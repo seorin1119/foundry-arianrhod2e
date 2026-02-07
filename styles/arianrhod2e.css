@@ -1,0 +1,619 @@
+/* ======================================== */
+/*  Arianrhod RPG 2E - FVTT System Styles   */
+/* ======================================== */
+
+:root {
+  --ar-primary: #4a5568;
+  --ar-accent: #5b7db1;
+  --ar-accent-light: #7b9dd1;
+  --ar-bg: #f7f5f0;
+  --ar-bg-dark: #e8e4dc;
+  --ar-border: #c4bfb4;
+  --ar-text: #2d3748;
+  --ar-text-light: #718096;
+  --ar-hp: #c53030;
+  --ar-mp: #2b6cb0;
+  --ar-fate: #d69e2e;
+  --ar-equipped: #38a169;
+  --ar-critical: #f6e05e;
+  --ar-fumble: #fc8181;
+}
+
+/* ======================================== */
+/*  Sheet Base                              */
+/* ======================================== */
+
+.arianrhod2e.sheet {
+  background: var(--ar-bg);
+  color: var(--ar-text);
+  font-family: "Noto Sans JP", "Yu Gothic", "Hiragino Kaku Gothic Pro", sans-serif;
+}
+
+.arianrhod2e .window-content {
+  padding: 4px 8px;
+  overflow-y: auto;
+  background: var(--ar-bg);
+}
+
+/* ======================================== */
+/*  Sheet Header                            */
+/* ======================================== */
+
+.arianrhod2e .sheet-header {
+  gap: 10px;
+  padding: 4px 0 8px;
+  border-bottom: 2px solid var(--ar-accent);
+  margin-bottom: 4px;
+}
+
+.arianrhod2e .sheet-header .profile-img {
+  border: 2px solid var(--ar-accent);
+  border-radius: 4px;
+  object-fit: cover;
+  flex: 0 0 100px;
+}
+
+.arianrhod2e .sheet-header .header-fields {
+  flex: 1;
+}
+
+.arianrhod2e .charname input,
+.arianrhod2e .item-name input {
+  font-size: 1.4em;
+  font-weight: bold;
+  border: none;
+  border-bottom: 1px solid var(--ar-border);
+  background: transparent;
+  color: var(--ar-text);
+  width: 100%;
+  padding: 0 2px;
+  height: 32px;
+}
+
+.arianrhod2e .header-details {
+  gap: 6px;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+
+.arianrhod2e .header-details .field {
+  flex: 1;
+  min-width: 100px;
+}
+
+.arianrhod2e .header-details .field-sm {
+  flex: 0 0 80px;
+  min-width: 60px;
+}
+
+.arianrhod2e .header-details label {
+  font-size: 0.75em;
+  font-weight: bold;
+  color: var(--ar-text-light);
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 1px;
+}
+
+.arianrhod2e .header-details input,
+.arianrhod2e .header-details select {
+  width: 100%;
+  border: 1px solid var(--ar-border);
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-size: 0.85em;
+  background: white;
+  height: 24px;
+}
+
+/* ======================================== */
+/*  Sheet Tabs                              */
+/* ======================================== */
+
+.arianrhod2e .sheet-tabs {
+  border-bottom: 2px solid var(--ar-border);
+  margin-bottom: 6px;
+}
+
+.arianrhod2e .sheet-tabs .item {
+  padding: 4px 12px;
+  font-size: 0.85em;
+  font-weight: bold;
+  color: var(--ar-text-light);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  text-decoration: none;
+}
+
+.arianrhod2e .sheet-tabs .item.active {
+  color: var(--ar-accent);
+  border-bottom-color: var(--ar-accent);
+}
+
+.arianrhod2e .sheet-tabs .item:hover {
+  color: var(--ar-accent-light);
+}
+
+/* ======================================== */
+/*  Sheet Body                              */
+/* ======================================== */
+
+.arianrhod2e .sheet-body {
+  overflow-y: auto;
+  padding: 0 2px;
+}
+
+.arianrhod2e .sheet-body .tab {
+  padding: 4px 0;
+}
+
+/* ======================================== */
+/*  Abilities Section                       */
+/* ======================================== */
+
+.arianrhod2e .abilities-grid {
+  margin-bottom: 12px;
+}
+
+.arianrhod2e .abilities-grid h3 {
+  font-size: 0.9em;
+  border-bottom: 1px solid var(--ar-border);
+  padding-bottom: 2px;
+  margin-bottom: 6px;
+  color: var(--ar-accent);
+}
+
+.arianrhod2e .ability-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 4px;
+}
+
+.arianrhod2e .ability {
+  background: white;
+  border: 1px solid var(--ar-border);
+  border-radius: 4px;
+  padding: 4px 8px;
+  align-items: center;
+  gap: 6px;
+}
+
+.arianrhod2e .ability-label {
+  font-weight: bold;
+  font-size: 0.85em;
+  min-width: 36px;
+  color: var(--ar-accent);
+}
+
+.arianrhod2e .ability-label.rollable {
+  cursor: pointer;
+}
+
+.arianrhod2e .ability-label.rollable:hover {
+  color: var(--ar-accent-light);
+  text-shadow: 0 0 4px rgba(91, 125, 177, 0.3);
+}
+
+.arianrhod2e .ability-value {
+  width: 40px;
+  text-align: center;
+  border: 1px solid var(--ar-border);
+  border-radius: 3px;
+  padding: 2px;
+  font-size: 0.9em;
+}
+
+.arianrhod2e .ability-bonus {
+  font-size: 0.8em;
+  color: var(--ar-text-light);
+  min-width: 24px;
+  text-align: center;
+}
+
+/* ======================================== */
+/*  Combat Stats                            */
+/* ======================================== */
+
+.arianrhod2e .combat-stats {
+  margin-bottom: 12px;
+}
+
+.arianrhod2e .combat-stats h3 {
+  font-size: 0.9em;
+  border-bottom: 1px solid var(--ar-border);
+  padding-bottom: 2px;
+  margin-bottom: 6px;
+  color: var(--ar-accent);
+}
+
+.arianrhod2e .combat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+}
+
+.arianrhod2e .resource {
+  background: white;
+  border: 1px solid var(--ar-border);
+  border-radius: 4px;
+  padding: 4px 8px;
+  align-items: center;
+  gap: 6px;
+}
+
+.arianrhod2e .resource label {
+  font-weight: bold;
+  font-size: 0.8em;
+  min-width: 24px;
+}
+
+.arianrhod2e .resource.hp label {
+  color: var(--ar-hp);
+}
+
+.arianrhod2e .resource.mp label {
+  color: var(--ar-mp);
+}
+
+.arianrhod2e .resource.fate label {
+  color: var(--ar-fate);
+}
+
+.arianrhod2e .resource-values {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex: 1;
+}
+
+.arianrhod2e .resource-values input {
+  width: 44px;
+  text-align: center;
+  border: 1px solid var(--ar-border);
+  border-radius: 3px;
+  padding: 2px;
+  font-size: 0.9em;
+}
+
+.arianrhod2e .resource-values span {
+  color: var(--ar-text-light);
+}
+
+.arianrhod2e .combat-detail {
+  background: white;
+  border: 1px solid var(--ar-border);
+  border-radius: 4px;
+  padding: 3px 8px;
+  align-items: center;
+  gap: 6px;
+}
+
+.arianrhod2e .combat-detail label {
+  font-size: 0.75em;
+  font-weight: bold;
+  color: var(--ar-text-light);
+  flex: 1;
+}
+
+.arianrhod2e .combat-detail input {
+  width: 50px;
+  text-align: center;
+  border: 1px solid var(--ar-border);
+  border-radius: 3px;
+  padding: 2px;
+  font-size: 0.85em;
+}
+
+/* ======================================== */
+/*  Currency                                */
+/* ======================================== */
+
+.arianrhod2e .currency-section {
+  align-items: center;
+  gap: 6px;
+  padding: 6px 0;
+  border-top: 1px solid var(--ar-border);
+}
+
+.arianrhod2e .currency-section label {
+  font-weight: bold;
+  font-size: 0.85em;
+  color: var(--ar-fate);
+}
+
+.arianrhod2e .currency-section input {
+  width: 100px;
+  text-align: right;
+  border: 1px solid var(--ar-border);
+  border-radius: 3px;
+  padding: 2px 4px;
+}
+
+.arianrhod2e .currency-unit {
+  font-weight: bold;
+  color: var(--ar-fate);
+}
+
+/* ======================================== */
+/*  Item Lists                              */
+/* ======================================== */
+
+.arianrhod2e .item-section {
+  margin-bottom: 10px;
+}
+
+.arianrhod2e .item-section-header {
+  align-items: center;
+  border-bottom: 1px solid var(--ar-accent);
+  padding-bottom: 2px;
+  margin-bottom: 4px;
+}
+
+.arianrhod2e .item-section-header h3 {
+  font-size: 0.9em;
+  color: var(--ar-accent);
+  flex: 1;
+  margin: 0;
+}
+
+.arianrhod2e .item-section-header .item-create {
+  color: var(--ar-accent);
+  cursor: pointer;
+  font-size: 0.85em;
+}
+
+.arianrhod2e .item-section-header .item-create:hover {
+  color: var(--ar-accent-light);
+}
+
+.arianrhod2e .item-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.arianrhod2e .item-header {
+  font-size: 0.7em;
+  font-weight: bold;
+  color: var(--ar-text-light);
+  text-transform: uppercase;
+  padding: 2px 4px;
+  border-bottom: 1px solid var(--ar-bg-dark);
+}
+
+.arianrhod2e .item-list .item {
+  border-bottom: 1px solid var(--ar-bg-dark);
+  padding: 3px 4px;
+  font-size: 0.85em;
+  align-items: center;
+}
+
+.arianrhod2e .item-list .item:hover {
+  background: var(--ar-bg-dark);
+}
+
+.arianrhod2e .item-list .item.equipped {
+  background: rgba(56, 161, 105, 0.05);
+}
+
+.arianrhod2e .item-name {
+  flex: 2;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.arianrhod2e .item-name.clickable {
+  cursor: pointer;
+}
+
+.arianrhod2e .item-name.clickable:hover {
+  color: var(--ar-accent);
+}
+
+.arianrhod2e .item-name img {
+  border: 1px solid var(--ar-border);
+  border-radius: 2px;
+  flex: 0 0 24px;
+}
+
+.arianrhod2e .item-detail {
+  flex: 0 0 60px;
+  text-align: center;
+  font-size: 0.9em;
+}
+
+.arianrhod2e .item-detail-sm {
+  flex: 0 0 44px;
+  text-align: center;
+  font-size: 0.9em;
+}
+
+.arianrhod2e .item-detail-wide {
+  flex: 1;
+  font-size: 0.85em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.arianrhod2e .item-controls {
+  flex: 0 0 50px;
+  text-align: right;
+}
+
+.arianrhod2e .item-controls a {
+  color: var(--ar-text-light);
+  margin-left: 4px;
+  font-size: 0.9em;
+}
+
+.arianrhod2e .item-controls a:hover {
+  color: var(--ar-accent);
+}
+
+.arianrhod2e .item-equip {
+  cursor: pointer;
+}
+
+.arianrhod2e .item-equip .fa-check-circle {
+  color: var(--ar-equipped);
+}
+
+.arianrhod2e .item-equip .fa-circle {
+  color: var(--ar-border);
+}
+
+/* ======================================== */
+/*  Skills List                             */
+/* ======================================== */
+
+.arianrhod2e .skills-list .item-header,
+.arianrhod2e .skills-list .item {
+  gap: 4px;
+}
+
+/* ======================================== */
+/*  Biography / Editor                      */
+/* ======================================== */
+
+.arianrhod2e .biography-content {
+  height: 100%;
+}
+
+.arianrhod2e .biography-content .editor {
+  height: 100%;
+}
+
+/* ======================================== */
+/*  Item Sheet                              */
+/* ======================================== */
+
+.arianrhod2e.sheet.item .sheet-header {
+  gap: 8px;
+  padding: 4px 0 6px;
+}
+
+.arianrhod2e.sheet.item .profile-img {
+  border: 2px solid var(--ar-accent);
+  border-radius: 4px;
+}
+
+.arianrhod2e .form-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.arianrhod2e .form-group label {
+  flex: 0 0 120px;
+  font-weight: bold;
+  font-size: 0.8em;
+  color: var(--ar-text-light);
+  text-align: right;
+}
+
+.arianrhod2e .form-group input,
+.arianrhod2e .form-group select,
+.arianrhod2e .form-group textarea {
+  flex: 1;
+  border: 1px solid var(--ar-border);
+  border-radius: 3px;
+  padding: 3px 6px;
+  font-size: 0.9em;
+  background: white;
+}
+
+.arianrhod2e .form-group textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+.arianrhod2e .form-group .form-field {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.arianrhod2e .form-group .form-field label {
+  flex: 0 0 auto;
+}
+
+.arianrhod2e .form-group .form-field input {
+  width: 50px;
+}
+
+/* ======================================== */
+/*  Drops Section (Enemy)                   */
+/* ======================================== */
+
+.arianrhod2e .drops-section {
+  margin-top: 8px;
+  padding-top: 6px;
+  border-top: 1px solid var(--ar-border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.arianrhod2e .drops-section label {
+  font-weight: bold;
+  font-size: 0.85em;
+  color: var(--ar-text-light);
+}
+
+.arianrhod2e .drops-section input {
+  flex: 1;
+  border: 1px solid var(--ar-border);
+  border-radius: 3px;
+  padding: 3px 6px;
+}
+
+/* ======================================== */
+/*  Chat Message Styles                     */
+/* ======================================== */
+
+.arianrhod.item-chat h3 {
+  font-size: 1.1em;
+  border-bottom: 1px solid var(--ar-accent);
+  padding-bottom: 2px;
+  margin-bottom: 4px;
+}
+
+.arianrhod.item-chat p {
+  margin: 2px 0;
+  font-size: 0.9em;
+}
+
+.arianrhod.item-chat .item-description {
+  margin-top: 6px;
+  padding-top: 4px;
+  border-top: 1px dashed var(--ar-border);
+  font-size: 0.85em;
+}
+
+/* ======================================== */
+/*  Scrollbar                               */
+/* ======================================== */
+
+.arianrhod2e ::-webkit-scrollbar {
+  width: 6px;
+}
+
+.arianrhod2e ::-webkit-scrollbar-track {
+  background: var(--ar-bg-dark);
+}
+
+.arianrhod2e ::-webkit-scrollbar-thumb {
+  background: var(--ar-border);
+  border-radius: 3px;
+}
+
+.arianrhod2e ::-webkit-scrollbar-thumb:hover {
+  background: var(--ar-accent);
+}

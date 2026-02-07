@@ -1,0 +1,118 @@
+{
+  "Actor": {
+    "types": ["character", "enemy"],
+    "character": {
+      "biography": "",
+      "race": "",
+      "age": "",
+      "gender": "",
+      "mainClass": "",
+      "supportClass": "",
+      "level": 1,
+      "experience": 0,
+      "guild": "",
+      "abilities": {
+        "str": { "value": 6 },
+        "dex": { "value": 6 },
+        "agi": { "value": 6 },
+        "int": { "value": 6 },
+        "per": { "value": 6 },
+        "spi": { "value": 6 },
+        "luk": { "value": 6 }
+      },
+      "combat": {
+        "hp": { "value": 10, "max": 10 },
+        "mp": { "value": 5, "max": 5 },
+        "physDef": 0,
+        "magDef": 0,
+        "initiative": 0,
+        "movement": 7,
+        "accuracy": 0,
+        "evasion": 0,
+        "attack": 0,
+        "magAttack": 0
+      },
+      "fate": { "value": 3, "max": 3 },
+      "currency": 0
+    },
+    "enemy": {
+      "description": "",
+      "enemyType": "",
+      "level": 1,
+      "abilities": {
+        "str": { "value": 6 },
+        "dex": { "value": 6 },
+        "agi": { "value": 6 },
+        "int": { "value": 6 },
+        "per": { "value": 6 },
+        "spi": { "value": 6 },
+        "luk": { "value": 6 }
+      },
+      "combat": {
+        "hp": { "value": 10, "max": 10 },
+        "mp": { "value": 5, "max": 5 },
+        "physDef": 0,
+        "magDef": 0,
+        "initiative": 0,
+        "movement": 2,
+        "accuracy": 0,
+        "evasion": 0,
+        "attack": 0,
+        "magAttack": 0
+      },
+      "drops": "",
+      "exp": 0
+    }
+  },
+  "Item": {
+    "types": ["weapon", "armor", "accessory", "skill", "item"],
+    "weapon": {
+      "description": "",
+      "weaponType": "",
+      "accuracy": 0,
+      "attack": 0,
+      "range": 0,
+      "weight": 0,
+      "price": 0,
+      "equipped": false,
+      "slot": "right"
+    },
+    "armor": {
+      "description": "",
+      "armorType": "",
+      "physDef": 0,
+      "magDef": 0,
+      "evasion": 0,
+      "weight": 0,
+      "price": 0,
+      "equipped": false,
+      "slot": "body"
+    },
+    "accessory": {
+      "description": "",
+      "effect": "",
+      "weight": 0,
+      "price": 0,
+      "equipped": false
+    },
+    "skill": {
+      "description": "",
+      "skillClass": "",
+      "level": 1,
+      "maxLevel": 5,
+      "timing": "",
+      "target": "",
+      "range": "",
+      "cost": "",
+      "effect": ""
+    },
+    "item": {
+      "description": "",
+      "itemType": "",
+      "weight": 0,
+      "price": 0,
+      "quantity": 1,
+      "effect": ""
+    }
+  }
+}

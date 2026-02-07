@@ -1,0 +1,151 @@
+{{!-- Equipment & Items Tab Content --}}
+
+{{!-- Weapons --}}
+<section class="item-section">
+  <div class="item-section-header flexrow">
+    <h3>{{localize "ARIANRHOD.Weapon"}}</h3>
+    <a class="item-create" data-type="weapon" title="{{localize 'ARIANRHOD.ItemCreate'}}">
+      <i class="fas fa-plus"></i>
+    </a>
+  </div>
+  <ol class="item-list">
+    <li class="item-header flexrow">
+      <span class="item-name">{{localize "ARIANRHOD.CharacterName"}}</span>
+      <span class="item-detail">{{localize "ARIANRHOD.Accuracy"}}</span>
+      <span class="item-detail">{{localize "ARIANRHOD.Attack"}}</span>
+      <span class="item-detail">{{localize "ARIANRHOD.Range"}}</span>
+      <span class="item-detail">{{localize "ARIANRHOD.Equipped"}}</span>
+      <span class="item-controls"></span>
+    </li>
+    {{#each weapons as |item|}}
+    <li class="item flexrow{{#if item.system.equipped}} equipped{{/if}}" data-item-id="{{item._id}}">
+      <span class="item-name clickable item-post">
+        <img src="{{item.img}}" width="24" height="24" />
+        {{item.name}}
+      </span>
+      <span class="item-detail">{{item.system.accuracy}}</span>
+      <span class="item-detail">{{item.system.attack}}</span>
+      <span class="item-detail">{{item.system.range}}</span>
+      <span class="item-detail">
+        <a class="item-equip" title="{{localize 'ARIANRHOD.ItemEquip'}}">
+          <i class="fas {{#if item.system.equipped}}fa-check-circle{{else}}fa-circle{{/if}}"></i>
+        </a>
+      </span>
+      <span class="item-controls">
+        <a class="item-edit" title="{{localize 'ARIANRHOD.ItemEdit'}}"><i class="fas fa-edit"></i></a>
+        <a class="item-delete" title="{{localize 'ARIANRHOD.ItemDelete'}}"><i class="fas fa-trash"></i></a>
+      </span>
+    </li>
+    {{/each}}
+  </ol>
+</section>
+
+{{!-- Armor --}}
+<section class="item-section">
+  <div class="item-section-header flexrow">
+    <h3>{{localize "ARIANRHOD.Armor"}}</h3>
+    <a class="item-create" data-type="armor" title="{{localize 'ARIANRHOD.ItemCreate'}}">
+      <i class="fas fa-plus"></i>
+    </a>
+  </div>
+  <ol class="item-list">
+    <li class="item-header flexrow">
+      <span class="item-name">{{localize "ARIANRHOD.CharacterName"}}</span>
+      <span class="item-detail">{{localize "ARIANRHOD.PhysDef"}}</span>
+      <span class="item-detail">{{localize "ARIANRHOD.MagDef"}}</span>
+      <span class="item-detail">{{localize "ARIANRHOD.Evasion"}}</span>
+      <span class="item-detail">{{localize "ARIANRHOD.Equipped"}}</span>
+      <span class="item-controls"></span>
+    </li>
+    {{#each armors as |item|}}
+    <li class="item flexrow{{#if item.system.equipped}} equipped{{/if}}" data-item-id="{{item._id}}">
+      <span class="item-name clickable item-post">
+        <img src="{{item.img}}" width="24" height="24" />
+        {{item.name}}
+      </span>
+      <span class="item-detail">{{item.system.physDef}}</span>
+      <span class="item-detail">{{item.system.magDef}}</span>
+      <span class="item-detail">{{item.system.evasion}}</span>
+      <span class="item-detail">
+        <a class="item-equip" title="{{localize 'ARIANRHOD.ItemEquip'}}">
+          <i class="fas {{#if item.system.equipped}}fa-check-circle{{else}}fa-circle{{/if}}"></i>
+        </a>
+      </span>
+      <span class="item-controls">
+        <a class="item-edit" title="{{localize 'ARIANRHOD.ItemEdit'}}"><i class="fas fa-edit"></i></a>
+        <a class="item-delete" title="{{localize 'ARIANRHOD.ItemDelete'}}"><i class="fas fa-trash"></i></a>
+      </span>
+    </li>
+    {{/each}}
+  </ol>
+</section>
+
+{{!-- Accessories --}}
+<section class="item-section">
+  <div class="item-section-header flexrow">
+    <h3>{{localize "ARIANRHOD.Accessory"}}</h3>
+    <a class="item-create" data-type="accessory" title="{{localize 'ARIANRHOD.ItemCreate'}}">
+      <i class="fas fa-plus"></i>
+    </a>
+  </div>
+  <ol class="item-list">
+    <li class="item-header flexrow">
+      <span class="item-name">{{localize "ARIANRHOD.CharacterName"}}</span>
+      <span class="item-detail-wide">{{localize "ARIANRHOD.Effect"}}</span>
+      <span class="item-detail">{{localize "ARIANRHOD.Equipped"}}</span>
+      <span class="item-controls"></span>
+    </li>
+    {{#each accessories as |item|}}
+    <li class="item flexrow{{#if item.system.equipped}} equipped{{/if}}" data-item-id="{{item._id}}">
+      <span class="item-name clickable item-post">
+        <img src="{{item.img}}" width="24" height="24" />
+        {{item.name}}
+      </span>
+      <span class="item-detail-wide">{{item.system.effect}}</span>
+      <span class="item-detail">
+        <a class="item-equip" title="{{localize 'ARIANRHOD.ItemEquip'}}">
+          <i class="fas {{#if item.system.equipped}}fa-check-circle{{else}}fa-circle{{/if}}"></i>
+        </a>
+      </span>
+      <span class="item-controls">
+        <a class="item-edit" title="{{localize 'ARIANRHOD.ItemEdit'}}"><i class="fas fa-edit"></i></a>
+        <a class="item-delete" title="{{localize 'ARIANRHOD.ItemDelete'}}"><i class="fas fa-trash"></i></a>
+      </span>
+    </li>
+    {{/each}}
+  </ol>
+</section>
+
+{{!-- General Items --}}
+<section class="item-section">
+  <div class="item-section-header flexrow">
+    <h3>{{localize "ARIANRHOD.Item"}}</h3>
+    <a class="item-create" data-type="item" title="{{localize 'ARIANRHOD.ItemCreate'}}">
+      <i class="fas fa-plus"></i>
+    </a>
+  </div>
+  <ol class="item-list">
+    <li class="item-header flexrow">
+      <span class="item-name">{{localize "ARIANRHOD.CharacterName"}}</span>
+      <span class="item-detail">{{localize "ARIANRHOD.Quantity"}}</span>
+      <span class="item-detail">{{localize "ARIANRHOD.Weight"}}</span>
+      <span class="item-detail-wide">{{localize "ARIANRHOD.Effect"}}</span>
+      <span class="item-controls"></span>
+    </li>
+    {{#each items as |item|}}
+    <li class="item flexrow" data-item-id="{{item._id}}">
+      <span class="item-name clickable item-post">
+        <img src="{{item.img}}" width="24" height="24" />
+        {{item.name}}
+      </span>
+      <span class="item-detail">{{item.system.quantity}}</span>
+      <span class="item-detail">{{item.system.weight}}</span>
+      <span class="item-detail-wide">{{item.system.effect}}</span>
+      <span class="item-controls">
+        <a class="item-edit" title="{{localize 'ARIANRHOD.ItemEdit'}}"><i class="fas fa-edit"></i></a>
+        <a class="item-delete" title="{{localize 'ARIANRHOD.ItemDelete'}}"><i class="fas fa-trash"></i></a>
+      </span>
+    </li>
+    {{/each}}
+  </ol>
+</section>
