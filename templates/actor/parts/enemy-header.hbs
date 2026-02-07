@@ -1,0 +1,32 @@
+{{!-- Enemy Sheet Header --}}
+<header class="sheet-header flexrow">
+  <img class="profile-img" src="{{actor.img}}" data-edit="img"
+       title="{{actor.name}}" height="100" width="100" />
+  <div class="header-fields">
+    <h1 class="charname">
+      <input name="name" type="text" value="{{actor.name}}"
+             placeholder="{{localize 'ARIANRHOD.CharacterName'}}" />
+    </h1>
+    <div class="header-details flexrow">
+      <div class="field">
+        <label>{{localize "ARIANRHOD.EnemyType"}}</label>
+        <select name="system.enemyType">
+          <option value="">---</option>
+          {{#each config.enemyTypes as |label key|}}
+          <option value="{{key}}" {{#if (eq key ../system.enemyType)}}selected{{/if}}>
+            {{localize label}}
+          </option>
+          {{/each}}
+        </select>
+      </div>
+      <div class="field field-sm">
+        <label>{{localize "ARIANRHOD.Level"}}</label>
+        <input type="number" name="system.level" value="{{system.level}}" data-dtype="Number" />
+      </div>
+      <div class="field field-sm">
+        <label>{{localize "ARIANRHOD.EnemyExp"}}</label>
+        <input type="number" name="system.exp" value="{{system.exp}}" data-dtype="Number" />
+      </div>
+    </div>
+  </div>
+</header>

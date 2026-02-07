@@ -2,10 +2,10 @@
   "id": "arianrhod2e",
   "title": "Arianrhod RPG 2E",
   "description": "アリアンロッドRPG 2E - A JRPG-style fantasy TRPG system by F.E.A.R. for Foundry Virtual Tabletop.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "compatibility": {
-    "minimum": "12",
-    "verified": "12"
+    "minimum": "13",
+    "verified": "13"
   },
   "authors": [
     {
@@ -26,6 +26,33 @@
       "path": "lang/en.json"
     }
   ],
+  "documentTypes": {
+    "Actor": {
+      "character": {
+        "htmlFields": ["biography"]
+      },
+      "enemy": {
+        "htmlFields": ["description"]
+      }
+    },
+    "Item": {
+      "weapon": {
+        "htmlFields": ["description"]
+      },
+      "armor": {
+        "htmlFields": ["description"]
+      },
+      "accessory": {
+        "htmlFields": ["description"]
+      },
+      "skill": {
+        "htmlFields": ["description"]
+      },
+      "item": {
+        "htmlFields": ["description"]
+      }
+    }
+  },
   "grid": {
     "distance": 1,
     "units": "sq"

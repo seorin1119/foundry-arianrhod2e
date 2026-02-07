@@ -3,6 +3,7 @@
  * アリアンロッドRPG 2E
  *
  * A JRPG-style fantasy TRPG by F.E.A.R.
+ * Compatible with Foundry VTT v13+
  */
 
 import { ARIANRHOD } from "./module/helpers/config.mjs";
@@ -10,6 +11,8 @@ import { ArianrhodActor } from "./module/documents/actor.mjs";
 import { ArianrhodItem } from "./module/documents/item.mjs";
 import { ArianrhodActorSheet } from "./module/sheets/actor-sheet.mjs";
 import { ArianrhodItemSheet } from "./module/sheets/item-sheet.mjs";
+import { CharacterData, EnemyData } from "./module/data/actor-data.mjs";
+import { WeaponData, ArmorData, AccessoryData, SkillData, ItemData } from "./module/data/item-data.mjs";
 import { rollCheck, rollCheckDialog } from "./module/dice.mjs";
 
 /* -------------------------------------------- */
@@ -34,24 +37,46 @@ Hooks.once("init", () => {
   CONFIG.Actor.documentClass = ArianrhodActor;
   CONFIG.Item.documentClass = ArianrhodItem;
 
-  // Register sheet application classes
-  Actors.unregisterSheet("core", ActorSheet);
-  Actors.registerSheet("arianrhod2e", ArianrhodActorSheet, {
+  // Register DataModel classes for Actor types
+  Object.assign(CONFIG.Actor.dataModels, {
+    character: CharacterData,
+    enemy: EnemyData,
+  });
+
+  // Register DataModel classes for Item types
+  Object.assign(CONFIG.Item.dataModels, {
+    weapon: WeaponData,
+    armor: ArmorData,
+    accessory: AccessoryData,
+    skill: SkillData,
+    item: ItemData,
+  });
+
+  // Register trackable attributes for token bars
+  CONFIG.Actor.trackableAttributes = {
+    character: {
+      bar: ["combat.hp", "combat.mp", "fate"],
+      value: ["level", "experience", "currency"],
+    },
+    enemy: {
+      bar: ["combat.hp", "combat.mp"],
+      value: ["level", "exp"],
+    },
+  };
+
+  // Register sheet application classes (v13 pattern)
+  DocumentSheetConfig.registerSheet(Actor, "arianrhod2e", ArianrhodActorSheet, {
     makeDefault: true,
     label: "ARIANRHOD.SheetCharacter",
   });
 
-  Items.unregisterSheet("core", ItemSheet);
-  Items.registerSheet("arianrhod2e", ArianrhodItemSheet, {
+  DocumentSheetConfig.registerSheet(Item, "arianrhod2e", ArianrhodItemSheet, {
     makeDefault: true,
     label: "ARIANRHOD.SheetItem",
   });
 
   // Register Handlebars helpers
   _registerHandlebarsHelpers();
-
-  // Preload Handlebars templates
-  return _preloadHandlebarsTemplates();
 });
 
 /* -------------------------------------------- */
@@ -67,36 +92,15 @@ Hooks.once("ready", () => {
 /* -------------------------------------------- */
 
 function _registerHandlebarsHelpers() {
-  // Equality check helper
   Handlebars.registerHelper("eq", function (a, b) {
     return a === b;
   });
 
-  // Greater than helper
   Handlebars.registerHelper("gt", function (a, b) {
     return a > b;
   });
 
-  // Multiplication helper
   Handlebars.registerHelper("multiply", function (a, b) {
     return a * b;
   });
-
-  // Localize with fallback
-  Handlebars.registerHelper("localizeOr", function (key, fallback) {
-    const localized = game.i18n.localize(key);
-    return localized !== key ? localized : fallback;
-  });
-}
-
-/* -------------------------------------------- */
-/*  Preload Templates                           */
-/* -------------------------------------------- */
-
-async function _preloadHandlebarsTemplates() {
-  return loadTemplates([
-    // Actor sheet partials
-    "systems/arianrhod2e/templates/parts/actor-items.hbs",
-    "systems/arianrhod2e/templates/parts/actor-skills.hbs",
-  ]);
 }

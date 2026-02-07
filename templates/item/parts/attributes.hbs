@@ -1,0 +1,168 @@
+{{!-- Item Attributes Tab --}}
+<section class="tab attributes{{#if tabs.attributes.active}} active{{/if}}" data-group="primary" data-tab="attributes">
+
+  {{!-- Weapon attributes --}}
+  {{#if (eq itemType "weapon")}}
+  <div class="form-group">
+    <label>{{localize "ARIANRHOD.WeaponType"}}</label>
+    <select name="system.weaponType">
+      <option value="">---</option>
+      {{#each config.weaponTypes as |label key|}}
+      <option value="{{key}}" {{#if (eq key ../system.weaponType)}}selected{{/if}}>
+        {{localize label}}
+      </option>
+      {{/each}}
+    </select>
+  </div>
+  <div class="form-group">
+    <label>{{localize "ARIANRHOD.Accuracy"}}</label>
+    <input type="number" name="system.accuracy" value="{{system.accuracy}}" data-dtype="Number" />
+  </div>
+  <div class="form-group">
+    <label>{{localize "ARIANRHOD.Attack"}}</label>
+    <input type="number" name="system.attack" value="{{system.attack}}" data-dtype="Number" />
+  </div>
+  <div class="form-group">
+    <label>{{localize "ARIANRHOD.Range"}}</label>
+    <input type="number" name="system.range" value="{{system.range}}" data-dtype="Number" />
+  </div>
+  <div class="form-group">
+    <label>{{localize "ARIANRHOD.Weight"}}</label>
+    <input type="number" name="system.weight" value="{{system.weight}}" data-dtype="Number" />
+  </div>
+  <div class="form-group">
+    <label>{{localize "ARIANRHOD.Price"}}</label>
+    <input type="number" name="system.price" value="{{system.price}}" data-dtype="Number" />
+  </div>
+  <div class="form-group">
+    <label>{{localize "ARIANRHOD.SlotRight"}}</label>
+    <select name="system.slot">
+      {{#each config.equipSlots as |label key|}}
+      <option value="{{key}}" {{#if (eq key ../system.slot)}}selected{{/if}}>
+        {{localize label}}
+      </option>
+      {{/each}}
+    </select>
+  </div>
+  {{/if}}
+
+  {{!-- Armor attributes --}}
+  {{#if (eq itemType "armor")}}
+  <div class="form-group">
+    <label>{{localize "ARIANRHOD.ArmorType"}}</label>
+    <select name="system.armorType">
+      <option value="">---</option>
+      {{#each config.armorTypes as |label key|}}
+      <option value="{{key}}" {{#if (eq key ../system.armorType)}}selected{{/if}}>
+        {{localize label}}
+      </option>
+      {{/each}}
+    </select>
+  </div>
+  <div class="form-group">
+    <label>{{localize "ARIANRHOD.PhysDef"}}</label>
+    <input type="number" name="system.physDef" value="{{system.physDef}}" data-dtype="Number" />
+  </div>
+  <div class="form-group">
+    <label>{{localize "ARIANRHOD.MagDef"}}</label>
+    <input type="number" name="system.magDef" value="{{system.magDef}}" data-dtype="Number" />
+  </div>
+  <div class="form-group">
+    <label>{{localize "ARIANRHOD.Evasion"}}</label>
+    <input type="number" name="system.evasion" value="{{system.evasion}}" data-dtype="Number" />
+  </div>
+  <div class="form-group">
+    <label>{{localize "ARIANRHOD.Weight"}}</label>
+    <input type="number" name="system.weight" value="{{system.weight}}" data-dtype="Number" />
+  </div>
+  <div class="form-group">
+    <label>{{localize "ARIANRHOD.Price"}}</label>
+    <input type="number" name="system.price" value="{{system.price}}" data-dtype="Number" />
+  </div>
+  <div class="form-group">
+    <label>{{localize "ARIANRHOD.SlotBody"}}</label>
+    <select name="system.slot">
+      {{#each config.equipSlots as |label key|}}
+      <option value="{{key}}" {{#if (eq key ../system.slot)}}selected{{/if}}>
+        {{localize label}}
+      </option>
+      {{/each}}
+    </select>
+  </div>
+  {{/if}}
+
+  {{!-- Accessory attributes --}}
+  {{#if (eq itemType "accessory")}}
+  <div class="form-group">
+    <label>{{localize "ARIANRHOD.Effect"}}</label>
+    <input type="text" name="system.effect" value="{{system.effect}}" />
+  </div>
+  <div class="form-group">
+    <label>{{localize "ARIANRHOD.Weight"}}</label>
+    <input type="number" name="system.weight" value="{{system.weight}}" data-dtype="Number" />
+  </div>
+  <div class="form-group">
+    <label>{{localize "ARIANRHOD.Price"}}</label>
+    <input type="number" name="system.price" value="{{system.price}}" data-dtype="Number" />
+  </div>
+  {{/if}}
+
+  {{!-- Skill attributes --}}
+  {{#if (eq itemType "skill")}}
+  <div class="form-group">
+    <label>{{localize "ARIANRHOD.SkillClass"}}</label>
+    <input type="text" name="system.skillClass" value="{{system.skillClass}}" />
+  </div>
+  <div class="form-group flexrow">
+    <div class="form-field">
+      <label>{{localize "ARIANRHOD.SkillLevel"}}</label>
+      <input type="number" name="system.level" value="{{system.level}}" data-dtype="Number" min="1" />
+    </div>
+    <div class="form-field">
+      <label>{{localize "ARIANRHOD.SkillMaxLevel"}}</label>
+      <input type="number" name="system.maxLevel" value="{{system.maxLevel}}" data-dtype="Number" min="1" />
+    </div>
+  </div>
+  <div class="form-group">
+    <label>{{localize "ARIANRHOD.Timing"}}</label>
+    <input type="text" name="system.timing" value="{{system.timing}}" />
+  </div>
+  <div class="form-group">
+    <label>{{localize "ARIANRHOD.Target"}}</label>
+    <input type="text" name="system.target" value="{{system.target}}" />
+  </div>
+  <div class="form-group">
+    <label>{{localize "ARIANRHOD.Range"}}</label>
+    <input type="text" name="system.range" value="{{system.range}}" />
+  </div>
+  <div class="form-group">
+    <label>{{localize "ARIANRHOD.Cost"}}</label>
+    <input type="text" name="system.cost" value="{{system.cost}}" />
+  </div>
+  <div class="form-group">
+    <label>{{localize "ARIANRHOD.Effect"}}</label>
+    <textarea name="system.effect" rows="4">{{system.effect}}</textarea>
+  </div>
+  {{/if}}
+
+  {{!-- General Item attributes --}}
+  {{#if (eq itemType "item")}}
+  <div class="form-group">
+    <label>{{localize "ARIANRHOD.Effect"}}</label>
+    <input type="text" name="system.effect" value="{{system.effect}}" />
+  </div>
+  <div class="form-group">
+    <label>{{localize "ARIANRHOD.Quantity"}}</label>
+    <input type="number" name="system.quantity" value="{{system.quantity}}" data-dtype="Number" min="0" />
+  </div>
+  <div class="form-group">
+    <label>{{localize "ARIANRHOD.Weight"}}</label>
+    <input type="number" name="system.weight" value="{{system.weight}}" data-dtype="Number" />
+  </div>
+  <div class="form-group">
+    <label>{{localize "ARIANRHOD.Price"}}</label>
+    <input type="number" name="system.price" value="{{system.price}}" data-dtype="Number" />
+  </div>
+  {{/if}}
+
+</section>

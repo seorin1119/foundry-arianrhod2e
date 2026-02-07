@@ -1,0 +1,7 @@
+{{!-- Biography Tab --}}
+<section class="tab biography{{#if tabs.biography.active}} active{{/if}}" data-group="primary" data-tab="biography">
+  <div class="biography-content">
+    {{editor enrichedBiography target="system.biography"
+             button=true editable=editable}}
+  </div>
+</section>

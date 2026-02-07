@@ -1,0 +1,108 @@
+{{!-- Abilities Tab --}}
+<section class="tab abilities{{#if tabs.abilities.active}} active{{/if}}" data-group="primary" data-tab="abilities">
+
+  {{!-- Ability Scores --}}
+  <section class="abilities-grid">
+    <h3>{{localize "ARIANRHOD.Abilities"}}</h3>
+    <div class="ability-list">
+      {{#each abilities as |ability key|}}
+      <div class="ability flexrow">
+        <span class="ability-label" data-action="rollAbility" data-ability="{{key}}"
+              title="{{ability.label}} チェック (クリックでロール)">
+          {{ability.abbr}}
+        </span>
+        <input class="ability-value" type="number"
+               name="system.abilities.{{key}}.value"
+               value="{{ability.value}}" data-dtype="Number" />
+        <span class="ability-bonus">[{{ability.bonus}}]</span>
+      </div>
+      {{/each}}
+    </div>
+  </section>
+
+  {{!-- Combat Stats --}}
+  <section class="combat-stats">
+    <h3>{{localize "ARIANRHOD.CombatStats"}}</h3>
+    <div class="combat-grid">
+      <div class="resource hp flexrow">
+        <label>{{localize "ARIANRHOD.HP"}}</label>
+        <div class="resource-values">
+          <input type="number" name="system.combat.hp.value"
+                 value="{{system.combat.hp.value}}" data-dtype="Number" />
+          <span>/</span>
+          <input type="number" name="system.combat.hp.max"
+                 value="{{system.combat.hp.max}}" data-dtype="Number" />
+        </div>
+      </div>
+      <div class="resource mp flexrow">
+        <label>{{localize "ARIANRHOD.MP"}}</label>
+        <div class="resource-values">
+          <input type="number" name="system.combat.mp.value"
+                 value="{{system.combat.mp.value}}" data-dtype="Number" />
+          <span>/</span>
+          <input type="number" name="system.combat.mp.max"
+                 value="{{system.combat.mp.max}}" data-dtype="Number" />
+        </div>
+      </div>
+      <div class="resource fate flexrow">
+        <label>{{localize "ARIANRHOD.Fate"}}</label>
+        <div class="resource-values">
+          <input type="number" name="system.fate.value"
+                 value="{{system.fate.value}}" data-dtype="Number" />
+          <span>/</span>
+          <input type="number" name="system.fate.max"
+                 value="{{system.fate.max}}" data-dtype="Number" />
+        </div>
+      </div>
+      <div class="combat-detail flexrow">
+        <label>{{localize "ARIANRHOD.PhysDef"}}</label>
+        <input type="number" name="system.combat.physDef"
+               value="{{system.combat.physDef}}" data-dtype="Number" />
+      </div>
+      <div class="combat-detail flexrow">
+        <label>{{localize "ARIANRHOD.MagDef"}}</label>
+        <input type="number" name="system.combat.magDef"
+               value="{{system.combat.magDef}}" data-dtype="Number" />
+      </div>
+      <div class="combat-detail flexrow">
+        <label>{{localize "ARIANRHOD.Initiative"}}</label>
+        <input type="number" name="system.combat.initiative"
+               value="{{system.combat.initiative}}" data-dtype="Number" />
+      </div>
+      <div class="combat-detail flexrow">
+        <label>{{localize "ARIANRHOD.Movement"}}</label>
+        <input type="number" name="system.combat.movement"
+               value="{{system.combat.movement}}" data-dtype="Number" />
+      </div>
+      <div class="combat-detail flexrow">
+        <label>{{localize "ARIANRHOD.Accuracy"}}</label>
+        <input type="number" name="system.combat.accuracy"
+               value="{{system.combat.accuracy}}" data-dtype="Number" />
+      </div>
+      <div class="combat-detail flexrow">
+        <label>{{localize "ARIANRHOD.Evasion"}}</label>
+        <input type="number" name="system.combat.evasion"
+               value="{{system.combat.evasion}}" data-dtype="Number" />
+      </div>
+      <div class="combat-detail flexrow">
+        <label>{{localize "ARIANRHOD.Attack"}}</label>
+        <input type="number" name="system.combat.attack"
+               value="{{system.combat.attack}}" data-dtype="Number" />
+      </div>
+      <div class="combat-detail flexrow">
+        <label>{{localize "ARIANRHOD.MagAttack"}}</label>
+        <input type="number" name="system.combat.magAttack"
+               value="{{system.combat.magAttack}}" data-dtype="Number" />
+      </div>
+    </div>
+  </section>
+
+  {{!-- Currency --}}
+  <section class="currency-section flexrow">
+    <label>{{localize "ARIANRHOD.Currency"}}</label>
+    <input type="number" name="system.currency"
+           value="{{system.currency}}" data-dtype="Number" />
+    <span class="currency-unit">{{localize "ARIANRHOD.CurrencyUnit"}}</span>
+  </section>
+
+</section>

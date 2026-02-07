@@ -1,0 +1,39 @@
+{{!-- Skills Tab --}}
+<section class="tab skills{{#if tabs.skills.active}} active{{/if}}" data-group="primary" data-tab="skills">
+  <section class="item-section">
+    <div class="item-section-header flexrow">
+      <h3>{{localize "ARIANRHOD.Skill"}}</h3>
+      <a data-action="createItem" data-type="skill" title="{{localize 'ARIANRHOD.ItemCreate'}}">
+        <i class="fas fa-plus"></i>
+      </a>
+    </div>
+    <ol class="item-list skills-list">
+      <li class="item-header flexrow">
+        <span class="item-name">{{localize "ARIANRHOD.CharacterName"}}</span>
+        <span class="item-detail-sm">{{localize "ARIANRHOD.SkillLevel"}}</span>
+        <span class="item-detail">{{localize "ARIANRHOD.SkillClass"}}</span>
+        <span class="item-detail">{{localize "ARIANRHOD.Timing"}}</span>
+        <span class="item-detail">{{localize "ARIANRHOD.Cost"}}</span>
+        <span class="item-detail">{{localize "ARIANRHOD.Range"}}</span>
+        <span class="item-controls"></span>
+      </li>
+      {{#each skills as |item|}}
+      <li class="item flexrow" data-item-id="{{item._id}}">
+        <span class="item-name clickable" data-action="postItem">
+          <img src="{{item.img}}" width="24" height="24" />
+          {{item.name}}
+        </span>
+        <span class="item-detail-sm">{{item.system.level}}/{{item.system.maxLevel}}</span>
+        <span class="item-detail">{{item.system.skillClass}}</span>
+        <span class="item-detail">{{item.system.timing}}</span>
+        <span class="item-detail">{{item.system.cost}}</span>
+        <span class="item-detail">{{item.system.range}}</span>
+        <span class="item-controls">
+          <a data-action="editItem" title="{{localize 'ARIANRHOD.ItemEdit'}}"><i class="fas fa-edit"></i></a>
+          <a data-action="deleteItem" title="{{localize 'ARIANRHOD.ItemDelete'}}"><i class="fas fa-trash"></i></a>
+        </span>
+      </li>
+      {{/each}}
+    </ol>
+  </section>
+</section>

@@ -1,6 +1,9 @@
 /* ======================================== */
-/*  Arianrhod RPG 2E - FVTT System Styles   */
+/*  Arianrhod RPG 2E - FVTT v13 Styles     */
 /* ======================================== */
+
+/* v13: Use CSS layers to avoid conflicts with Foundry's theme */
+@layer arianrhod {
 
 :root {
   --ar-primary: #4a5568;
@@ -617,3 +620,13 @@
 .arianrhod2e ::-webkit-scrollbar-thumb:hover {
   background: var(--ar-accent);
 }
+
+/* ======================================== */
+/*  v13: Tab visibility                     */
+/* ======================================== */
+
+.arianrhod2e .tab:not(.active) {
+  display: none;
+}
+
+} /* end @layer arianrhod */

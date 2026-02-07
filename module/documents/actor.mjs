@@ -1,69 +1,9 @@
 /**
  * Extend the base Actor document for Arianrhod RPG 2E.
+ * Derived data is handled by DataModel classes in data/actor-data.mjs.
  * @extends {Actor}
  */
 export class ArianrhodActor extends Actor {
-  /** @override */
-  prepareData() {
-    super.prepareData();
-  }
-
-  /** @override */
-  prepareDerivedData() {
-    const systemData = this.system;
-
-    // Calculate ability bonuses (能力ボーナス = 能力基本値 / 3, rounded down)
-    if (systemData.abilities) {
-      for (const [key, ability] of Object.entries(systemData.abilities)) {
-        ability.bonus = Math.floor(ability.value / 3);
-      }
-    }
-
-    // Type-specific derived data
-    if (this.type === "character") {
-      this._prepareCharacterData(systemData);
-    } else if (this.type === "enemy") {
-      this._prepareEnemyData(systemData);
-    }
-  }
-
-  /**
-   * Prepare derived data for character actors.
-   * @param {object} systemData
-   */
-  _prepareCharacterData(systemData) {
-    // Ensure HP and MP don't exceed max
-    systemData.combat.hp.value = Math.min(
-      systemData.combat.hp.value,
-      systemData.combat.hp.max
-    );
-    systemData.combat.mp.value = Math.min(
-      systemData.combat.mp.value,
-      systemData.combat.mp.max
-    );
-
-    // Ensure fate doesn't exceed max
-    systemData.fate.value = Math.min(
-      systemData.fate.value,
-      systemData.fate.max
-    );
-  }
-
-  /**
-   * Prepare derived data for enemy actors.
-   * @param {object} systemData
-   */
-  _prepareEnemyData(systemData) {
-    systemData.combat.hp.value = Math.min(
-      systemData.combat.hp.value,
-      systemData.combat.hp.max
-    );
-    systemData.combat.mp.value = Math.min(
-      systemData.combat.mp.value,
-      systemData.combat.mp.max
-    );
-  }
-
   /**
    * Roll an ability check (2d6 + ability bonus).
    * @param {string} abilityKey - The ability key (str, dex, agi, int, per, spi, luk)

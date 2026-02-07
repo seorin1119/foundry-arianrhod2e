@@ -1,0 +1,49 @@
+{{!-- Character Sheet Header --}}
+<header class="sheet-header flexrow">
+  <img class="profile-img" src="{{actor.img}}" data-edit="img"
+       title="{{actor.name}}" height="100" width="100" />
+  <div class="header-fields">
+    <h1 class="charname">
+      <input name="name" type="text" value="{{actor.name}}"
+             placeholder="{{localize 'ARIANRHOD.CharacterName'}}" />
+    </h1>
+    <div class="header-details flexrow">
+      <div class="field">
+        <label>{{localize "ARIANRHOD.Race"}}</label>
+        <input type="text" name="system.race" value="{{system.race}}" />
+      </div>
+      <div class="field">
+        <label>{{localize "ARIANRHOD.Age"}}</label>
+        <input type="text" name="system.age" value="{{system.age}}" />
+      </div>
+      <div class="field">
+        <label>{{localize "ARIANRHOD.Gender"}}</label>
+        <input type="text" name="system.gender" value="{{system.gender}}" />
+      </div>
+    </div>
+    <div class="header-details flexrow">
+      <div class="field">
+        <label>{{localize "ARIANRHOD.MainClass"}}</label>
+        <input type="text" name="system.mainClass" value="{{system.mainClass}}" />
+      </div>
+      <div class="field">
+        <label>{{localize "ARIANRHOD.SupportClass"}}</label>
+        <input type="text" name="system.supportClass" value="{{system.supportClass}}" />
+      </div>
+      <div class="field field-sm">
+        <label>{{localize "ARIANRHOD.Level"}}</label>
+        <input type="number" name="system.level" value="{{system.level}}" data-dtype="Number" />
+      </div>
+      <div class="field field-sm">
+        <label>{{localize "ARIANRHOD.Experience"}}</label>
+        <input type="number" name="system.experience" value="{{system.experience}}" data-dtype="Number" />
+      </div>
+    </div>
+    <div class="header-details flexrow">
+      <div class="field">
+        <label>{{localize "ARIANRHOD.Guild"}}</label>
+        <input type="text" name="system.guild" value="{{system.guild}}" />
+      </div>
+    </div>
+  </div>
+</header>
