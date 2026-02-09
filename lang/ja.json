@@ -147,5 +147,24 @@
   "ARIANRHOD.Circumstance": "境遇",
   "ARIANRHOD.Objective": "目的",
   "ARIANRHOD.Connections": "コネクション",
-  "ARIANRHOD.Notes": "メモ"
+  "ARIANRHOD.Notes": "メモ",
+
+  "ARIANRHOD.SpecialChecks": "特殊判定",
+  "ARIANRHOD.CheckAlchemy": "錬金術判定",
+  "ARIANRHOD.CheckTrapDisarm": "トラップ解除",
+  "ARIANRHOD.CheckTrapDetect": "トラップ探知",
+  "ARIANRHOD.CheckDangerSense": "危険感知",
+  "ARIANRHOD.CheckMagic": "魔術判定",
+  "ARIANRHOD.CheckEnemyIdentify": "エネミー識別",
+  "ARIANRHOD.CheckItemAppraise": "アイテム鑑定",
+
+  "ARIANRHOD.CarryCapacity": "所持容量",
+  "ARIANRHOD.TabConnections": "コネクション",
+  "ARIANRHOD.ConnectionName": "名前",
+  "ARIANRHOD.ConnectionRelation": "関係",
+  "ARIANRHOD.ConnectionPlace": "居場所",
+  "ARIANRHOD.ConnectionInfo": "情報",
+  "ARIANRHOD.GrowthLog": "レベルアップ/成長記録",
+  "ARIANRHOD.GrowthPts": "成長点",
+  "ARIANRHOD.EquipSlots": "装備品"
 }

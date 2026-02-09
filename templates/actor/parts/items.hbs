@@ -1,6 +1,20 @@
 {{!-- Items Tab --}}
 <section class="tab items{{#if tabs.items.active}} active{{/if}}" data-group="primary" data-tab="items">
 
+  {{!-- Equipment Slots Summary --}}
+  <section class="equip-slots">
+    <h3>{{localize "ARIANRHOD.EquipSlots"}}</h3>
+    <div class="equip-slots-table">
+      {{#each equipSlots as |slot|}}
+      <div class="equip-slot flexrow{{#if slot.item}} filled{{/if}}">
+        <span class="slot-label">{{slot.label}}</span>
+        <span class="slot-item">{{#if slot.item}}{{slot.item.name}}{{else}}—{{/if}}</span>
+        <span class="slot-stat">{{#if slot.item}}{{slot.summary}}{{/if}}</span>
+      </div>
+      {{/each}}
+    </div>
+  </section>
+
   {{!-- Weapons --}}
   <section class="item-section">
     <div class="item-section-header flexrow">

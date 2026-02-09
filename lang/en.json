@@ -147,5 +147,24 @@
   "ARIANRHOD.Circumstance": "Circumstance",
   "ARIANRHOD.Objective": "Objective",
   "ARIANRHOD.Connections": "Connections",
-  "ARIANRHOD.Notes": "Notes"
+  "ARIANRHOD.Notes": "Notes",
+
+  "ARIANRHOD.SpecialChecks": "Special Checks",
+  "ARIANRHOD.CheckAlchemy": "Alchemy",
+  "ARIANRHOD.CheckTrapDisarm": "Trap Disarm",
+  "ARIANRHOD.CheckTrapDetect": "Trap Detect",
+  "ARIANRHOD.CheckDangerSense": "Danger Sense",
+  "ARIANRHOD.CheckMagic": "Magic Check",
+  "ARIANRHOD.CheckEnemyIdentify": "Enemy Identify",
+  "ARIANRHOD.CheckItemAppraise": "Item Appraise",
+
+  "ARIANRHOD.CarryCapacity": "Carry Capacity",
+  "ARIANRHOD.TabConnections": "Connections",
+  "ARIANRHOD.ConnectionName": "Name",
+  "ARIANRHOD.ConnectionRelation": "Relation",
+  "ARIANRHOD.ConnectionPlace": "Location",
+  "ARIANRHOD.ConnectionInfo": "Info",
+  "ARIANRHOD.GrowthLog": "Level Up / Growth Log",
+  "ARIANRHOD.GrowthPts": "Growth Pts",
+  "ARIANRHOD.EquipSlots": "Equipment"
 }

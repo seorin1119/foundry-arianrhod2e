@@ -49,6 +49,7 @@ export class AccessoryData extends foundry.abstract.TypeDataModel {
       weight: new NumberField({ required: true, integer: true, min: 0, initial: 0 }),
       price: new NumberField({ required: true, integer: true, min: 0, initial: 0 }),
       equipped: new BooleanField({ initial: false }),
+      slot: new StringField({ initial: "accessory1" }),
     };
   }
 }

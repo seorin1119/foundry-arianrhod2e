@@ -1,4 +1,4 @@
-const { SchemaField, NumberField, StringField, HTMLField, BooleanField } = foundry.data.fields;
+const { SchemaField, NumberField, StringField, HTMLField, BooleanField, ArrayField } = foundry.data.fields;
 
 /**
  * Data model for Arianrhod RPG 2E Character actors.
@@ -16,6 +16,11 @@ export class CharacterData extends foundry.abstract.TypeDataModel {
       level: new NumberField({ required: true, integer: true, min: 1, initial: 1 }),
       experience: new NumberField({ required: true, integer: true, min: 0, initial: 0 }),
       guild: new StringField({ initial: "" }),
+      lifePath: new SchemaField({
+        origin: new StringField({ initial: "" }),
+        circumstance: new StringField({ initial: "" }),
+        objective: new StringField({ initial: "" }),
+      }),
       abilities: new SchemaField({
         str: new SchemaField({ value: new NumberField({ required: true, integer: true, min: 0, initial: 6 }) }),
         dex: new SchemaField({ value: new NumberField({ required: true, integer: true, min: 0, initial: 6 }) }),
@@ -43,11 +48,38 @@ export class CharacterData extends foundry.abstract.TypeDataModel {
         attack: new NumberField({ required: true, integer: true, initial: 0 }),
         magAttack: new NumberField({ required: true, integer: true, initial: 0 }),
       }),
+      specialChecks: new SchemaField({
+        alchemy: new NumberField({ required: true, integer: true, initial: 0 }),
+        trapDisarm: new NumberField({ required: true, integer: true, initial: 0 }),
+        trapDetect: new NumberField({ required: true, integer: true, initial: 0 }),
+        dangerSense: new NumberField({ required: true, integer: true, initial: 0 }),
+        magicCheck: new NumberField({ required: true, integer: true, initial: 0 }),
+        enemyIdentify: new NumberField({ required: true, integer: true, initial: 0 }),
+        itemAppraise: new NumberField({ required: true, integer: true, initial: 0 }),
+      }),
       fate: new SchemaField({
         value: new NumberField({ required: true, integer: true, min: 0, initial: 3 }),
         max: new NumberField({ required: true, integer: true, min: 0, initial: 3 }),
       }),
       currency: new NumberField({ required: true, integer: true, min: 0, initial: 0 }),
+      carryCapacity: new SchemaField({
+        value: new NumberField({ required: true, integer: true, min: 0, initial: 0 }),
+        max: new NumberField({ required: true, integer: true, min: 0, initial: 0 }),
+      }),
+      connections: new ArrayField(new SchemaField({
+        name: new StringField({ initial: "" }),
+        relation: new StringField({ initial: "" }),
+        place: new StringField({ initial: "" }),
+        info: new StringField({ initial: "" }),
+      })),
+      growthLog: new ArrayField(new SchemaField({
+        level: new NumberField({ integer: true, initial: 1 }),
+        abilities: new StringField({ initial: "" }),
+        skills: new StringField({ initial: "" }),
+        growthPts: new NumberField({ integer: true, initial: 0 }),
+        gold: new NumberField({ integer: true, initial: 0 }),
+        notes: new StringField({ initial: "" }),
+      })),
     };
   }
 

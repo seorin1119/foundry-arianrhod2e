@@ -25,6 +25,10 @@ export class ArianrhodActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
       deleteItem: ArianrhodActorSheet.#onDeleteItem,
       equipItem: ArianrhodActorSheet.#onEquipItem,
       postItem: ArianrhodActorSheet.#onPostItem,
+      addConnection: ArianrhodActorSheet.#onAddConnection,
+      deleteConnection: ArianrhodActorSheet.#onDeleteConnection,
+      addGrowthLog: ArianrhodActorSheet.#onAddGrowthLog,
+      deleteGrowthLog: ArianrhodActorSheet.#onDeleteGrowthLog,
     },
   };
 
@@ -35,6 +39,7 @@ export class ArianrhodActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
     items: { template: "systems/arianrhod2e/templates/actor/parts/items.hbs" },
     skills: { template: "systems/arianrhod2e/templates/actor/parts/skills.hbs" },
     biography: { template: "systems/arianrhod2e/templates/actor/parts/biography.hbs" },
+    connections: { template: "systems/arianrhod2e/templates/actor/parts/connections.hbs" },
     // Enemy-specific parts
     enemyHeader: { template: "systems/arianrhod2e/templates/actor/parts/enemy-header.hbs" },
     enemyAbilities: { template: "systems/arianrhod2e/templates/actor/parts/enemy-abilities.hbs" },
@@ -45,7 +50,7 @@ export class ArianrhodActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
   _configureRenderOptions(options) {
     super._configureRenderOptions(options);
     if (this.document.type === "character") {
-      options.parts = ["header", "tabs", "abilities", "items", "skills", "biography"];
+      options.parts = ["header", "tabs", "abilities", "items", "skills", "connections", "biography"];
     } else {
       options.parts = ["enemyHeader", "tabs", "enemyAbilities", "skills", "enemyDescription"];
     }
@@ -86,6 +91,11 @@ export class ArianrhodActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
     context.skills = this.actor.items.filter((i) => i.type === "skill");
     context.items = this.actor.items.filter((i) => i.type === "item");
 
+    // Prepare equipment slot summary
+    if (context.isCharacter) {
+      context.equipSlots = this._prepareEquipSlots(context);
+    }
+
     // Enrich HTML
     if (this.actor.type === "character") {
       context.enrichedBiography = await TextEditor.enrichHTML(
@@ -112,7 +122,7 @@ export class ArianrhodActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
   _prepareTabs() {
     const tabs = {};
     const tabEntries = this.actor.type === "character"
-      ? { abilities: "ARIANRHOD.TabAbilities", items: "ARIANRHOD.TabItems", skills: "ARIANRHOD.TabSkills", biography: "ARIANRHOD.TabBiography" }
+      ? { abilities: "ARIANRHOD.TabAbilities", items: "ARIANRHOD.TabItems", skills: "ARIANRHOD.TabSkills", connections: "ARIANRHOD.TabConnections", biography: "ARIANRHOD.TabBiography" }
       : { abilities: "ARIANRHOD.TabAbilities", skills: "ARIANRHOD.TabSkills", description: "ARIANRHOD.TabDescription" };
 
     for (const [id, label] of Object.entries(tabEntries)) {
@@ -124,6 +134,36 @@ export class ArianrhodActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
       };
     }
     return tabs;
+  }
+
+  /**
+   * Build equipment slot summary from equipped items.
+   */
+  _prepareEquipSlots(context) {
+    const equipped = this.actor.items.filter((i) => i.system.equipped);
+    const slotDefs = [
+      { key: "right", label: game.i18n.localize("ARIANRHOD.SlotRight") },
+      { key: "left", label: game.i18n.localize("ARIANRHOD.SlotLeft") },
+      { key: "head", label: game.i18n.localize("ARIANRHOD.SlotHead") },
+      { key: "body", label: game.i18n.localize("ARIANRHOD.SlotBody") },
+      { key: "accessory1", label: game.i18n.localize("ARIANRHOD.SlotAccessory1") },
+      { key: "accessory2", label: game.i18n.localize("ARIANRHOD.SlotAccessory2") },
+    ];
+
+    return slotDefs.map((slot) => {
+      const item = equipped.find((i) => i.system.slot === slot.key);
+      let summary = "";
+      if (item) {
+        if (item.type === "weapon") {
+          summary = `${game.i18n.localize("ARIANRHOD.Accuracy")}:${item.system.accuracy} ${game.i18n.localize("ARIANRHOD.Attack")}:${item.system.attack}`;
+        } else if (item.type === "armor") {
+          summary = `${game.i18n.localize("ARIANRHOD.PhysDef")}:${item.system.physDef} ${game.i18n.localize("ARIANRHOD.MagDef")}:${item.system.magDef}`;
+        } else if (item.type === "accessory") {
+          summary = item.system.effect ?? "";
+        }
+      }
+      return { ...slot, item, summary };
+    });
   }
 
   /* -------------------------------------------- */
@@ -179,5 +219,35 @@ export class ArianrhodActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
     const itemId = target.closest("[data-item-id]")?.dataset.itemId;
     const item = this.actor.items.get(itemId);
     await item?.postToChat();
+  }
+
+  static async #onAddConnection(event, target) {
+    event.preventDefault();
+    const connections = [...(this.actor.system.connections ?? [])];
+    connections.push({ name: "", relation: "", place: "", info: "" });
+    await this.actor.update({ "system.connections": connections });
+  }
+
+  static async #onDeleteConnection(event, target) {
+    event.preventDefault();
+    const index = Number(target.dataset.index);
+    const connections = [...(this.actor.system.connections ?? [])];
+    connections.splice(index, 1);
+    await this.actor.update({ "system.connections": connections });
+  }
+
+  static async #onAddGrowthLog(event, target) {
+    event.preventDefault();
+    const log = [...(this.actor.system.growthLog ?? [])];
+    log.push({ level: this.actor.system.level, abilities: "", skills: "", growthPts: 0, gold: 0, notes: "" });
+    await this.actor.update({ "system.growthLog": log });
+  }
+
+  static async #onDeleteGrowthLog(event, target) {
+    event.preventDefault();
+    const index = Number(target.dataset.index);
+    const log = [...(this.actor.system.growthLog ?? [])];
+    log.splice(index, 1);
+    await this.actor.update({ "system.growthLog": log });
   }
 }

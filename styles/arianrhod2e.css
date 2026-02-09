@@ -338,6 +338,112 @@
 }
 
 /* ======================================== */
+/*  Special Checks                          */
+/* ======================================== */
+
+.arianrhod2e .special-checks {
+  margin-bottom: 12px;
+}
+
+.arianrhod2e .special-checks h3 {
+  font-size: 0.9em;
+  border-bottom: 1px solid var(--ar-border);
+  padding-bottom: 2px;
+  margin-bottom: 6px;
+  color: var(--ar-accent);
+}
+
+.arianrhod2e .special-checks-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+}
+
+/* ======================================== */
+/*  Currency & Carry                        */
+/* ======================================== */
+
+.arianrhod2e .currency-carry-section {
+  display: flex;
+  gap: 16px;
+  padding: 6px 0;
+  border-top: 1px solid var(--ar-border);
+  align-items: center;
+}
+
+.arianrhod2e .carry-section {
+  align-items: center;
+  gap: 6px;
+}
+
+.arianrhod2e .carry-section label {
+  font-weight: bold;
+  font-size: 0.85em;
+  color: var(--ar-text-light);
+}
+
+.arianrhod2e .carry-section .resource-values input {
+  width: 40px;
+}
+
+/* ======================================== */
+/*  Equipment Slots Summary                 */
+/* ======================================== */
+
+.arianrhod2e .equip-slots {
+  margin-bottom: 12px;
+}
+
+.arianrhod2e .equip-slots h3 {
+  font-size: 0.9em;
+  border-bottom: 1px solid var(--ar-border);
+  padding-bottom: 2px;
+  margin-bottom: 6px;
+  color: var(--ar-accent);
+}
+
+.arianrhod2e .equip-slots-table {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3px;
+}
+
+.arianrhod2e .equip-slot {
+  background: white;
+  border: 1px solid var(--ar-border);
+  border-radius: 4px;
+  padding: 3px 8px;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85em;
+}
+
+.arianrhod2e .equip-slot.filled {
+  background: rgba(56, 161, 105, 0.05);
+  border-color: var(--ar-equipped);
+}
+
+.arianrhod2e .slot-label {
+  font-weight: bold;
+  font-size: 0.8em;
+  color: var(--ar-text-light);
+  flex: 0 0 50px;
+}
+
+.arianrhod2e .slot-item {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.arianrhod2e .slot-stat {
+  font-size: 0.8em;
+  color: var(--ar-text-light);
+  flex: 0 0 auto;
+}
+
+/* ======================================== */
 /*  Item Lists                              */
 /* ======================================== */
 
@@ -477,6 +583,59 @@
 .arianrhod2e .skills-list .item-header,
 .arianrhod2e .skills-list .item {
   gap: 4px;
+}
+
+/* ======================================== */
+/*  Connections & Growth Log                */
+/* ======================================== */
+
+.arianrhod2e .connections-section,
+.arianrhod2e .growth-log-section {
+  margin-bottom: 12px;
+}
+
+.arianrhod2e .conn-name {
+  flex: 1;
+}
+
+.arianrhod2e .conn-relation,
+.arianrhod2e .conn-place {
+  flex: 0 0 80px;
+}
+
+.arianrhod2e .conn-info {
+  flex: 1;
+}
+
+.arianrhod2e .growth-level {
+  flex: 0 0 48px;
+}
+
+.arianrhod2e .growth-abilities,
+.arianrhod2e .growth-skills,
+.arianrhod2e .growth-notes {
+  flex: 1;
+}
+
+.arianrhod2e .growth-pts,
+.arianrhod2e .growth-gold {
+  flex: 0 0 60px;
+}
+
+.arianrhod2e .connections-section input,
+.arianrhod2e .growth-log-section input {
+  width: 100%;
+  border: 1px solid var(--ar-border);
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-size: 0.85em;
+  background: white;
+  height: 24px;
+}
+
+.arianrhod2e .connections-section input[type="number"],
+.arianrhod2e .growth-log-section input[type="number"] {
+  text-align: center;
 }
 
 /* ======================================== */

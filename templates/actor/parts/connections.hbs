@@ -1,0 +1,92 @@
+{{!-- Connections Tab --}}
+<section class="tab connections{{#if tabs.connections.active}} active{{/if}}" data-group="primary" data-tab="connections">
+
+  {{!-- Connections --}}
+  <section class="connections-section">
+    <div class="item-section-header flexrow">
+      <h3>{{localize "ARIANRHOD.Connections"}}</h3>
+      <a data-action="addConnection" title="追加">
+        <i class="fas fa-plus"></i>
+      </a>
+    </div>
+    <ol class="item-list">
+      <li class="item-header flexrow">
+        <span class="conn-name">{{localize "ARIANRHOD.ConnectionName"}}</span>
+        <span class="conn-relation">{{localize "ARIANRHOD.ConnectionRelation"}}</span>
+        <span class="conn-place">{{localize "ARIANRHOD.ConnectionPlace"}}</span>
+        <span class="conn-info">{{localize "ARIANRHOD.ConnectionInfo"}}</span>
+        <span class="item-controls"></span>
+      </li>
+      {{#each system.connections as |conn idx|}}
+      <li class="item flexrow" data-conn-index="{{idx}}">
+        <span class="conn-name">
+          <input type="text" name="system.connections.{{idx}}.name" value="{{conn.name}}" />
+        </span>
+        <span class="conn-relation">
+          <input type="text" name="system.connections.{{idx}}.relation" value="{{conn.relation}}" />
+        </span>
+        <span class="conn-place">
+          <input type="text" name="system.connections.{{idx}}.place" value="{{conn.place}}" />
+        </span>
+        <span class="conn-info">
+          <input type="text" name="system.connections.{{idx}}.info" value="{{conn.info}}" />
+        </span>
+        <span class="item-controls">
+          <a data-action="deleteConnection" data-index="{{idx}}" title="{{localize 'ARIANRHOD.ItemDelete'}}">
+            <i class="fas fa-trash"></i>
+          </a>
+        </span>
+      </li>
+      {{/each}}
+    </ol>
+  </section>
+
+  {{!-- Growth Log --}}
+  <section class="growth-log-section">
+    <div class="item-section-header flexrow">
+      <h3>{{localize "ARIANRHOD.GrowthLog"}}</h3>
+      <a data-action="addGrowthLog" title="追加">
+        <i class="fas fa-plus"></i>
+      </a>
+    </div>
+    <ol class="item-list">
+      <li class="item-header flexrow">
+        <span class="growth-level">{{localize "ARIANRHOD.Level"}}</span>
+        <span class="growth-abilities">{{localize "ARIANRHOD.Abilities"}}</span>
+        <span class="growth-skills">{{localize "ARIANRHOD.Skill"}}</span>
+        <span class="growth-pts">{{localize "ARIANRHOD.GrowthPts"}}</span>
+        <span class="growth-gold">{{localize "ARIANRHOD.Currency"}}</span>
+        <span class="growth-notes">{{localize "ARIANRHOD.Notes"}}</span>
+        <span class="item-controls"></span>
+      </li>
+      {{#each system.growthLog as |entry idx|}}
+      <li class="item flexrow" data-growth-index="{{idx}}">
+        <span class="growth-level">
+          <input type="number" name="system.growthLog.{{idx}}.level" value="{{entry.level}}" data-dtype="Number" />
+        </span>
+        <span class="growth-abilities">
+          <input type="text" name="system.growthLog.{{idx}}.abilities" value="{{entry.abilities}}" />
+        </span>
+        <span class="growth-skills">
+          <input type="text" name="system.growthLog.{{idx}}.skills" value="{{entry.skills}}" />
+        </span>
+        <span class="growth-pts">
+          <input type="number" name="system.growthLog.{{idx}}.growthPts" value="{{entry.growthPts}}" data-dtype="Number" />
+        </span>
+        <span class="growth-gold">
+          <input type="number" name="system.growthLog.{{idx}}.gold" value="{{entry.gold}}" data-dtype="Number" />
+        </span>
+        <span class="growth-notes">
+          <input type="text" name="system.growthLog.{{idx}}.notes" value="{{entry.notes}}" />
+        </span>
+        <span class="item-controls">
+          <a data-action="deleteGrowthLog" data-index="{{idx}}" title="{{localize 'ARIANRHOD.ItemDelete'}}">
+            <i class="fas fa-trash"></i>
+          </a>
+        </span>
+      </li>
+      {{/each}}
+    </ol>
+  </section>
+
+</section>

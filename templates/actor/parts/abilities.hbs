@@ -97,12 +97,66 @@
     </div>
   </section>
 
-  {{!-- Currency --}}
-  <section class="currency-section flexrow">
-    <label>{{localize "ARIANRHOD.Currency"}}</label>
-    <input type="number" name="system.currency"
-           value="{{system.currency}}" data-dtype="Number" />
-    <span class="currency-unit">{{localize "ARIANRHOD.CurrencyUnit"}}</span>
+  {{!-- Special Checks --}}
+  <section class="special-checks">
+    <h3>{{localize "ARIANRHOD.SpecialChecks"}}</h3>
+    <div class="special-checks-grid">
+      <div class="combat-detail flexrow">
+        <label>{{localize "ARIANRHOD.CheckAlchemy"}}</label>
+        <input type="number" name="system.specialChecks.alchemy"
+               value="{{system.specialChecks.alchemy}}" data-dtype="Number" />
+      </div>
+      <div class="combat-detail flexrow">
+        <label>{{localize "ARIANRHOD.CheckTrapDisarm"}}</label>
+        <input type="number" name="system.specialChecks.trapDisarm"
+               value="{{system.specialChecks.trapDisarm}}" data-dtype="Number" />
+      </div>
+      <div class="combat-detail flexrow">
+        <label>{{localize "ARIANRHOD.CheckTrapDetect"}}</label>
+        <input type="number" name="system.specialChecks.trapDetect"
+               value="{{system.specialChecks.trapDetect}}" data-dtype="Number" />
+      </div>
+      <div class="combat-detail flexrow">
+        <label>{{localize "ARIANRHOD.CheckDangerSense"}}</label>
+        <input type="number" name="system.specialChecks.dangerSense"
+               value="{{system.specialChecks.dangerSense}}" data-dtype="Number" />
+      </div>
+      <div class="combat-detail flexrow">
+        <label>{{localize "ARIANRHOD.CheckMagic"}}</label>
+        <input type="number" name="system.specialChecks.magicCheck"
+               value="{{system.specialChecks.magicCheck}}" data-dtype="Number" />
+      </div>
+      <div class="combat-detail flexrow">
+        <label>{{localize "ARIANRHOD.CheckEnemyIdentify"}}</label>
+        <input type="number" name="system.specialChecks.enemyIdentify"
+               value="{{system.specialChecks.enemyIdentify}}" data-dtype="Number" />
+      </div>
+      <div class="combat-detail flexrow">
+        <label>{{localize "ARIANRHOD.CheckItemAppraise"}}</label>
+        <input type="number" name="system.specialChecks.itemAppraise"
+               value="{{system.specialChecks.itemAppraise}}" data-dtype="Number" />
+      </div>
+    </div>
+  </section>
+
+  {{!-- Currency & Carrying --}}
+  <section class="currency-carry-section">
+    <div class="currency-section flexrow">
+      <label>{{localize "ARIANRHOD.Currency"}}</label>
+      <input type="number" name="system.currency"
+             value="{{system.currency}}" data-dtype="Number" />
+      <span class="currency-unit">{{localize "ARIANRHOD.CurrencyUnit"}}</span>
+    </div>
+    <div class="carry-section flexrow">
+      <label>{{localize "ARIANRHOD.CarryCapacity"}}</label>
+      <div class="resource-values">
+        <input type="number" name="system.carryCapacity.value"
+               value="{{system.carryCapacity.value}}" data-dtype="Number" />
+        <span>/</span>
+        <input type="number" name="system.carryCapacity.max"
+               value="{{system.carryCapacity.max}}" data-dtype="Number" />
+      </div>
+    </div>
   </section>
 
 </section>
