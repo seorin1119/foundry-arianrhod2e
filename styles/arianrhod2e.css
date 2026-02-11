@@ -1085,6 +1085,7 @@
     inset 0 0 0 2px var(--ar-leather),
     0 4px 12px rgba(0, 0, 0, 0.3);
   transition: all 0.3s ease;
+  cursor: pointer;
 }
 
 .arianrhod2e .sheet-header .profile-img:hover {
