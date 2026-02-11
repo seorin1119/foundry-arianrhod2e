@@ -175,5 +175,126 @@
 
 ---
 
-**마지막 업데이트**: 2026-02-11 23:30
+## 2026-02-12 세션: 버그 수정 및 스킬 라이브러리 구현 ✅
+
+### 완료된 작업
+
+#### 🐛 버그 수정 (커밋 078fd5f)
+**팀**: arianrhod-bugfix-2 (bug-fixer)
+
+1. **라이프 패스 주사위 표기 수정** ✅
+   - 문제: 2+4 주사위가 합계 "6"으로 표시됨
+   - 해결: 연결 표기 "24"로 올바르게 표시
+   - 파일: `module/dice.mjs`
+
+2. **라이프 패스 결과 자동 적용** ✅
+   - 문제: 주사위 굴린 결과가 드롭다운에 적용 안됨
+   - 해결: actor.update() 구조 수정하여 자동 선택
+   - 파일: `module/sheets/actor-sheet.mjs`
+
+3. **종족 능력 보너스 표시** ✅
+   - 문제: 종족 보너스가 캐릭터 시트에 표시 안됨
+   - 해결: 템플릿에 "+수정치 =합계" 표시 추가
+   - 예: 필보르 LUK → "6 +3 =9 [3]"
+   - 파일: `templates/actor/parts/abilities.hbs`, `module/sheets/actor-sheet.mjs`
+
+4. **스킬 필터 드롭다운 수정** ✅
+   - 문제: 필터 클릭 시 즉시 닫힘
+   - 해결: event.stopPropagation() 추가
+   - 파일: `module/sheets/actor-sheet.mjs`
+
+#### 🎯 스킬 라이브러리 시스템 구현 (커밋 c06f081)
+**팀**: arianrhod-bugfix-2 (skill-dev with Opus)
+
+**구현된 기능:**
+- ✅ 일반 스킬 21개 (모든 클래스 사용 가능)
+- ✅ 4개 클래스 스킬 샘플 (워리어, 어콜라이트, 메이지, 시프)
+- ✅ 스킬 선택 다이얼로그 (ApplicationV2)
+- ✅ 클래스별 필터링 (전체/일반/메인/서포트)
+- ✅ 이름/설명 검색 기능
+- ✅ 중복 획득 방지
+- ✅ 한글/영어/일본어 완전 지원
+
+**새로 생성된 파일:**
+- `module/apps/skill-selection-dialog.mjs` - 다이얼로그 로직
+- `templates/apps/skill-selection-dialog.hbs` - 다이얼로그 UI
+
+**수정된 파일:**
+- `module/helpers/config.mjs` - ARIANRHOD.skillLibrary 추가
+- `module/sheets/actor-sheet.mjs` - + 버튼에 다이얼로그 연결
+- `lang/en.json`, `lang/ja.json`, `lang/ko.json` - 30+ 번역 추가
+
+**사용 방법:**
+1. 스킬 탭에서 + 버튼 클릭
+2. 캐릭터의 클래스에 맞는 스킬 표시
+3. 필터/검색으로 스킬 찾기
+4. "선택" 버튼으로 스킬 획득
+
+**미완성 부분:**
+- 10개 클래스 스킬 미구현 (건슬링거, 닌자, 댄서, 레인저, 몽크, 바드, 사무라이, 서머너, 세이지, 알케미스트)
+- PDF 추출 실패 (인코딩 문제)
+- 프레임워크는 준비되어 있어 배열만 채우면 됨
+
+### 현재 시스템 상태
+
+**완전 작동 기능:**
+- ✅ 캐릭터 생성/편집
+- ✅ 종족 선택 (9개, 능력 보너스 자동 적용 및 표시)
+- ✅ 클래스 선택 (14개, 스탯/HP/MP 자동 계산)
+- ✅ 라이프 패스 시스템 (2d6 롤, 자동 적용)
+- ✅ 레벨업/성장점 시스템
+- ✅ 능력치 투자 (성장점 사용)
+- ✅ 스킬 획득 시스템 (21+ 일반 스킬)
+
+---
+
+## 다음 세션 시작 가이드 📋
+
+### 즉시 테스트 가능 ✅
+
+**Foundry VTT에서 테스트:**
+1. 새 캐릭터 생성
+2. 종족 선택 (예: 필보르) → LUK에 "+3" 표시 확인
+3. 클래스 선택 (예: 워리어/메이지) → HP/MP 자동 계산 확인
+4. 라이프 패스 주사위 굴리기 → "24" 같은 연결 표기 확인
+5. 레벨업하고 성장점으로 능력치 올리기
+6. **스킬 탭에서 + 버튼** → 스킬 선택 다이얼로그 테스트
+
+### 선택적 작업 (우선순위 낮음)
+
+**나머지 10개 클래스 스킬 추가:**
+- 방법 1: 룰북에서 수동으로 스킬 데이터 입력
+- 방법 2: PDF 추출 도구 개선 후 자동 추출
+- 현재: 일반 스킬로 충분히 플레이 가능
+
+**구현 위치:**
+- `module/helpers/config.mjs` 파일의 `ARIANRHOD.skillLibrary` 객체
+- 각 클래스 배열에 스킬 객체 추가:
+```javascript
+{
+  id: "skill-id",
+  name: "スキル名",
+  nameEn: "Skill Name",
+  skillClass: "gunslinger",
+  timing: "action",
+  cost: "3MP",
+  range: "10m",
+  target: "단체",
+  maxLevel: 5,
+  description: "효과 설명"
+}
+```
+
+---
+
+## 커밋 기록
+
+- **078fd5f**: fix: critical bugs found during testing (4개 버그 수정)
+- **c06f081**: feat: implement skill library selection system (스킬 라이브러리)
+- **2045c61**: feat: add character progression system and fix multiple bugs (이전 세션)
+
+---
+
+**마지막 업데이트**: 2026-02-12 03:00
 **작성자**: team-lead
+**상태**: 테스트 준비 완료 ✅
