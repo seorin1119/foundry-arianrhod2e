@@ -16,6 +16,11 @@
   "styles": ["styles/arianrhod2e.css"],
   "languages": [
     {
+      "lang": "ko",
+      "name": "한국어",
+      "path": "lang/ko.json"
+    },
+    {
       "lang": "ja",
       "name": "日本語",
       "path": "lang/ja.json"

@@ -6,20 +6,30 @@
 @layer arianrhod {
 
 :root {
-  --ar-primary: #4a5568;
-  --ar-accent: #5b7db1;
-  --ar-accent-light: #7b9dd1;
-  --ar-bg: #f7f5f0;
-  --ar-bg-dark: #e8e4dc;
-  --ar-border: #c4bfb4;
-  --ar-text: #2d3748;
-  --ar-text-light: #718096;
+  /* Fantasy RPG Color Scheme */
+  --ar-primary: #3a2f1f;
+  --ar-accent: #8b6f47;
+  --ar-accent-light: #b8956a;
+  --ar-accent-gold: #d4af37;
+  --ar-bg: #f4ede4;
+  --ar-bg-dark: #e4d9ca;
+  --ar-bg-darker: #d4c9ba;
+  --ar-border: #8b7355;
+  --ar-border-light: #b8a896;
+  --ar-text: #2a1f13;
+  --ar-text-light: #6b5d4f;
   --ar-hp: #c53030;
-  --ar-mp: #2b6cb0;
-  --ar-fate: #d69e2e;
-  --ar-equipped: #38a169;
-  --ar-critical: #f6e05e;
-  --ar-fumble: #fc8181;
+  --ar-mp: #2563eb;
+  --ar-fate: #d97706;
+  --ar-equipped: #16a34a;
+  --ar-critical: #fbbf24;
+  --ar-fumble: #ef4444;
+
+  /* Fantasy decorative colors */
+  --ar-parchment: #fef6e4;
+  --ar-leather: #654321;
+  --ar-metal: #8b8680;
+  --ar-magic: #7c3aed;
 }
 
 /* ======================================== */
@@ -786,6 +796,318 @@
 
 .arianrhod2e .tab:not(.active) {
   display: none;
+}
+
+/* ======================================== */
+/*  Fantasy RPG Style Enhancements         */
+/* ======================================== */
+
+/* Sheet background texture */
+.arianrhod2e.sheet {
+  background: linear-gradient(135deg, var(--ar-parchment) 0%, var(--ar-bg) 100%);
+  box-shadow:
+    0 0 0 2px var(--ar-leather),
+    0 0 0 4px var(--ar-accent-gold),
+    0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+/* Header styling - ornate fantasy look */
+.arianrhod2e .sheet-header {
+  background: linear-gradient(to bottom, var(--ar-parchment), var(--ar-bg));
+  border-bottom: 3px double var(--ar-accent-gold);
+  box-shadow: 0 2px 6px rgba(139, 111, 71, 0.2);
+  position: relative;
+}
+
+.arianrhod2e .sheet-header::before {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--ar-leather);
+}
+
+/* Character name - ornate title style */
+.arianrhod2e .charname input {
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 1.6em;
+  font-weight: 700;
+  color: var(--ar-leather);
+  text-shadow: 1px 1px 2px rgba(212, 175, 55, 0.3);
+  border-bottom: 2px solid var(--ar-accent-gold);
+  background: linear-gradient(to bottom, transparent, rgba(212, 175, 55, 0.1));
+}
+
+/* Class dropdowns - enhanced fantasy style */
+.arianrhod2e .header-details select {
+  background: linear-gradient(to bottom, white, var(--ar-parchment));
+  border: 2px solid var(--ar-accent);
+  font-weight: 600;
+  color: var(--ar-leather);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.arianrhod2e .header-details select:hover {
+  border-color: var(--ar-accent-gold);
+  box-shadow:
+    inset 0 1px 3px rgba(0, 0, 0, 0.1),
+    0 0 8px rgba(212, 175, 55, 0.3);
+  background: linear-gradient(to bottom, var(--ar-parchment), white);
+}
+
+.arianrhod2e .header-details select:focus {
+  outline: none;
+  border-color: var(--ar-accent-gold);
+  box-shadow: 0 0 12px rgba(212, 175, 55, 0.5);
+}
+
+/* Label styling - medieval manuscript style */
+.arianrhod2e .header-details label {
+  color: var(--ar-accent);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.7em;
+}
+
+/* Ability boxes - gem-like appearance */
+.arianrhod2e .ability {
+  background: linear-gradient(135deg, white, var(--ar-parchment));
+  border: 2px solid var(--ar-border);
+  box-shadow:
+    inset 0 1px 2px rgba(255, 255, 255, 0.8),
+    0 2px 4px rgba(139, 111, 71, 0.2);
+  transition: all 0.2s ease;
+}
+
+.arianrhod2e .ability:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    inset 0 1px 2px rgba(255, 255, 255, 0.8),
+    0 4px 8px rgba(139, 111, 71, 0.3);
+}
+
+.arianrhod2e .ability-label {
+  color: var(--ar-accent);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.arianrhod2e .ability-label.rollable:hover {
+  color: var(--ar-accent-gold);
+  text-shadow: 0 0 8px rgba(212, 175, 55, 0.6);
+}
+
+/* Combat stats - armored plate style */
+.arianrhod2e .resource {
+  background: linear-gradient(135deg, var(--ar-parchment), white);
+  border: 2px solid var(--ar-border);
+  box-shadow:
+    inset 0 1px 2px rgba(255, 255, 255, 0.8),
+    0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.arianrhod2e .resource.hp {
+  border-color: var(--ar-hp);
+  background: linear-gradient(135deg, rgba(197, 48, 48, 0.08), white);
+}
+
+.arianrhod2e .resource.mp {
+  border-color: var(--ar-mp);
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.08), white);
+}
+
+.arianrhod2e .resource.fate {
+  border-color: var(--ar-fate);
+  background: linear-gradient(135deg, rgba(217, 119, 6, 0.08), white);
+}
+
+.arianrhod2e .resource label {
+  font-weight: 700;
+  font-size: 0.85em;
+  text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.8);
+}
+
+/* Section headers - illuminated manuscript style */
+.arianrhod2e .abilities-grid h3,
+.arianrhod2e .combat-stats h3,
+.arianrhod2e .equip-slots h3,
+.arianrhod2e .item-section-header h3 {
+  color: var(--ar-accent-gold);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 2px solid var(--ar-accent-gold);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+  padding-bottom: 3px;
+  position: relative;
+}
+
+.arianrhod2e .abilities-grid h3::after,
+.arianrhod2e .combat-stats h3::after,
+.arianrhod2e .equip-slots h3::after,
+.arianrhod2e .item-section-header h3::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 40px;
+  height: 2px;
+  background: var(--ar-leather);
+}
+
+/* Tabs - leather bookmark style */
+.arianrhod2e .sheet-tabs {
+  border-bottom: 3px solid var(--ar-accent);
+  background: linear-gradient(to bottom, var(--ar-bg), var(--ar-bg-dark));
+}
+
+.arianrhod2e .sheet-tabs .item {
+  background: var(--ar-bg-darker);
+  border: 1px solid var(--ar-border);
+  border-bottom: none;
+  margin-right: 2px;
+  border-radius: 4px 4px 0 0;
+  transition: all 0.2s ease;
+}
+
+.arianrhod2e .sheet-tabs .item.active {
+  background: linear-gradient(to bottom, var(--ar-parchment), var(--ar-bg));
+  color: var(--ar-accent-gold);
+  border-color: var(--ar-accent-gold);
+  border-width: 2px;
+  border-bottom: 2px solid var(--ar-bg);
+  margin-bottom: -3px;
+  font-weight: 700;
+  box-shadow:
+    inset 0 2px 4px rgba(212, 175, 55, 0.1),
+    0 -2px 6px rgba(139, 111, 71, 0.2);
+}
+
+.arianrhod2e .sheet-tabs .item:hover:not(.active) {
+  background: var(--ar-bg);
+  color: var(--ar-accent-gold);
+}
+
+/* Input fields - parchment style */
+.arianrhod2e input[type="text"],
+.arianrhod2e input[type="number"],
+.arianrhod2e textarea {
+  background: var(--ar-parchment);
+  border: 1px solid var(--ar-border-light);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.arianrhod2e input[type="text"]:focus,
+.arianrhod2e input[type="number"]:focus,
+.arianrhod2e textarea:focus {
+  outline: none;
+  border-color: var(--ar-accent-gold);
+  box-shadow:
+    inset 0 1px 3px rgba(0, 0, 0, 0.1),
+    0 0 8px rgba(212, 175, 55, 0.3);
+  background: white;
+}
+
+/* Item list - treasure chest style */
+.arianrhod2e .item-list .item {
+  border-left: 3px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.arianrhod2e .item-list .item:hover {
+  background: var(--ar-bg-dark);
+  border-left-color: var(--ar-accent-gold);
+  box-shadow: inset 3px 0 6px rgba(212, 175, 55, 0.1);
+}
+
+.arianrhod2e .item-list .item.equipped {
+  background: linear-gradient(to right, rgba(22, 163, 74, 0.1), transparent);
+  border-left-color: var(--ar-equipped);
+  font-weight: 600;
+}
+
+/* Equipment slots - armory display */
+.arianrhod2e .equip-slot {
+  border: 2px solid var(--ar-border-light);
+  transition: all 0.2s ease;
+}
+
+.arianrhod2e .equip-slot.filled {
+  background: linear-gradient(135deg, rgba(22, 163, 74, 0.1), white);
+  border-color: var(--ar-equipped);
+  box-shadow:
+    inset 0 1px 2px rgba(22, 163, 74, 0.1),
+    0 2px 4px rgba(22, 163, 74, 0.2);
+}
+
+.arianrhod2e .equip-slot:hover {
+  border-color: var(--ar-accent-gold);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(139, 111, 71, 0.3);
+}
+
+/* Combat details - engraved metal style */
+.arianrhod2e .combat-detail {
+  background: linear-gradient(135deg, var(--ar-metal), #a8a49f);
+  border: 1px solid var(--ar-border);
+  color: white;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.3),
+    0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.arianrhod2e .combat-detail label {
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.7em;
+  letter-spacing: 0.5px;
+}
+
+.arianrhod2e .combat-detail input {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(139, 111, 71, 0.5);
+  color: var(--ar-leather);
+  font-weight: 700;
+}
+
+/* Profile image - ornate frame */
+.arianrhod2e .sheet-header .profile-img {
+  border: 3px solid var(--ar-accent-gold);
+  box-shadow:
+    inset 0 0 0 2px var(--ar-leather),
+    0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.arianrhod2e .sheet-header .profile-img:hover {
+  transform: scale(1.02);
+  box-shadow:
+    inset 0 0 0 2px var(--ar-leather),
+    0 6px 16px rgba(212, 175, 55, 0.4);
+}
+
+/* Scrollbar - aged leather */
+.arianrhod2e ::-webkit-scrollbar-track {
+  background: var(--ar-bg-darker);
+  border: 1px solid var(--ar-border-light);
+}
+
+.arianrhod2e ::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, var(--ar-accent), var(--ar-leather));
+  border: 1px solid var(--ar-border);
+  box-shadow: inset 0 0 3px rgba(255, 255, 255, 0.2);
+}
+
+.arianrhod2e ::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, var(--ar-accent-gold), var(--ar-accent));
 }
 
 } /* end @layer arianrhod */
