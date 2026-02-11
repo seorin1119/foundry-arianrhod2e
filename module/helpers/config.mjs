@@ -92,6 +92,121 @@ ARIANRHOD.races = {
 };
 
 /**
+ * Race stat modifiers
+ * Based on race skill data from Arianrhod 2E Rulebook (p.74-87)
+ * Note: Huulin's 《만능》 skill allows player choice of 3 abilities for +1 each
+ */
+ARIANRHOD.raceData = {
+  huulin: {
+    // Player chooses 3 abilities for +1 each (special case, handled manually)
+    abilityMods: {}
+  },
+  eldanaan: {
+    // 《지의 축복》: +3 INT (most common choice)
+    abilityMods: { int: 3 }
+  },
+  neverf: {
+    // 《재의 축복》: +3 DEX
+    abilityMods: { dex: 3 }
+  },
+  filbol: {
+    // 《럭키》: +3 LUK
+    abilityMods: { luk: 3 }
+  },
+  varna: {
+    // 《민의 축복》: +3 AGI
+    abilityMods: { agi: 3 }
+  },
+  duan: {
+    // 《근의 축복》: +3 STR
+    abilityMods: { str: 3 }
+  },
+  exmachina: {
+    // Data incomplete in reference, no modifiers for now
+    abilityMods: {}
+  },
+  dragonet: {
+    // Data incomplete in reference, no modifiers for now
+    abilityMods: {}
+  },
+  arsian: {
+    // No direct stat modifiers mentioned in reference
+    abilityMods: {}
+  },
+};
+
+/**
+ * Life Path tables
+ * Based on Arianrhod 2E Rulebook (p.59-61)
+ */
+ARIANRHOD.lifePath = {
+  origin: {
+    "00": "ARIANRHOD.LifePathOrigin00",
+    "11": "ARIANRHOD.LifePathOrigin11",
+    "13": "ARIANRHOD.LifePathOrigin13",
+    "15": "ARIANRHOD.LifePathOrigin15",
+    "21": "ARIANRHOD.LifePathOrigin21",
+    "23": "ARIANRHOD.LifePathOrigin23",
+    "25": "ARIANRHOD.LifePathOrigin25",
+    "31": "ARIANRHOD.LifePathOrigin31",
+    "33": "ARIANRHOD.LifePathOrigin33",
+    "35": "ARIANRHOD.LifePathOrigin35",
+    "41": "ARIANRHOD.LifePathOrigin41",
+    "43": "ARIANRHOD.LifePathOrigin43",
+    "45": "ARIANRHOD.LifePathOrigin45",
+    "51": "ARIANRHOD.LifePathOrigin51",
+    "53": "ARIANRHOD.LifePathOrigin53",
+    "55": "ARIANRHOD.LifePathOrigin55",
+    "61": "ARIANRHOD.LifePathOrigin61",
+    "63": "ARIANRHOD.LifePathOrigin63",
+    "65": "ARIANRHOD.LifePathOrigin65",
+    "77": "ARIANRHOD.LifePathOrigin77",
+  },
+  circumstance: {
+    "00": "ARIANRHOD.LifePathCircumstance00",
+    "11": "ARIANRHOD.LifePathCircumstance11",
+    "13": "ARIANRHOD.LifePathCircumstance13",
+    "15": "ARIANRHOD.LifePathCircumstance15",
+    "21": "ARIANRHOD.LifePathCircumstance21",
+    "23": "ARIANRHOD.LifePathCircumstance23",
+    "25": "ARIANRHOD.LifePathCircumstance25",
+    "31": "ARIANRHOD.LifePathCircumstance31",
+    "33": "ARIANRHOD.LifePathCircumstance33",
+    "35": "ARIANRHOD.LifePathCircumstance35",
+    "41": "ARIANRHOD.LifePathCircumstance41",
+    "43": "ARIANRHOD.LifePathCircumstance43",
+    "45": "ARIANRHOD.LifePathCircumstance45",
+    "51": "ARIANRHOD.LifePathCircumstance51",
+    "53": "ARIANRHOD.LifePathCircumstance53",
+    "55": "ARIANRHOD.LifePathCircumstance55",
+    "61": "ARIANRHOD.LifePathCircumstance61",
+    "63": "ARIANRHOD.LifePathCircumstance63",
+    "65": "ARIANRHOD.LifePathCircumstance65",
+  },
+  objective: {
+    "00": "ARIANRHOD.LifePathObjective00",
+    "11": "ARIANRHOD.LifePathObjective11",
+    "13": "ARIANRHOD.LifePathObjective13",
+    "15": "ARIANRHOD.LifePathObjective15",
+    "21": "ARIANRHOD.LifePathObjective21",
+    "23": "ARIANRHOD.LifePathObjective23",
+    "25": "ARIANRHOD.LifePathObjective25",
+    "31": "ARIANRHOD.LifePathObjective31",
+    "33": "ARIANRHOD.LifePathObjective33",
+    "35": "ARIANRHOD.LifePathObjective35",
+    "41": "ARIANRHOD.LifePathObjective41",
+    "43": "ARIANRHOD.LifePathObjective43",
+    "45": "ARIANRHOD.LifePathObjective45",
+    "51": "ARIANRHOD.LifePathObjective51",
+    "53": "ARIANRHOD.LifePathObjective53",
+    "55": "ARIANRHOD.LifePathObjective55",
+    "61": "ARIANRHOD.LifePathObjective61",
+    "63": "ARIANRHOD.LifePathObjective63",
+    "65": "ARIANRHOD.LifePathObjective65",
+  },
+};
+
+/**
  * Enemy types
  */
 ARIANRHOD.enemyTypes = {

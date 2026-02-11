@@ -10,7 +10,14 @@
     <div class="header-details flexrow">
       <div class="field">
         <label>{{localize "ARIANRHOD.Race"}}</label>
-        <input type="text" name="system.race" value="{{system.race}}" />
+        <select name="system.race">
+          <option value="">--</option>
+          {{#each config.races as |label key|}}
+            <option value="{{key}}" {{#if (eq ../system.race key)}}selected{{/if}}>
+              {{localize label}}
+            </option>
+          {{/each}}
+        </select>
       </div>
       <div class="field">
         <label>{{localize "ARIANRHOD.Age"}}</label>
@@ -62,15 +69,60 @@
     <div class="header-details flexrow">
       <div class="field">
         <label>{{localize "ARIANRHOD.Origin"}}</label>
-        <input type="text" name="system.lifePath.origin" value="{{system.lifePath.origin}}" />
+        <div style="display: flex; gap: 4px;">
+          <select name="system.lifePath.origin" style="flex: 1;">
+            <option value="">--</option>
+            {{#each config.lifePath.origin as |label key|}}
+              <option value="{{key}}" {{#if (eq ../system.lifePath.origin key)}}selected{{/if}}>
+                {{localize label}}
+              </option>
+            {{/each}}
+            <option value="custom" {{#if (eq system.lifePath.origin "custom")}}selected{{/if}}>
+              {{localize "ARIANRHOD.LifePathCustom"}}
+            </option>
+          </select>
+          <button type="button" data-action="rollLifePath" data-category="origin" title="{{localize 'ARIANRHOD.LifePathRoll'}}">
+            <i class="fas fa-dice"></i>
+          </button>
+        </div>
       </div>
       <div class="field">
         <label>{{localize "ARIANRHOD.Circumstance"}}</label>
-        <input type="text" name="system.lifePath.circumstance" value="{{system.lifePath.circumstance}}" />
+        <div style="display: flex; gap: 4px;">
+          <select name="system.lifePath.circumstance" style="flex: 1;">
+            <option value="">--</option>
+            {{#each config.lifePath.circumstance as |label key|}}
+              <option value="{{key}}" {{#if (eq ../system.lifePath.circumstance key)}}selected{{/if}}>
+                {{localize label}}
+              </option>
+            {{/each}}
+            <option value="custom" {{#if (eq system.lifePath.circumstance "custom")}}selected{{/if}}>
+              {{localize "ARIANRHOD.LifePathCustom"}}
+            </option>
+          </select>
+          <button type="button" data-action="rollLifePath" data-category="circumstance" title="{{localize 'ARIANRHOD.LifePathRoll'}}">
+            <i class="fas fa-dice"></i>
+          </button>
+        </div>
       </div>
       <div class="field">
         <label>{{localize "ARIANRHOD.Objective"}}</label>
-        <input type="text" name="system.lifePath.objective" value="{{system.lifePath.objective}}" />
+        <div style="display: flex; gap: 4px;">
+          <select name="system.lifePath.objective" style="flex: 1;">
+            <option value="">--</option>
+            {{#each config.lifePath.objective as |label key|}}
+              <option value="{{key}}" {{#if (eq ../system.lifePath.objective key)}}selected{{/if}}>
+                {{localize label}}
+              </option>
+            {{/each}}
+            <option value="custom" {{#if (eq system.lifePath.objective "custom")}}selected{{/if}}>
+              {{localize "ARIANRHOD.LifePathCustom"}}
+            </option>
+          </select>
+          <button type="button" data-action="rollLifePath" data-category="objective" title="{{localize 'ARIANRHOD.LifePathRoll'}}">
+            <i class="fas fa-dice"></i>
+          </button>
+        </div>
       </div>
     </div>
   </div>

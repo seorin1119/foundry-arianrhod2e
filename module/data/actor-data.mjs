@@ -85,9 +85,17 @@ export class CharacterData extends foundry.abstract.TypeDataModel {
 
   /** @override */
   prepareDerivedData() {
-    // Calculate ability bonuses (能力ボーナス = floor(能力基本値 / 3))
-    for (const ability of Object.values(this.abilities)) {
-      ability.bonus = Math.floor(ability.value / 3);
+    // Apply race ability modifiers
+    const raceData = CONFIG.ARIANRHOD.raceData?.[this.race];
+    for (const [abilityKey, ability] of Object.entries(this.abilities)) {
+      // Get race modifier for this ability (default to 0)
+      const raceMod = raceData?.abilityMods?.[abilityKey] || 0;
+      ability.mod = raceMod;
+      ability.total = ability.value + raceMod;
+
+      // Calculate ability bonuses (能力ボーナス = floor(能力基本値 / 3))
+      // Use total value (including race modifiers) for bonus calculation
+      ability.bonus = Math.floor(ability.total / 3);
     }
 
     // Calculate class-based HP/MP maximums
@@ -98,12 +106,13 @@ export class CharacterData extends foundry.abstract.TypeDataModel {
       // Formula from Arianrhod 2E Rulebook p.62:
       // Max HP = STR + Main initial HP + Support initial HP + (Main HP growth + Support HP growth) × (level - 1)
       // Max MP = MEN + Main initial MP + Support initial MP + (Main MP growth + Support MP growth) × (level - 1)
-      const calculatedMaxHp = this.abilities.str.value
+      // Use total ability value (including race modifiers)
+      const calculatedMaxHp = this.abilities.str.total
         + mainClassData.initialHp
         + supportClassData.initialHp
         + (mainClassData.hpGrowth + supportClassData.hpGrowth) * (this.level - 1);
 
-      const calculatedMaxMp = this.abilities.men.value
+      const calculatedMaxMp = this.abilities.men.total
         + mainClassData.initialMp
         + supportClassData.initialMp
         + (mainClassData.mpGrowth + supportClassData.mpGrowth) * (this.level - 1);

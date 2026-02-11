@@ -27,7 +27,17 @@
       "Bash(\"/c/Users/js4u1/AppData/Local/Microsoft/WinGet/Packages/oschwartz10612.Poppler_Microsoft.Winget.Source_8wekyb3d8bbwe/poppler-25.07.0/Library/bin/pdftotext.exe\" -f 1 -l 30 \"C:\\\\Users\\\\js4u1\\\\Desktop\\\\learning\\\\아리안로드2e 기본 룰북.pdf\" -)",
       "Bash(\"/c/Users/js4u1/AppData/Local/Microsoft/WinGet/Packages/oschwartz10612.Poppler_Microsoft.Winget.Source_8wekyb3d8bbwe/poppler-25.07.0/Library/bin/pdftotext.exe\" -f 88 -l 92 \"C:\\\\Users\\\\js4u1\\\\Desktop\\\\learning\\\\아리안로드2e 기본 룰북.pdf\" -)",
       "Bash(\"/c/Users/js4u1/AppData/Local/Microsoft/WinGet/Packages/oschwartz10612.Poppler_Microsoft.Winget.Source_8wekyb3d8bbwe/poppler-25.07.0/Library/bin/pdftotext.exe\" -f 61 -l 67 \"C:\\\\Users\\\\js4u1\\\\Desktop\\\\learning\\\\아리안로드2e 기본 룰북.pdf\" -)",
-      "Bash(\"/c/Users/js4u1/AppData/Local/Microsoft/WinGet/Packages/oschwartz10612.Poppler_Microsoft.Winget.Source_8wekyb3d8bbwe/poppler-25.07.0/Library/bin/pdftotext.exe\" -f 68 -l 68 \"C:\\\\Users\\\\js4u1\\\\Desktop\\\\learning\\\\아리안로드2e 기본 룰북.pdf\" -)"
+      "Bash(\"/c/Users/js4u1/AppData/Local/Microsoft/WinGet/Packages/oschwartz10612.Poppler_Microsoft.Winget.Source_8wekyb3d8bbwe/poppler-25.07.0/Library/bin/pdftotext.exe\" -f 68 -l 68 \"C:\\\\Users\\\\js4u1\\\\Desktop\\\\learning\\\\아리안로드2e 기본 룰북.pdf\" -)",
+      "Bash(export PATH=\"$PATH:/c/Users/js4u1/AppData/Local/Microsoft/WinGet/Packages/oschwartz10612.Poppler_Microsoft.Winget.Source_8wekyb3d8bbwe/poppler-25.07.0/Library/bin\")",
+      "Bash(pdftoppm:*)",
+      "Bash(\"C:\\\\Users\\\\js4u1\\\\AppData\\\\Local\\\\Microsoft\\\\WinGet\\\\Packages\\\\oschwartz10612.Poppler_Microsoft.Winget.Source_8wekyb3d8bbwe\\\\poppler-25.07.0\\\\Library\\\\bin\\\\pdftotext.exe\" -f 1 -l 10 \"C:\\\\Users\\\\js4u1\\\\Desktop\\\\learning\\\\아리안로드2e 기본 룰북.pdf\" -)",
+      "Bash(\"C:\\\\Users\\\\js4u1\\\\AppData\\\\Local\\\\Microsoft\\\\WinGet\\\\Packages\\\\oschwartz10612.Poppler_Microsoft.Winget.Source_8wekyb3d8bbwe\\\\poppler-25.07.0\\\\Library\\\\bin\\\\pdftotext.exe\" -f 68 -l 84 \"C:\\\\Users\\\\js4u1\\\\Desktop\\\\learning\\\\아리안로드2e 기본 룰북.pdf\" -)",
+      "Bash(\"C:\\\\Users\\\\js4u1\\\\AppData\\\\Local\\\\Microsoft\\\\WinGet\\\\Packages\\\\oschwartz10612.Poppler_Microsoft.Winget.Source_8wekyb3d8bbwe\\\\poppler-25.07.0\\\\Library\\\\bin\\\\pdftotext.exe\" -f 28 -l 47 \"C:\\\\Users\\\\js4u1\\\\Desktop\\\\learning\\\\아리안로드2e 기본 룰북.pdf\" -)",
+      "Bash(\"C:\\\\Users\\\\js4u1\\\\AppData\\\\Local\\\\Microsoft\\\\WinGet\\\\Packages\\\\oschwartz10612.Poppler_Microsoft.Winget.Source_8wekyb3d8bbwe\\\\poppler-25.07.0\\\\Library\\\\bin\\\\pdftotext.exe\" -f 59 -l 61 \"C:\\\\Users\\\\js4u1\\\\Desktop\\\\learning\\\\아리안로드2e 기본 룰북.pdf\" -)",
+      "Bash(if [ -f \".gitignore\" ])",
+      "Bash(then echo -e \"\\\\n# Rulebook reference \\(not for git\\)\\\\nRULEBOOK_REFERENCE.md\")",
+      "Bash(else echo -e \"# Rulebook reference \\(not for git\\)\\\\nRULEBOOK_REFERENCE.md\")",
+      "Bash(fi)"
     ]
   }
 }

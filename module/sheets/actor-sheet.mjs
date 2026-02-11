@@ -1,4 +1,4 @@
-import { rollCheckDialog } from "../dice.mjs";
+import { rollCheckDialog, rollLifePath } from "../dice.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -20,6 +20,7 @@ export class ArianrhodActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
     },
     actions: {
       rollAbility: ArianrhodActorSheet.#onRollAbility,
+      rollLifePath: ArianrhodActorSheet.#onRollLifePath,
       editImage: ArianrhodActorSheet.#onEditImage,
       createItem: ArianrhodActorSheet.#onCreateItem,
       editItem: ArianrhodActorSheet.#onEditItem,
@@ -231,6 +232,22 @@ export class ArianrhodActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
       label: `${label} チェック`,
       actor: this.actor,
     });
+  }
+
+  static async #onRollLifePath(event, target) {
+    event.preventDefault();
+    const category = target.dataset.category;
+    if (!category || !["origin", "circumstance", "objective"].includes(category)) {
+      return;
+    }
+
+    const result = await rollLifePath(category, this.actor);
+
+    // Auto-select the rolled entry in the dropdown
+    if (result.tableKey) {
+      const updatePath = `system.lifePath.${category}`;
+      await this.actor.update({ [updatePath]: result.tableKey });
+    }
   }
 
   static async #onCreateItem(event, target) {

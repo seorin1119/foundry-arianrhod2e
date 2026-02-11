@@ -139,3 +139,35 @@ export async function rollCheckDialog({
     }).render(true);
   });
 }
+
+/**
+ * Roll 2d6 for life path table and return the table key.
+ * Life path tables use concatenated dice notation (11 = 1+1, 13 = 1+3, 65 = 6+5, etc.)
+ * @param {string} category - "origin", "circumstance", or "objective"
+ * @param {Actor} actor - The actor rolling
+ * @returns {Promise<{roll: Roll, tableKey: string, label: string}>}
+ */
+export async function rollLifePath(category, actor) {
+  const roll = new Roll("2d6");
+  await roll.evaluate();
+
+  // Get individual die results (sorted for table lookup)
+  const dice = roll.dice[0].results.map(r => r.result).sort();
+  const die1 = dice[0];
+  const die2 = dice[1];
+
+  // Table key is concatenation of sorted dice (e.g., 1+3 = "13", 5+6 = "56")
+  const tableKey = `${die1}${die2}`;
+
+  const categoryLabel = game.i18n.localize(`ARIANRHOD.${category.charAt(0).toUpperCase() + category.slice(1)}`);
+  const entryLabel = game.i18n.localize(CONFIG.ARIANRHOD.lifePath[category]?.[tableKey] || "");
+
+  const speaker = actor ? ChatMessage.getSpeaker({ actor }) : ChatMessage.getSpeaker();
+
+  await roll.toMessage({
+    speaker: speaker,
+    flavor: `${categoryLabel} (${tableKey}) — <strong>${entryLabel}</strong>`,
+  });
+
+  return { roll, tableKey, label: entryLabel };
+}
