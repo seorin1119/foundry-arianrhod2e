@@ -1,0 +1,33 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "WebSearch",
+      "WebFetch(domain:yarukizerogames.com)",
+      "WebFetch(domain:seesaawiki.jp)",
+      "WebFetch(domain:ja.wikipedia.org)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:wikiwiki.jp)",
+      "WebFetch(domain:geiboruku.halfmoon.jp)",
+      "Bash(where:*)",
+      "WebFetch(domain:www.fear.co.jp)",
+      "Bash(winget list:*)",
+      "Bash(dir:*)",
+      "Bash(findstr:*)",
+      "Bash(export PATH:*)",
+      "Bash(\"/c/Users/js4u1/AppData/Local/Microsoft/WinGet/Packages/oschwartz10612.Poppler_Microsoft.Winget.Source_8wekyb3d8bbwe/poppler-25.07.0/Library/bin/pdftoppm.exe\" -f 1 -l 1 -png \"C:\\\\Users\\\\js4u1\\\\Desktop\\\\learning\\\\아리안로드2e 기본 룰북.pdf\" /tmp/test)",
+      "Bash(setx PATH \"%PATH%;C:\\\\Users\\\\js4u1\\\\AppData\\\\Local\\\\Microsoft\\\\WinGet\\\\Packages\\\\oschwartz10612.Poppler_Microsoft.Winget.Source_8wekyb3d8bbwe\\\\poppler-25.07.0\\\\Library\\\\bin\")",
+      "Bash(\"/c/Users/js4u1/AppData/Local/Microsoft/WinGet/Packages/oschwartz10612.Poppler_Microsoft.Winget.Source_8wekyb3d8bbwe/poppler-25.07.0/Library/bin/pdftotext.exe\" -f 1 -l 10 \"C:\\\\Users\\\\js4u1\\\\Desktop\\\\learning\\\\아리안로드2e 기본 룰북.pdf\" -)",
+      "Bash(\"/c/Users/js4u1/AppData/Local/Microsoft/WinGet/Packages/oschwartz10612.Poppler_Microsoft.Winget.Source_8wekyb3d8bbwe/poppler-25.07.0/Library/bin/pdftotext.exe\" -f 227 -l 232 \"C:\\\\Users\\\\js4u1\\\\Desktop\\\\learning\\\\아리안로드2e 기본 룰북.pdf\" -)",
+      "Bash(\"/c/Users/js4u1/AppData/Local/Microsoft/WinGet/Packages/oschwartz10612.Poppler_Microsoft.Winget.Source_8wekyb3d8bbwe/poppler-25.07.0/Library/bin/pdftotext.exe\" -f 150 -l 156 \"C:\\\\Users\\\\js4u1\\\\Desktop\\\\learning\\\\아리안로드2e 기본 룰북.pdf\" -)",
+      "Bash(\"/c/Users/js4u1/AppData/Local/Microsoft/WinGet/Packages/oschwartz10612.Poppler_Microsoft.Winget.Source_8wekyb3d8bbwe/poppler-25.07.0/Library/bin/pdftotext.exe\" \"C:\\\\Users\\\\js4u1\\\\Desktop\\\\learning\\\\아리안로드2e 기본 룰북.pdf\" -)",
+      "Bash(\"/c/Users/js4u1/AppData/Local/Microsoft/WinGet/Packages/oschwartz10612.Poppler_Microsoft.Winget.Source_8wekyb3d8bbwe/poppler-25.07.0/Library/bin/pdftotext.exe\" -f 184 -l 190 \"C:\\\\Users\\\\js4u1\\\\Desktop\\\\learning\\\\아리안로드2e 기본 룰북.pdf\" -)",
+      "Bash(\"/c/Users/js4u1/AppData/Local/Microsoft/WinGet/Packages/oschwartz10612.Poppler_Microsoft.Winget.Source_8wekyb3d8bbwe/poppler-25.07.0/Library/bin/pdftotext.exe\" -f 175 -l 175 \"C:\\\\Users\\\\js4u1\\\\Desktop\\\\learning\\\\아리안로드2e 기본 룰북.pdf\" -)",
+      "Bash(\"/c/Users/js4u1/AppData/Local/Microsoft/WinGet/Packages/oschwartz10612.Poppler_Microsoft.Winget.Source_8wekyb3d8bbwe/poppler-25.07.0/Library/bin/pdftotext.exe\" -f 1 -l 30 \"C:\\\\Users\\\\js4u1\\\\Desktop\\\\learning\\\\아리안로드2e 기본 룰북.pdf\" -)",
+      "Bash(\"/c/Users/js4u1/AppData/Local/Microsoft/WinGet/Packages/oschwartz10612.Poppler_Microsoft.Winget.Source_8wekyb3d8bbwe/poppler-25.07.0/Library/bin/pdftotext.exe\" -f 88 -l 92 \"C:\\\\Users\\\\js4u1\\\\Desktop\\\\learning\\\\아리안로드2e 기본 룰북.pdf\" -)",
+      "Bash(\"/c/Users/js4u1/AppData/Local/Microsoft/WinGet/Packages/oschwartz10612.Poppler_Microsoft.Winget.Source_8wekyb3d8bbwe/poppler-25.07.0/Library/bin/pdftotext.exe\" -f 61 -l 67 \"C:\\\\Users\\\\js4u1\\\\Desktop\\\\learning\\\\아리안로드2e 기본 룰북.pdf\" -)",
+      "Bash(\"/c/Users/js4u1/AppData/Local/Microsoft/WinGet/Packages/oschwartz10612.Poppler_Microsoft.Winget.Source_8wekyb3d8bbwe/poppler-25.07.0/Library/bin/pdftotext.exe\" -f 68 -l 68 \"C:\\\\Users\\\\js4u1\\\\Desktop\\\\learning\\\\아리안로드2e 기본 룰북.pdf\" -)"
+    ]
+  }
+}

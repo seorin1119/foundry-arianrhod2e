@@ -65,6 +65,13 @@ export class ArianrhodActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
     const context = await super._prepareContext(options);
     const systemData = this.actor.system;
 
+    // Add actor document properties for template access
+    context.actor = {
+      name: this.actor.name,
+      img: this.actor.img,
+      id: this.actor.id,
+      type: this.actor.type
+    };
     context.system = systemData;
     context.config = CONFIG.ARIANRHOD;
     context.isCharacter = this.actor.type === "character";
