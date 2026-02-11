@@ -996,22 +996,27 @@
 /* Input fields - parchment style */
 .arianrhod2e input[type="text"],
 .arianrhod2e input[type="number"],
-.arianrhod2e textarea {
+.arianrhod2e textarea,
+.arianrhod2e select {
   background: var(--ar-parchment);
   border: 1px solid var(--ar-border-light);
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
   transition: all 0.2s ease;
+  color: var(--ar-text);
+  font-weight: 500;
 }
 
 .arianrhod2e input[type="text"]:focus,
 .arianrhod2e input[type="number"]:focus,
-.arianrhod2e textarea:focus {
+.arianrhod2e textarea:focus,
+.arianrhod2e select:focus {
   outline: none;
   border-color: var(--ar-accent-gold);
   box-shadow:
     inset 0 1px 3px rgba(0, 0, 0, 0.1),
     0 0 8px rgba(212, 175, 55, 0.3);
   background: white;
+  color: var(--ar-text);
 }
 
 /* Item list - treasure chest style */

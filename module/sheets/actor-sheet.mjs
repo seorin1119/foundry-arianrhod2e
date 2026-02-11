@@ -20,6 +20,7 @@ export class ArianrhodActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
     },
     actions: {
       rollAbility: ArianrhodActorSheet.#onRollAbility,
+      editImage: ArianrhodActorSheet.#onEditImage,
       createItem: ArianrhodActorSheet.#onCreateItem,
       editItem: ArianrhodActorSheet.#onEditItem,
       deleteItem: ArianrhodActorSheet.#onDeleteItem,
@@ -33,17 +34,44 @@ export class ArianrhodActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
   };
 
   static PARTS = {
-    header: { template: "systems/arianrhod2e/templates/actor/parts/header.hbs" },
-    tabs: { template: "systems/arianrhod2e/templates/actor/parts/tabs.hbs" },
-    abilities: { template: "systems/arianrhod2e/templates/actor/parts/abilities.hbs" },
-    items: { template: "systems/arianrhod2e/templates/actor/parts/items.hbs" },
-    skills: { template: "systems/arianrhod2e/templates/actor/parts/skills.hbs" },
-    biography: { template: "systems/arianrhod2e/templates/actor/parts/biography.hbs" },
-    connections: { template: "systems/arianrhod2e/templates/actor/parts/connections.hbs" },
+    header: {
+      template: "systems/arianrhod2e/templates/actor/parts/header.hbs"
+    },
+    tabs: {
+      template: "systems/arianrhod2e/templates/actor/parts/tabs.hbs"
+    },
+    abilities: {
+      template: "systems/arianrhod2e/templates/actor/parts/abilities.hbs",
+      scrollable: [""]
+    },
+    items: {
+      template: "systems/arianrhod2e/templates/actor/parts/items.hbs",
+      scrollable: [""]
+    },
+    skills: {
+      template: "systems/arianrhod2e/templates/actor/parts/skills.hbs",
+      scrollable: [""]
+    },
+    biography: {
+      template: "systems/arianrhod2e/templates/actor/parts/biography.hbs",
+      scrollable: [""]
+    },
+    connections: {
+      template: "systems/arianrhod2e/templates/actor/parts/connections.hbs",
+      scrollable: [""]
+    },
     // Enemy-specific parts
-    enemyHeader: { template: "systems/arianrhod2e/templates/actor/parts/enemy-header.hbs" },
-    enemyAbilities: { template: "systems/arianrhod2e/templates/actor/parts/enemy-abilities.hbs" },
-    enemyDescription: { template: "systems/arianrhod2e/templates/actor/parts/enemy-description.hbs" },
+    enemyHeader: {
+      template: "systems/arianrhod2e/templates/actor/parts/enemy-header.hbs"
+    },
+    enemyAbilities: {
+      template: "systems/arianrhod2e/templates/actor/parts/enemy-abilities.hbs",
+      scrollable: [""]
+    },
+    description: {
+      template: "systems/arianrhod2e/templates/actor/parts/enemy-description.hbs",
+      scrollable: [""]
+    },
   };
 
   /** @override */
@@ -52,7 +80,7 @@ export class ArianrhodActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
     if (this.document.type === "character") {
       options.parts = ["header", "tabs", "abilities", "items", "skills", "connections", "biography"];
     } else {
-      options.parts = ["enemyHeader", "tabs", "enemyAbilities", "skills", "enemyDescription"];
+      options.parts = ["enemyHeader", "tabs", "enemyAbilities", "skills", "description"];
     }
   }
 
@@ -176,6 +204,18 @@ export class ArianrhodActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
   /* -------------------------------------------- */
   /*  Action Handlers                             */
   /* -------------------------------------------- */
+
+  static async #onEditImage(event, target) {
+    event.preventDefault();
+    const fp = new FilePicker({
+      type: "image",
+      current: this.actor.img,
+      callback: async (path) => {
+        await this.actor.update({ img: path });
+      },
+    });
+    return fp.browse();
+  }
 
   static async #onRollAbility(event, target) {
     event.preventDefault();
