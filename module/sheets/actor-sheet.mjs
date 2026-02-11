@@ -172,6 +172,8 @@ export class ArianrhodActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
       for (const [key, ability] of Object.entries(systemData.abilities)) {
         context.abilities[key] = {
           value: ability.value,
+          mod: ability.mod || 0,
+          total: ability.total || ability.value,
           bonus: ability.bonus,
           label: game.i18n.localize(CONFIG.ARIANRHOD.abilities[key] ?? key),
           abbr: game.i18n.localize(CONFIG.ARIANRHOD.abilityAbbreviations[key] ?? key),
@@ -304,8 +306,13 @@ export class ArianrhodActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
 
     // Auto-select the rolled entry in the dropdown
     if (result.tableKey) {
-      const updatePath = `system.lifePath.${category}`;
-      await this.actor.update({ [updatePath]: result.tableKey });
+      await this.actor.update({
+        system: {
+          lifePath: {
+            [category]: result.tableKey
+          }
+        }
+      });
     }
   }
 
@@ -468,6 +475,7 @@ export class ArianrhodActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
 
   static #onFilterSkills(event, target) {
     event.preventDefault();
+    event.stopPropagation();
     const filterValue = target.value;
 
     // Store filter preference (could be expanded to save to actor flags)

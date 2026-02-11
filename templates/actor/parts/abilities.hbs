@@ -18,6 +18,10 @@
                value="{{ability.value}}" data-dtype="Number" />
         <button type="button" data-action="increaseAbility" data-ability="{{key}}"
                 title="{{localize 'ARIANRHOD.IncreaseAbility'}}" style="width: 20px; padding: 1px; font-size: 0.9em;">+</button>
+        {{#if ability.mod}}
+        <span class="ability-modifier">+{{ability.mod}}</span>
+        <span class="ability-total">={{ability.total}}</span>
+        {{/if}}
         <span class="ability-bonus">[{{ability.bonus}}]</span>
       </div>
       {{/each}}

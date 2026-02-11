@@ -164,9 +164,26 @@ export async function rollLifePath(category, actor) {
 
   const speaker = actor ? ChatMessage.getSpeaker({ actor }) : ChatMessage.getSpeaker();
 
-  await roll.toMessage({
+  // Create custom chat message to show concatenated notation instead of sum
+  await ChatMessage.create({
     speaker: speaker,
     flavor: `${categoryLabel} (${tableKey}) — <strong>${entryLabel}</strong>`,
+    content: `<div class="dice-roll">
+      <div class="dice-result">
+        <div class="dice-formula">${roll.formula}</div>
+        <div class="dice-tooltip" style="display: none;">
+          <div class="dice-rolls">
+            <ol class="dice-rolls">
+              <li class="roll die d6">${die1}</li>
+              <li class="roll die d6">${die2}</li>
+            </ol>
+          </div>
+        </div>
+        <h4 class="dice-total">${tableKey}</h4>
+      </div>
+    </div>`,
+    roll: roll,
+    type: CONST.CHAT_MESSAGE_TYPES.ROLL,
   });
 
   return { roll, tableKey, label: entryLabel };
