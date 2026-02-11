@@ -2,8 +2,8 @@
  * Arianrhod RPG 2E Dice Rolling System
  *
  * Core mechanic: 2d6 + modifier vs target number
- * Critical: double 6 (6,6)
- * Fumble: double 1 (1,1)
+ * Critical: 2 or more dice showing 6
+ * Fumble: 2 or more dice showing 1 (on base 2d6 only)
  * Fate: spend fate points to add +1d6 each
  */
 
@@ -33,13 +33,24 @@ export async function rollCheck({
   const roll = new Roll(formula);
   await roll.evaluate();
 
-  // Check for critical and fumble on the initial 2d6
-  const baseDice = roll.dice[0].results.map((r) => r.result);
+  // Collect all dice results from all dice pools
+  const allDice = [];
+  for (const dicePool of roll.dice) {
+    allDice.push(...dicePool.results.map((r) => r.result));
+  }
+
+  // Count 6s and 1s across all dice
+  const sixCount = allDice.filter((d) => d === 6).length;
+  const oneCount = allDice.filter((d) => d === 1).length;
+
   let flavor = label || game.i18n.localize("ARIANRHOD.Check");
 
-  if (baseDice[0] === 6 && baseDice[1] === 6) {
-    flavor += " — <strong>クリティカル!</strong>";
-  } else if (baseDice[0] === 1 && baseDice[1] === 1) {
+  // Critical: 2 or more 6s
+  if (sixCount >= 2) {
+    flavor += ` — <strong>クリティカル! (6×${sixCount})</strong>`;
+  }
+  // Fumble: 2 or more 1s (only check base 2d6)
+  else if (oneCount >= 2 && fateDice === 0) {
     flavor += " — <strong>ファンブル!</strong>";
   }
 

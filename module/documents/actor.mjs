@@ -22,12 +22,15 @@ export class ArianrhodActor extends Actor {
     const roll = new Roll("2d6 + @bonus", { bonus });
     await roll.evaluate();
 
-    // Check for critical (6,6) and fumble (1,1)
+    // Check for critical (2+ sixes) and fumble (2+ ones)
     const dice = roll.dice[0].results.map((r) => r.result);
+    const sixCount = dice.filter((d) => d === 6).length;
+    const oneCount = dice.filter((d) => d === 1).length;
+
     let flavor = `${label} チェック`;
-    if (dice[0] === 6 && dice[1] === 6) {
-      flavor += " — <strong>クリティカル!</strong>";
-    } else if (dice[0] === 1 && dice[1] === 1) {
+    if (sixCount >= 2) {
+      flavor += ` — <strong>クリティカル!</strong>`;
+    } else if (oneCount >= 2) {
       flavor += " — <strong>ファンブル!</strong>";
     }
 
