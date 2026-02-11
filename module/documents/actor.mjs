@@ -6,7 +6,7 @@
 export class ArianrhodActor extends Actor {
   /**
    * Roll an ability check (2d6 + ability bonus).
-   * @param {string} abilityKey - The ability key (str, dex, agi, int, per, spi, luk)
+   * @param {string} abilityKey - The ability key (str, dex, agi, int, sen, men, luk)
    * @param {object} options - Roll options
    * @returns {Promise<Roll>}
    */

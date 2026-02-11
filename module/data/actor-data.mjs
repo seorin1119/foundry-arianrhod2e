@@ -26,8 +26,8 @@ export class CharacterData extends foundry.abstract.TypeDataModel {
         dex: new SchemaField({ value: new NumberField({ required: true, integer: true, min: 0, initial: 6 }) }),
         agi: new SchemaField({ value: new NumberField({ required: true, integer: true, min: 0, initial: 6 }) }),
         int: new SchemaField({ value: new NumberField({ required: true, integer: true, min: 0, initial: 6 }) }),
-        per: new SchemaField({ value: new NumberField({ required: true, integer: true, min: 0, initial: 6 }) }),
-        spi: new SchemaField({ value: new NumberField({ required: true, integer: true, min: 0, initial: 6 }) }),
+        sen: new SchemaField({ value: new NumberField({ required: true, integer: true, min: 0, initial: 6 }) }),
+        men: new SchemaField({ value: new NumberField({ required: true, integer: true, min: 0, initial: 6 }) }),
         luk: new SchemaField({ value: new NumberField({ required: true, integer: true, min: 0, initial: 6 }) }),
       }),
       combat: new SchemaField({
@@ -111,8 +111,8 @@ export class EnemyData extends foundry.abstract.TypeDataModel {
         dex: new SchemaField({ value: new NumberField({ required: true, integer: true, min: 0, initial: 6 }) }),
         agi: new SchemaField({ value: new NumberField({ required: true, integer: true, min: 0, initial: 6 }) }),
         int: new SchemaField({ value: new NumberField({ required: true, integer: true, min: 0, initial: 6 }) }),
-        per: new SchemaField({ value: new NumberField({ required: true, integer: true, min: 0, initial: 6 }) }),
-        spi: new SchemaField({ value: new NumberField({ required: true, integer: true, min: 0, initial: 6 }) }),
+        sen: new SchemaField({ value: new NumberField({ required: true, integer: true, min: 0, initial: 6 }) }),
+        men: new SchemaField({ value: new NumberField({ required: true, integer: true, min: 0, initial: 6 }) }),
         luk: new SchemaField({ value: new NumberField({ required: true, integer: true, min: 0, initial: 6 }) }),
       }),
       combat: new SchemaField({

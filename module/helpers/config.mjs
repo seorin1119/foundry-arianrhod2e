@@ -8,8 +8,8 @@ ARIANRHOD.abilities = {
   dex: "ARIANRHOD.AbilityDex",
   agi: "ARIANRHOD.AbilityAgi",
   int: "ARIANRHOD.AbilityInt",
-  per: "ARIANRHOD.AbilityPer",
-  spi: "ARIANRHOD.AbilitySpi",
+  sen: "ARIANRHOD.AbilitySen",
+  men: "ARIANRHOD.AbilityMen",
   luk: "ARIANRHOD.AbilityLuk",
 };
 
@@ -18,8 +18,8 @@ ARIANRHOD.abilityAbbreviations = {
   dex: "ARIANRHOD.AbilityDexAbbr",
   agi: "ARIANRHOD.AbilityAgiAbbr",
   int: "ARIANRHOD.AbilityIntAbbr",
-  per: "ARIANRHOD.AbilityPerAbbr",
-  spi: "ARIANRHOD.AbilitySpiAbbr",
+  sen: "ARIANRHOD.AbilitySenAbbr",
+  men: "ARIANRHOD.AbilityMenAbbr",
   luk: "ARIANRHOD.AbilityLukAbbr",
 };
 

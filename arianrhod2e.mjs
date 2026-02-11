@@ -77,15 +77,156 @@ Hooks.once("init", () => {
 
   // Register Handlebars helpers
   _registerHandlebarsHelpers();
+
+  // Register system migration version setting
+  game.settings.register("arianrhod2e", "systemMigrationVersion", {
+    name: "System Migration Version",
+    scope: "world",
+    config: false,
+    type: String,
+    default: "0.0.0"
+  });
 });
 
 /* -------------------------------------------- */
 /*  Ready Hook                                  */
 /* -------------------------------------------- */
 
-Hooks.once("ready", () => {
+Hooks.once("ready", async () => {
   console.log("Arianrhod 2E | システム準備完了");
+
+  // Run system migrations if needed
+  const currentVersion = game.settings.get("arianrhod2e", "systemMigrationVersion");
+  const NEEDS_MIGRATION_VERSION = "0.3.0";
+
+  if (foundry.utils.isNewerVersion(NEEDS_MIGRATION_VERSION, currentVersion)) {
+    console.log(`Arianrhod 2E | Running migration from ${currentVersion} to ${NEEDS_MIGRATION_VERSION}`);
+    ui.notifications.info("Arianrhod 2E: Migrating actor data (PER→SEN, SPI→MEN). Please wait...", { permanent: false });
+
+    await migrateAbilityNames();
+
+    await game.settings.set("arianrhod2e", "systemMigrationVersion", NEEDS_MIGRATION_VERSION);
+    console.log("Arianrhod 2E | Migration complete");
+    ui.notifications.info("Arianrhod 2E: Migration complete!", { permanent: false });
+  }
 });
+
+/* -------------------------------------------- */
+/*  Migration Functions                         */
+/* -------------------------------------------- */
+
+/**
+ * Migrate ability names from PER/SPI to SEN/MEN (v0.3.0)
+ * Handles both world actors and unlinked scene tokens
+ */
+async function migrateAbilityNames() {
+  let migratedCount = 0;
+  let skippedCount = 0;
+  let errorCount = 0;
+  const errors = [];
+
+  // Migrate world actors
+  for (const actor of game.actors) {
+    try {
+      const updated = await migrateActorAbilities(actor);
+      if (updated) migratedCount++;
+      else skippedCount++;
+    } catch (error) {
+      errorCount++;
+      errors.push({ type: "Actor", name: actor.name, id: actor.id, error: error.message });
+      console.error(`Arianrhod 2E | Failed to migrate actor ${actor.name}:`, error);
+    }
+  }
+
+  // Migrate unlinked tokens in scenes
+  for (const scene of game.scenes) {
+    for (const token of scene.tokens) {
+      if (token.actorLink) continue; // Skip linked tokens (they use world actor data)
+
+      try {
+        const actorData = token.delta?.system || token.actor?.system;
+        if (!actorData?.abilities) continue;
+
+        // Check if migration is needed
+        if (actorData.abilities.sen || actorData.abilities.men) {
+          skippedCount++;
+          continue;
+        }
+
+        if (!actorData.abilities.per && !actorData.abilities.spi) {
+          skippedCount++;
+          continue;
+        }
+
+        // Migrate the token's actor data
+        const updates = {};
+        if (actorData.abilities.per) {
+          updates["delta.system.abilities.sen"] = actorData.abilities.per;
+          updates["delta.system.abilities.-=per"] = null;
+        }
+        if (actorData.abilities.spi) {
+          updates["delta.system.abilities.men"] = actorData.abilities.spi;
+          updates["delta.system.abilities.-=spi"] = null;
+        }
+
+        await token.update(updates);
+        migratedCount++;
+      } catch (error) {
+        errorCount++;
+        errors.push({ type: "Token", name: token.name, id: token.id, scene: scene.name, error: error.message });
+        console.error(`Arianrhod 2E | Failed to migrate token ${token.name} in scene ${scene.name}:`, error);
+      }
+    }
+  }
+
+  // Log results
+  console.log(`Arianrhod 2E | Migration complete: ${migratedCount} migrated, ${skippedCount} skipped, ${errorCount} errors`);
+
+  if (errors.length > 0) {
+    console.warn("Arianrhod 2E | Migration errors:", errors);
+    ui.notifications.warn(`Migration completed with ${errorCount} errors. Check console for details.`);
+  }
+
+  return { migratedCount, skippedCount, errorCount, errors };
+}
+
+/**
+ * Migrate a single actor's abilities from PER/SPI to SEN/MEN
+ * @param {Actor} actor - The actor to migrate
+ * @returns {boolean} - True if migrated, false if skipped
+ */
+async function migrateActorAbilities(actor) {
+  const abilities = actor.system.abilities;
+  if (!abilities) return false;
+
+  // Check if already migrated (has sen/men fields)
+  if (abilities.sen || abilities.men) {
+    return false; // Already migrated
+  }
+
+  // Check if migration is needed (has per/spi fields)
+  if (!abilities.per && !abilities.spi) {
+    return false; // Nothing to migrate
+  }
+
+  // Prepare update data
+  const updates = {};
+
+  if (abilities.per) {
+    updates["system.abilities.sen"] = abilities.per;
+    updates["system.abilities.-=per"] = null;
+  }
+
+  if (abilities.spi) {
+    updates["system.abilities.men"] = abilities.spi;
+    updates["system.abilities.-=spi"] = null;
+  }
+
+  // Apply the update
+  await actor.update(updates);
+  console.log(`Arianrhod 2E | Migrated actor: ${actor.name}`);
+  return true;
+}
 
 /* -------------------------------------------- */
 /*  Handlebars Helpers                          */
