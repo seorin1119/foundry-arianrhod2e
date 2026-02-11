@@ -89,6 +89,30 @@ export class CharacterData extends foundry.abstract.TypeDataModel {
     for (const ability of Object.values(this.abilities)) {
       ability.bonus = Math.floor(ability.value / 3);
     }
+
+    // Calculate class-based HP/MP maximums
+    const mainClassData = CONFIG.ARIANRHOD.classData[this.mainClass];
+    const supportClassData = CONFIG.ARIANRHOD.classData[this.supportClass];
+
+    if (mainClassData && supportClassData) {
+      // Formula from Arianrhod 2E Rulebook p.62:
+      // Max HP = STR + Main initial HP + Support initial HP + (Main HP growth + Support HP growth) × (level - 1)
+      // Max MP = MEN + Main initial MP + Support initial MP + (Main MP growth + Support MP growth) × (level - 1)
+      const calculatedMaxHp = this.abilities.str.value
+        + mainClassData.initialHp
+        + supportClassData.initialHp
+        + (mainClassData.hpGrowth + supportClassData.hpGrowth) * (this.level - 1);
+
+      const calculatedMaxMp = this.abilities.men.value
+        + mainClassData.initialMp
+        + supportClassData.initialMp
+        + (mainClassData.mpGrowth + supportClassData.mpGrowth) * (this.level - 1);
+
+      this.combat.hp.max = calculatedMaxHp;
+      this.combat.mp.max = calculatedMaxMp;
+    }
+    // If either class is missing/invalid, skip calculation (preserve manual values)
+
     // Set race-specific fate max
     if ([3, 5, 6].includes(this.fate.max)) {
       const oldMax = this.fate.max;
@@ -98,6 +122,7 @@ export class CharacterData extends foundry.abstract.TypeDataModel {
         this.fate.value = this.fate.max;
       }
     }
+
     // Clamp current values to max
     this.combat.hp.value = Math.min(this.combat.hp.value, this.combat.hp.max);
     this.combat.mp.value = Math.min(this.combat.mp.value, this.combat.mp.max);

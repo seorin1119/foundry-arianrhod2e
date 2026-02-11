@@ -99,3 +99,138 @@ ARIANRHOD.enemyTypes = {
   boss: "ARIANRHOD.EnemyTypeBoss",
   named: "ARIANRHOD.EnemyTypeNamed",
 };
+
+/**
+ * Main class options (メインクラス)
+ */
+ARIANRHOD.mainClasses = {
+  warrior: "ARIANRHOD.ClassWarrior",
+  acolyte: "ARIANRHOD.ClassAcolyte",
+  mage: "ARIANRHOD.ClassMage",
+  thief: "ARIANRHOD.ClassThief",
+};
+
+/**
+ * Support class options (サポートクラス)
+ */
+ARIANRHOD.supportClasses = {
+  warrior: "ARIANRHOD.ClassWarrior",
+  acolyte: "ARIANRHOD.ClassAcolyte",
+  mage: "ARIANRHOD.ClassMage",
+  thief: "ARIANRHOD.ClassThief",
+  gunslinger: "ARIANRHOD.ClassGunslinger",
+  ninja: "ARIANRHOD.ClassNinja",
+  dancer: "ARIANRHOD.ClassDancer",
+  ranger: "ARIANRHOD.ClassRanger",
+  monk: "ARIANRHOD.ClassMonk",
+  bard: "ARIANRHOD.ClassBard",
+  samurai: "ARIANRHOD.ClassSamurai",
+  summoner: "ARIANRHOD.ClassSummoner",
+  sage: "ARIANRHOD.ClassSage",
+  alchemist: "ARIANRHOD.ClassAlchemist",
+};
+
+/**
+ * Class data including HP/MP growth and ability modifiers
+ * Based on Arianrhod 2E Rulebook p.62
+ */
+ARIANRHOD.classData = {
+  warrior: {
+    initialHp: 13,
+    hpGrowth: 7,
+    initialMp: 11,
+    mpGrowth: 3,
+    abilityMods: { str: 1, dex: 1, agi: 1 }
+  },
+  acolyte: {
+    initialHp: 11,
+    hpGrowth: 5,
+    initialMp: 12,
+    mpGrowth: 4,
+    abilityMods: { dex: 1, men: 1 }
+  },
+  mage: {
+    initialHp: 10,
+    hpGrowth: 4,
+    initialMp: 13,
+    mpGrowth: 4,
+    abilityMods: { int: 1, sen: 1 }
+  },
+  thief: {
+    initialHp: 12,
+    hpGrowth: 6,
+    initialMp: 11,
+    mpGrowth: 3,
+    abilityMods: { dex: 1, sen: 1 }
+  },
+  gunslinger: {
+    initialHp: 12,
+    hpGrowth: 4,
+    initialMp: 11,
+    mpGrowth: 3,
+    abilityMods: { dex: 1 }
+  },
+  ninja: {
+    initialHp: 10,
+    hpGrowth: 6,
+    initialMp: 11,
+    mpGrowth: 3,
+    abilityMods: { men: 1 }
+  },
+  dancer: {
+    initialHp: 11,
+    hpGrowth: 7,
+    initialMp: 13,
+    mpGrowth: 3,
+    abilityMods: { dex: 1 }
+  },
+  ranger: {
+    initialHp: 12,
+    hpGrowth: 5,
+    initialMp: 12,
+    mpGrowth: 3,
+    abilityMods: { men: 1 }
+  },
+  monk: {
+    initialHp: 12,
+    hpGrowth: 6,
+    initialMp: 11,
+    mpGrowth: 3,
+    abilityMods: { men: 1 }
+  },
+  bard: {
+    initialHp: 10,
+    hpGrowth: 5,
+    initialMp: 13,
+    mpGrowth: 4,
+    abilityMods: { sen: 1 }
+  },
+  samurai: {
+    initialHp: 12,
+    hpGrowth: 7,
+    initialMp: 12,
+    mpGrowth: 3,
+    abilityMods: { str: 1 }
+  },
+  summoner: {
+    initialHp: 8,
+    hpGrowth: 4,
+    initialMp: 15,
+    mpGrowth: 5,
+    abilityMods: { int: 1 }
+  },
+  sage: {
+    initialHp: 9,
+    hpGrowth: 4,
+    initialMp: 14,
+    mpGrowth: 4,
+    abilityMods: { sen: 1 }
+  },
+  alchemist: {
+    initialHp: 10,
+    hpGrowth: 5,
+    initialMp: 13,
+    mpGrowth: 4,
+    abilityMods: { int: 1 }
+  },
+};
