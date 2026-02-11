@@ -31,6 +31,13 @@ export class ArianrhodActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
       deleteConnection: ArianrhodActorSheet.#onDeleteConnection,
       addGrowthLog: ArianrhodActorSheet.#onAddGrowthLog,
       deleteGrowthLog: ArianrhodActorSheet.#onDeleteGrowthLog,
+      levelUp: ArianrhodActorSheet.#onLevelUp,
+      levelDown: ArianrhodActorSheet.#onLevelDown,
+      increaseAbility: ArianrhodActorSheet.#onIncreaseAbility,
+      decreaseAbility: ArianrhodActorSheet.#onDecreaseAbility,
+      increaseSkillLevel: ArianrhodActorSheet.#onIncreaseSkillLevel,
+      decreaseSkillLevel: ArianrhodActorSheet.#onDecreaseSkillLevel,
+      filterSkills: ArianrhodActorSheet.#onFilterSkills,
     },
   };
 
@@ -88,6 +95,58 @@ export class ArianrhodActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
   tabGroups = {
     primary: "abilities",
   };
+
+  /** @override */
+  _onRender(context, options) {
+    super._onRender(context, options);
+    this._activateTabNavigation();
+  }
+
+  /**
+   * Activate tab navigation handlers.
+   */
+  _activateTabNavigation() {
+    const tabs = this.element.querySelector('[data-group="primary"]');
+    if (!tabs) return;
+
+    // Add click handlers for all tab links
+    tabs.querySelectorAll('[data-tab]').forEach(tab => {
+      tab.addEventListener('click', (event) => {
+        event.preventDefault();
+        const tabId = tab.dataset.tab;
+        this._onChangeTab(tabId);
+      });
+    });
+  }
+
+  /**
+   * Handle tab changes.
+   */
+  _onChangeTab(tabId) {
+    // Update the active tab
+    this.tabGroups.primary = tabId;
+
+    // Update tab UI
+    const tabs = this.element.querySelector('[data-group="primary"]');
+    if (tabs) {
+      tabs.querySelectorAll('[data-tab]').forEach(tab => {
+        if (tab.dataset.tab === tabId) {
+          tab.classList.add('active');
+        } else {
+          tab.classList.remove('active');
+        }
+      });
+    }
+
+    // Update tab content visibility
+    this.element.querySelectorAll('.tab[data-group="primary"]').forEach(content => {
+      if (content.dataset.tab === tabId) {
+        content.classList.add('active');
+      } else {
+        content.classList.remove('active');
+      }
+    });
+  }
 
   /** @override */
   async _prepareContext(options) {
@@ -313,5 +372,108 @@ export class ArianrhodActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
     const log = [...(this.actor.system.growthLog ?? [])];
     log.splice(index, 1);
     await this.actor.update({ "system.growthLog": log });
+  }
+
+  static async #onLevelUp(event, target) {
+    event.preventDefault();
+    const currentLevel = this.actor.system.level;
+    await this.actor.update({ "system.level": currentLevel + 1 });
+    ui.notifications.info(game.i18n.format("ARIANRHOD.LevelUpNotification", { level: currentLevel + 1 }));
+  }
+
+  static async #onLevelDown(event, target) {
+    event.preventDefault();
+    const currentLevel = this.actor.system.level;
+    if (currentLevel > 1) {
+      await this.actor.update({ "system.level": currentLevel - 1 });
+      ui.notifications.info(game.i18n.format("ARIANRHOD.LevelDownNotification", { level: currentLevel - 1 }));
+    }
+  }
+
+  static async #onIncreaseAbility(event, target) {
+    event.preventDefault();
+    const abilityKey = target.dataset.ability;
+    const currentValue = this.actor.system.abilities[abilityKey].value;
+    const remainingPoints = this.actor.system.growthPoints.remaining;
+
+    if (remainingPoints <= 0) {
+      ui.notifications.warn(game.i18n.localize("ARIANRHOD.NoGrowthPointsRemaining"));
+      return;
+    }
+
+    // Increase ability and track spent growth points
+    await this.actor.update({
+      [`system.abilities.${abilityKey}.value`]: currentValue + 1,
+      "system.growthPoints.spent": this.actor.system.growthPoints.spent + 1
+    });
+  }
+
+  static async #onDecreaseAbility(event, target) {
+    event.preventDefault();
+    const abilityKey = target.dataset.ability;
+    const currentValue = this.actor.system.abilities[abilityKey].value;
+    const spentPoints = this.actor.system.growthPoints.spent;
+
+    if (currentValue <= 0) {
+      ui.notifications.warn(game.i18n.localize("ARIANRHOD.AbilityCannotBeNegative"));
+      return;
+    }
+
+    if (spentPoints <= 0) {
+      ui.notifications.warn(game.i18n.localize("ARIANRHOD.NoSpentGrowthPoints"));
+      return;
+    }
+
+    // Decrease ability and refund growth point
+    await this.actor.update({
+      [`system.abilities.${abilityKey}.value`]: currentValue - 1,
+      "system.growthPoints.spent": this.actor.system.growthPoints.spent - 1
+    });
+  }
+
+  static async #onIncreaseSkillLevel(event, target) {
+    event.preventDefault();
+    const itemId = target.dataset.itemId;
+    const item = this.actor.items.get(itemId);
+
+    if (!item) return;
+
+    const currentLevel = item.system.level;
+    const maxLevel = item.system.maxLevel;
+
+    if (currentLevel >= maxLevel) {
+      ui.notifications.warn(game.i18n.localize("ARIANRHOD.SkillMaxLevelReached"));
+      return;
+    }
+
+    await item.update({ "system.level": currentLevel + 1 });
+  }
+
+  static async #onDecreaseSkillLevel(event, target) {
+    event.preventDefault();
+    const itemId = target.dataset.itemId;
+    const item = this.actor.items.get(itemId);
+
+    if (!item) return;
+
+    const currentLevel = item.system.level;
+
+    if (currentLevel <= 1) {
+      ui.notifications.warn(game.i18n.localize("ARIANRHOD.SkillMinLevelReached"));
+      return;
+    }
+
+    await item.update({ "system.level": currentLevel - 1 });
+  }
+
+  static #onFilterSkills(event, target) {
+    event.preventDefault();
+    const filterValue = target.value;
+
+    // Store filter preference (could be expanded to save to actor flags)
+    this._skillFilter = filterValue;
+
+    // Re-render to apply filter
+    this.render();
   }
 }

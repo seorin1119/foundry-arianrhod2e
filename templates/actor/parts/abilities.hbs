@@ -11,9 +11,13 @@
               title="{{ability.label}} チェック (クリックでロール)">
           {{ability.abbr}}
         </span>
+        <button type="button" data-action="decreaseAbility" data-ability="{{key}}"
+                title="{{localize 'ARIANRHOD.DecreaseAbility'}}" style="width: 20px; padding: 1px; font-size: 0.9em;">-</button>
         <input class="ability-value" type="number"
                name="system.abilities.{{key}}.value"
                value="{{ability.value}}" data-dtype="Number" />
+        <button type="button" data-action="increaseAbility" data-ability="{{key}}"
+                title="{{localize 'ARIANRHOD.IncreaseAbility'}}" style="width: 20px; padding: 1px; font-size: 0.9em;">+</button>
         <span class="ability-bonus">[{{ability.bonus}}]</span>
       </div>
       {{/each}}

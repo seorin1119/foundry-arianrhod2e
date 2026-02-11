@@ -151,8 +151,8 @@ export async function rollLifePath(category, actor) {
   const roll = new Roll("2d6");
   await roll.evaluate();
 
-  // Get individual die results (sorted for table lookup)
-  const dice = roll.dice[0].results.map(r => r.result).sort();
+  // Get individual die results (sorted numerically for table lookup)
+  const dice = roll.dice[0].results.map(r => r.result).sort((a, b) => a - b);
   const die1 = dice[0];
   const die2 = dice[1];
 

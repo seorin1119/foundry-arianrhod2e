@@ -16,10 +16,17 @@ export class CharacterData extends foundry.abstract.TypeDataModel {
       level: new NumberField({ required: true, integer: true, min: 1, initial: 1 }),
       experience: new NumberField({ required: true, integer: true, min: 0, initial: 0 }),
       guild: new StringField({ initial: "" }),
+      growthPoints: new SchemaField({
+        total: new NumberField({ required: true, integer: true, min: 0, initial: 0 }),
+        spent: new NumberField({ required: true, integer: true, min: 0, initial: 0 }),
+      }),
       lifePath: new SchemaField({
         origin: new StringField({ initial: "" }),
+        originCustom: new StringField({ initial: "" }),
         circumstance: new StringField({ initial: "" }),
+        circumstanceCustom: new StringField({ initial: "" }),
         objective: new StringField({ initial: "" }),
+        objectiveCustom: new StringField({ initial: "" }),
       }),
       abilities: new SchemaField({
         str: new SchemaField({ value: new NumberField({ required: true, integer: true, min: 0, initial: 6 }) }),
@@ -85,23 +92,34 @@ export class CharacterData extends foundry.abstract.TypeDataModel {
 
   /** @override */
   prepareDerivedData() {
-    // Apply race ability modifiers
+    // Calculate total growth points from level
+    // In Arianrhod 2E, characters get 2 growth points per level after level 1
+    this.growthPoints.total = (this.level - 1) * 2;
+    this.growthPoints.remaining = this.growthPoints.total - this.growthPoints.spent;
+
+    // Apply race and class ability modifiers
     const raceData = CONFIG.ARIANRHOD.raceData?.[this.race];
+    const mainClassData = CONFIG.ARIANRHOD.classData?.[this.mainClass];
+    const supportClassData = CONFIG.ARIANRHOD.classData?.[this.supportClass];
+
     for (const [abilityKey, ability] of Object.entries(this.abilities)) {
       // Get race modifier for this ability (default to 0)
       const raceMod = raceData?.abilityMods?.[abilityKey] || 0;
-      ability.mod = raceMod;
-      ability.total = ability.value + raceMod;
+
+      // Get class modifiers for this ability (default to 0)
+      const mainClassMod = mainClassData?.abilityMods?.[abilityKey] || 0;
+      const supportClassMod = supportClassData?.abilityMods?.[abilityKey] || 0;
+
+      // Calculate total modifier from all sources
+      ability.mod = raceMod + mainClassMod + supportClassMod;
+      ability.total = ability.value + ability.mod;
 
       // Calculate ability bonuses (能力ボーナス = floor(能力基本値 / 3))
-      // Use total value (including race modifiers) for bonus calculation
+      // Use total value (including all modifiers) for bonus calculation
       ability.bonus = Math.floor(ability.total / 3);
     }
 
     // Calculate class-based HP/MP maximums
-    const mainClassData = CONFIG.ARIANRHOD.classData[this.mainClass];
-    const supportClassData = CONFIG.ARIANRHOD.classData[this.supportClass];
-
     if (mainClassData && supportClassData) {
       // Formula from Arianrhod 2E Rulebook p.62:
       // Max HP = STR + Main initial HP + Support initial HP + (Main HP growth + Support HP growth) × (level - 1)
