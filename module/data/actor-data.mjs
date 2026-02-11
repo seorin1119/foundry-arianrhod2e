@@ -89,6 +89,15 @@ export class CharacterData extends foundry.abstract.TypeDataModel {
     for (const ability of Object.values(this.abilities)) {
       ability.bonus = Math.floor(ability.value / 3);
     }
+    // Set race-specific fate max
+    if ([3, 5, 6].includes(this.fate.max)) {
+      const oldMax = this.fate.max;
+      this.fate.max = this.race === "huulin" ? 6 : 5;
+      // If max increased and value was at old max, increase value too
+      if (this.fate.value === oldMax && this.fate.max > oldMax) {
+        this.fate.value = this.fate.max;
+      }
+    }
     // Clamp current values to max
     this.combat.hp.value = Math.min(this.combat.hp.value, this.combat.hp.max);
     this.combat.mp.value = Math.min(this.combat.mp.value, this.combat.mp.max);
