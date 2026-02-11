@@ -349,3 +349,439 @@ ARIANRHOD.classData = {
     abilityMods: { int: 1 }
   },
 };
+
+/**
+ * Skill Library - Contains all available skills from the rulebook
+ * Based on Arianrhod 2E Rulebook and RULEBOOK_REFERENCE.md
+ * Format: { id, name, class, timing, cost, range, target, maxLevel, description }
+ */
+ARIANRHOD.skillLibrary = {
+  // General Skills (一般スキル) - Available to all classes
+  general: [
+    {
+      id: "opinion",
+      name: "オピニオン",
+      nameEn: "Opinion",
+      skillClass: "general",
+      timing: "passive",
+      cost: "",
+      range: "",
+      target: "",
+      maxLevel: 5,
+      description: "社会的な交渉や説得判定にボーナスを得る。"
+    },
+    {
+      id: "history",
+      name: "ヒストリー",
+      nameEn: "History",
+      skillClass: "general",
+      timing: "passive",
+      cost: "",
+      range: "",
+      target: "",
+      maxLevel: 5,
+      description: "歴史や伝承に関する知識判定にボーナスを得る。"
+    },
+    {
+      id: "enlarge-limit",
+      name: "インラージ・リミット",
+      nameEn: "Enlarge Limit",
+      skillClass: "general",
+      timing: "passive",
+      cost: "",
+      range: "",
+      target: "",
+      maxLevel: 5,
+      description: "所持重量の上限が増加する。"
+    },
+    {
+      id: "remove-trap",
+      name: "リムーブ・トラップ",
+      nameEn: "Remove Trap",
+      skillClass: "general",
+      timing: "action",
+      cost: "",
+      range: "",
+      target: "トラップ",
+      maxLevel: 5,
+      description: "トラップの解除判定にボーナスを得る。"
+    },
+    {
+      id: "destroyer",
+      name: "デストロイアー",
+      nameEn: "Destroyer",
+      skillClass: "general",
+      timing: "passive",
+      cost: "",
+      range: "",
+      target: "",
+      maxLevel: 5,
+      description: "物体破壊の判定にボーナスを得る。"
+    },
+    {
+      id: "six-sense",
+      name: "シックスセンス",
+      nameEn: "Six Sense",
+      skillClass: "general",
+      timing: "passive",
+      cost: "",
+      range: "",
+      target: "",
+      maxLevel: 5,
+      description: "罠や危機の感知判定にボーナスを得る。"
+    },
+    {
+      id: "mythos-knowledge",
+      name: "ミソス・ナレッジ",
+      nameEn: "Mythos Knowledge",
+      skillClass: "general",
+      timing: "passive",
+      cost: "",
+      range: "",
+      target: "",
+      maxLevel: 5,
+      description: "神話や信仰に関する知識判定にボーナスを得る。"
+    },
+    {
+      id: "magic-knowledge",
+      name: "マジック・ナレッジ",
+      nameEn: "Magic Knowledge",
+      skillClass: "general",
+      timing: "passive",
+      cost: "",
+      range: "",
+      target: "",
+      maxLevel: 5,
+      description: "魔法に関する知識判定にボーナスを得る。"
+    },
+    {
+      id: "alchemy-knowledge",
+      name: "アルケミー・ナレッジ",
+      nameEn: "Alchemy Knowledge",
+      skillClass: "general",
+      timing: "passive",
+      cost: "",
+      range: "",
+      target: "",
+      maxLevel: 5,
+      description: "錬金術に関する知識判定にボーナスを得る。"
+    },
+    {
+      id: "identify",
+      name: "アイデンティファイ",
+      nameEn: "Identify",
+      skillClass: "general",
+      timing: "action",
+      cost: "",
+      range: "",
+      target: "アイテム",
+      maxLevel: 5,
+      description: "アイテムの鑑定判定にボーナスを得る。"
+    },
+    {
+      id: "bluff",
+      name: "ブラフ",
+      nameEn: "Bluff",
+      skillClass: "general",
+      timing: "action",
+      cost: "",
+      range: "",
+      target: "",
+      maxLevel: 5,
+      description: "嘘や欺瞞の判定にボーナスを得る。"
+    },
+    {
+      id: "tracking",
+      name: "トラッキング",
+      nameEn: "Tracking",
+      skillClass: "general",
+      timing: "action",
+      cost: "",
+      range: "",
+      target: "",
+      maxLevel: 5,
+      description: "追跡や痕跡発見の判定にボーナスを得る。"
+    },
+    {
+      id: "insight",
+      name: "インサイト",
+      nameEn: "Insight",
+      skillClass: "general",
+      timing: "passive",
+      cost: "",
+      range: "",
+      target: "",
+      maxLevel: 5,
+      description: "洞察や心理判定にボーナスを得る。"
+    },
+    {
+      id: "surge-risk",
+      name: "サージ・リスク",
+      nameEn: "Surge Risk",
+      skillClass: "general",
+      timing: "passive",
+      cost: "",
+      range: "",
+      target: "",
+      maxLevel: 5,
+      description: "危険を顧みない行動で有利な効果を得る。"
+    },
+    {
+      id: "street-wise",
+      name: "ストリート・ワイズ",
+      nameEn: "Street Wise",
+      skillClass: "general",
+      timing: "passive",
+      cost: "",
+      range: "",
+      target: "",
+      maxLevel: 5,
+      description: "街や裏社会の情報収集判定にボーナスを得る。"
+    },
+    {
+      id: "vigilante",
+      name: "ビジランテ",
+      nameEn: "Vigilante",
+      skillClass: "general",
+      timing: "passive",
+      cost: "",
+      range: "",
+      target: "",
+      maxLevel: 5,
+      description: "警戒や見張りの判定にボーナスを得る。"
+    },
+    {
+      id: "resurge",
+      name: "リサージ",
+      nameEn: "Resurge",
+      skillClass: "general",
+      timing: "passive",
+      cost: "",
+      range: "",
+      target: "",
+      maxLevel: 5,
+      description: "回復や再起に関する効果を得る。"
+    },
+    {
+      id: "culture-erindle",
+      name: "カルチャー:エリンディル西方",
+      nameEn: "Culture: Erindle West",
+      skillClass: "general",
+      timing: "passive",
+      cost: "",
+      range: "",
+      target: "",
+      maxLevel: 5,
+      description: "エリンディル西方の文化や風習に関する知識判定にボーナスを得る。"
+    },
+    {
+      id: "modern-world",
+      name: "現代世界",
+      nameEn: "Modern World",
+      skillClass: "general",
+      timing: "passive",
+      cost: "",
+      range: "",
+      target: "",
+      maxLevel: 5,
+      description: "現代世界の知識や技術に関する判定にボーナスを得る。（アーシアン専用）"
+    },
+    {
+      id: "trivialist",
+      name: "トリビアリスト",
+      nameEn: "Trivialist",
+      skillClass: "general",
+      timing: "passive",
+      cost: "",
+      range: "",
+      target: "",
+      maxLevel: 5,
+      description: "雑学全般の知識判定にボーナスを得る。"
+    },
+    {
+      id: "gunsmith",
+      name: "ガンスミス",
+      nameEn: "Gunsmith",
+      skillClass: "general",
+      timing: "passive",
+      cost: "",
+      range: "",
+      target: "",
+      maxLevel: 5,
+      description: "銃器の製作や修理判定にボーナスを得る。"
+    }
+  ],
+
+  // Warrior Skills (ウォーリアー)
+  warrior: [
+    {
+      id: "bash",
+      name: "バッシュ",
+      nameEn: "Bash",
+      skillClass: "warrior",
+      timing: "action",
+      cost: "3MP",
+      range: "武器",
+      target: "単体",
+      maxLevel: 5,
+      description: "白兵攻撃のダメージが増加する。"
+    },
+    {
+      id: "cover",
+      name: "カバー",
+      nameEn: "Cover",
+      skillClass: "warrior",
+      timing: "damage",
+      cost: "2MP",
+      range: "10m",
+      target: "単体",
+      maxLevel: 3,
+      description: "味方が受けたダメージを代わりに受ける。"
+    },
+    {
+      id: "provoke",
+      name: "プロヴォーク",
+      nameEn: "Provoke",
+      skillClass: "warrior",
+      timing: "action",
+      cost: "3MP",
+      range: "10m",
+      target: "単体",
+      maxLevel: 3,
+      description: "敵の注意を自分に引きつける。"
+    }
+  ],
+
+  // Acolyte Skills (アコライト)
+  acolyte: [
+    {
+      id: "heal",
+      name: "ヒール",
+      nameEn: "Heal",
+      skillClass: "acolyte",
+      timing: "action",
+      cost: "2MP",
+      range: "10m",
+      target: "単体",
+      maxLevel: 5,
+      description: "対象のHPを回復する。"
+    },
+    {
+      id: "bless",
+      name: "ブレス",
+      nameEn: "Bless",
+      skillClass: "acolyte",
+      timing: "action",
+      cost: "3MP",
+      range: "10m",
+      target: "単体",
+      maxLevel: 5,
+      description: "対象の判定にボーナスを与える。"
+    },
+    {
+      id: "purify",
+      name: "ピュリファイ",
+      nameEn: "Purify",
+      skillClass: "acolyte",
+      timing: "action",
+      cost: "3MP",
+      range: "10m",
+      target: "単体",
+      maxLevel: 3,
+      description: "対象のバッドステータスを解除する。"
+    }
+  ],
+
+  // Mage Skills (メイジ)
+  mage: [
+    {
+      id: "fire-bolt",
+      name: "ファイアボルト",
+      nameEn: "Fire Bolt",
+      skillClass: "mage",
+      timing: "action",
+      cost: "3MP",
+      range: "20m",
+      target: "単体",
+      maxLevel: 5,
+      description: "炎の魔法攻撃を行う。"
+    },
+    {
+      id: "protect",
+      name: "プロテクション",
+      nameEn: "Protection",
+      skillClass: "mage",
+      timing: "action",
+      cost: "3MP",
+      range: "10m",
+      target: "単体",
+      maxLevel: 5,
+      description: "対象の防御力を上昇させる。"
+    },
+    {
+      id: "dispel",
+      name: "ディスペル",
+      nameEn: "Dispel",
+      skillClass: "mage",
+      timing: "action",
+      cost: "4MP",
+      range: "20m",
+      target: "単体",
+      maxLevel: 3,
+      description: "魔法効果を解除する。"
+    }
+  ],
+
+  // Thief Skills (シーフ)
+  thief: [
+    {
+      id: "surprise-attack",
+      name: "サプライズアタック",
+      nameEn: "Surprise Attack",
+      skillClass: "thief",
+      timing: "action",
+      cost: "3MP",
+      range: "武器",
+      target: "単体",
+      maxLevel: 5,
+      description: "不意打ちで大ダメージを与える。"
+    },
+    {
+      id: "hide",
+      name: "ハイド",
+      nameEn: "Hide",
+      skillClass: "thief",
+      timing: "setup",
+      cost: "2MP",
+      range: "自身",
+      target: "自身",
+      maxLevel: 3,
+      description: "隠密状態になる。"
+    },
+    {
+      id: "trap-detect",
+      name: "トラップディテクト",
+      nameEn: "Trap Detect",
+      skillClass: "thief",
+      timing: "action",
+      cost: "1MP",
+      range: "10m",
+      target: "範囲",
+      maxLevel: 5,
+      description: "罠を発見する。"
+    }
+  ],
+
+  // Additional class skills (placeholders for other classes)
+  // These should be filled in with actual rulebook data
+  gunslinger: [],
+  ninja: [],
+  dancer: [],
+  ranger: [],
+  monk: [],
+  bard: [],
+  samurai: [],
+  summoner: [],
+  sage: [],
+  alchemist: []
+};

@@ -1,0 +1,108 @@
+{{!-- Skill Selection Dialog Template --}}
+<form class="skill-selection-form">
+
+  {{!-- Character Class Info --}}
+  <section class="dialog-header" style="margin-bottom: 15px; padding: 12px; background: rgba(0,0,0,0.1); border-radius: 4px;">
+    <h3 style="margin: 0 0 8px 0;">{{localize "ARIANRHOD.AvailableClasses"}}</h3>
+    <div style="display: flex; gap: 20px; font-size: 0.95em;">
+      <div>
+        <strong>{{localize "ARIANRHOD.MainClass"}}:</strong>
+        {{#if hasMainClass}}
+          <span style="color: #4a90e2;">{{localize (lookup config.mainClasses mainClass)}}</span>
+        {{else}}
+          <span style="color: #888;">{{localize "ARIANRHOD.NoMainClass"}}</span>
+        {{/if}}
+      </div>
+      <div>
+        <strong>{{localize "ARIANRHOD.SupportClass"}}:</strong>
+        {{#if hasSupportClass}}
+          <span style="color: #e2904a;">{{localize (lookup config.supportClasses supportClass)}}</span>
+        {{else}}
+          <span style="color: #888;">{{localize "ARIANRHOD.NoSupportClass"}}</span>
+        {{/if}}
+      </div>
+    </div>
+  </section>
+
+  {{!-- Filters --}}
+  <section class="filters" style="margin-bottom: 15px; padding: 10px; background: rgba(0,0,0,0.05); border-radius: 4px;">
+    <div style="display: flex; gap: 15px; align-items: center;">
+      <div style="flex: 1;">
+        <label style="margin-right: 8px;">{{localize "ARIANRHOD.FilterByClass"}}:</label>
+        <select data-action="filterClass" style="padding: 4px 8px; min-width: 150px;">
+          {{#each filterOptions as |option|}}
+            <option value="{{option.value}}" {{#if (eq ../filterClass option.value)}}selected{{/if}}>
+              {{option.label}}
+            </option>
+          {{/each}}
+        </select>
+      </div>
+      <div style="flex: 1;">
+        <label style="margin-right: 8px;">{{localize "ARIANRHOD.Search"}}:</label>
+        <input type="text" data-action="search" value="{{searchQuery}}"
+               placeholder="{{localize 'ARIANRHOD.SearchSkills'}}"
+               style="padding: 4px 8px; width: 100%;" />
+      </div>
+    </div>
+  </section>
+
+  {{!-- Skills List --}}
+  <section class="skills-list" style="max-height: 400px; overflow-y: auto; border: 1px solid #ccc; border-radius: 4px;">
+    {{#if skills}}
+      <table style="width: 100%; border-collapse: collapse;">
+        <thead style="position: sticky; top: 0; background: #333; color: white; z-index: 10;">
+          <tr>
+            <th style="padding: 8px; text-align: left; width: 25%;">{{localize "ARIANRHOD.SkillName"}}</th>
+            <th style="padding: 8px; text-align: left; width: 12%;">{{localize "ARIANRHOD.SkillClass"}}</th>
+            <th style="padding: 8px; text-align: center; width: 10%;">{{localize "ARIANRHOD.Timing"}}</th>
+            <th style="padding: 8px; text-align: center; width: 8%;">{{localize "ARIANRHOD.Cost"}}</th>
+            <th style="padding: 8px; text-align: center; width: 10%;">{{localize "ARIANRHOD.Range"}}</th>
+            <th style="padding: 8px; text-align: left; width: 25%;">{{localize "ARIANRHOD.Description"}}</th>
+            <th style="padding: 8px; text-align: center; width: 10%;"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each skills as |skill|}}
+            <tr style="border-bottom: 1px solid #ddd; {{#if skill.acquired}}background: rgba(100,200,100,0.1);{{/if}}">
+              <td style="padding: 8px;">
+                <strong>{{skill.name}}</strong>
+                {{#if skill.nameEn}}
+                  <br><span style="font-size: 0.85em; color: #666;">{{skill.nameEn}}</span>
+                {{/if}}
+              </td>
+              <td style="padding: 8px; font-size: 0.9em;">{{skill.classLabel}}</td>
+              <td style="padding: 8px; text-align: center; font-size: 0.9em;">{{skill.timingLabel}}</td>
+              <td style="padding: 8px; text-align: center; font-size: 0.9em;">{{skill.cost}}</td>
+              <td style="padding: 8px; text-align: center; font-size: 0.9em;">{{skill.range}}</td>
+              <td style="padding: 8px; font-size: 0.85em; color: #555;">{{skill.description}}</td>
+              <td style="padding: 8px; text-align: center;">
+                {{#if skill.acquired}}
+                  <span style="color: green; font-size: 0.9em;">✓ {{localize "ARIANRHOD.Acquired"}}</span>
+                {{else}}
+                  <button type="button" data-action="selectSkill" data-skill-id="{{skill.id}}"
+                          style="padding: 4px 12px; background: #4a90e2; color: white; border: none; border-radius: 3px; cursor: pointer;">
+                    {{localize "ARIANRHOD.Select"}}
+                  </button>
+                {{/if}}
+              </td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    {{else}}
+      <div style="padding: 40px; text-align: center; color: #888;">
+        <p>{{localize "ARIANRHOD.NoSkillsAvailable"}}</p>
+        <p style="font-size: 0.9em;">{{localize "ARIANRHOD.SelectClassFirst"}}</p>
+      </div>
+    {{/if}}
+  </section>
+
+  {{!-- Footer --}}
+  <footer class="dialog-footer" style="margin-top: 15px; padding: 10px; text-align: right; border-top: 1px solid #ccc;">
+    <button type="button" onclick="this.closest('.window-app').querySelector('.window-header .close').click()"
+            style="padding: 6px 16px; background: #666; color: white; border: none; border-radius: 3px; cursor: pointer;">
+      {{localize "ARIANRHOD.Close"}}
+    </button>
+  </footer>
+
+</form>

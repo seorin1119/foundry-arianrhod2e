@@ -37,7 +37,8 @@
       "Bash(if [ -f \".gitignore\" ])",
       "Bash(then echo -e \"\\\\n# Rulebook reference \\(not for git\\)\\\\nRULEBOOK_REFERENCE.md\")",
       "Bash(else echo -e \"# Rulebook reference \\(not for git\\)\\\\nRULEBOOK_REFERENCE.md\")",
-      "Bash(fi)"
+      "Bash(fi)",
+      "Bash(\"C:\\\\Program Files\\\\poppler-24.08.0\\\\Library\\\\bin\\\\pdftotext.exe\" \"C:\\\\Users\\\\js4u1\\\\Desktop\\\\learning\\\\아리안로드2e 기본 룰북.pdf\" -)"
     ]
   }
 }

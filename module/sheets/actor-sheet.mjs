@@ -1,4 +1,5 @@
 import { rollCheckDialog, rollLifePath } from "../dice.mjs";
+import { SkillSelectionDialog } from "../apps/skill-selection-dialog.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -319,6 +320,15 @@ export class ArianrhodActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
   static async #onCreateItem(event, target) {
     event.preventDefault();
     const type = target.dataset.type;
+
+    // For skills, open the skill selection dialog
+    if (type === "skill") {
+      const dialog = new SkillSelectionDialog(this.actor);
+      dialog.render(true);
+      return;
+    }
+
+    // For other item types, create blank item as before
     const name = `${game.i18n.localize("ARIANRHOD.ItemCreate")} ${game.i18n.localize(`ARIANRHOD.${type.charAt(0).toUpperCase() + type.slice(1)}`)}`;
     await Item.create({ name, type, system: {} }, { parent: this.actor });
   }
