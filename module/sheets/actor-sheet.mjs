@@ -44,6 +44,8 @@ export class ArianrhodActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
       rollAttack: ArianrhodActorSheet.#onRollAttack,
       rollDamage: ArianrhodActorSheet.#onRollDamage,
       rollEvasion: ArianrhodActorSheet.#onRollEvasion,
+      toggleStatus: ArianrhodActorSheet.#onToggleStatus,
+      addStatusEffect: ArianrhodActorSheet.#onAddStatusEffect,
     },
   };
 
@@ -146,6 +148,26 @@ export class ArianrhodActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
     context.hpPercent = hp?.max ? Math.min(100, Math.max(0, Math.round((hp.value / hp.max) * 100))) : 0;
     context.mpPercent = mp?.max ? Math.min(100, Math.max(0, Math.round((mp.value / mp.max) * 100))) : 0;
     context.fatePercent = fate?.max ? Math.min(100, Math.max(0, Math.round((fate.value / fate.max) * 100))) : 0;
+
+    // Prepare status effects
+    const activeStatusIds = new Set();
+    context.statusEffects = this.actor.effects
+      .filter(e => e.statuses.size > 0)
+      .map(e => {
+        const statusId = e.statuses.first();
+        activeStatusIds.add(statusId);
+        return {
+          id: statusId,
+          label: e.name,
+          icon: e.icon
+        };
+      });
+    context.availableStatuses = (CONFIG.statusEffects ?? [])
+      .filter(s => !activeStatusIds.has(s.id))
+      .map(s => ({
+        id: s.id,
+        label: game.i18n.localize(s.name)
+      }));
 
     // Categorize items
     context.weapons = this.actor.items.filter((i) => i.type === "weapon");
@@ -466,6 +488,19 @@ export class ArianrhodActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
     const item = this.actor.items.get(itemId);
     if (!item) return;
     await activateSkill(this.actor, item);
+  }
+
+  static async #onToggleStatus(event, target) {
+    event.preventDefault();
+    const statusId = target.dataset.statusId;
+    if (statusId) await this.actor.toggleStatusEffect(statusId);
+  }
+
+  static async #onAddStatusEffect(event, target) {
+    const statusId = target.value;
+    if (!statusId) return;
+    await this.actor.toggleStatusEffect(statusId);
+    target.value = "";
   }
 
   static async #onRollAttack(event, target) {

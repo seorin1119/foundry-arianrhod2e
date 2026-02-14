@@ -119,6 +119,50 @@ export class ArianrhodActor extends Actor {
   }
 
   /**
+   * Toggle a status effect on/off for this actor.
+   * @param {string} statusId - The status effect ID (e.g., "poison", "stun")
+   * @returns {Promise<ActiveEffect|undefined>}
+   */
+  async toggleStatusEffect(statusId) {
+    const existing = this.effects.find(e => e.statuses.has(statusId));
+    if (existing) {
+      await existing.delete();
+      return undefined;
+    }
+
+    const statusDef = CONFIG.statusEffects.find(s => s.id === statusId);
+    if (!statusDef) return undefined;
+
+    const effectData = {
+      name: game.i18n.localize(statusDef.name),
+      icon: statusDef.icon,
+      statuses: [statusId],
+      changes: statusDef.changes ?? [],
+      flags: statusDef.flags ?? {}
+    };
+
+    const created = await this.createEmbeddedDocuments("ActiveEffect", [effectData]);
+    return created[0];
+  }
+
+  /**
+   * Check if this actor has a specific status effect.
+   * @param {string} statusId - The status effect ID
+   * @returns {boolean}
+   */
+  hasStatusEffect(statusId) {
+    return this.effects.some(e => e.statuses.has(statusId));
+  }
+
+  /**
+   * Get all active status effects on this actor.
+   * @returns {ActiveEffect[]}
+   */
+  getStatusEffects() {
+    return this.effects.filter(e => e.statuses.size > 0);
+  }
+
+  /**
    * Prompt user to select a weapon from multiple equipped weapons.
    * @param {Item[]} weapons - Array of equipped weapon items
    * @returns {Promise<Item|null>}

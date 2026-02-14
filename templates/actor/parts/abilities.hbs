@@ -121,6 +121,30 @@
     </div>
   </section>
 
+  {{!-- Status Effects --}}
+  <section class="status-effects">
+    <h3>{{localize "ARIANRHOD.StatusEffects"}}</h3>
+    <div class="status-effects-grid">
+      {{#each statusEffects as |effect|}}
+      <div class="status-badge {{effect.id}}" data-action="toggleStatus" data-status-id="{{effect.id}}" title="{{effect.label}}">
+        <img src="{{effect.icon}}" width="24" height="24" />
+        <span class="status-label">{{effect.label}}</span>
+      </div>
+      {{/each}}
+      {{#unless statusEffects.length}}
+      <span class="no-status">{{localize "ARIANRHOD.NoStatusEffects"}}</span>
+      {{/unless}}
+    </div>
+    <div class="status-add">
+      <select data-action="addStatusEffect">
+        <option value="">{{localize "ARIANRHOD.AddStatusEffect"}}...</option>
+        {{#each availableStatuses as |status|}}
+        <option value="{{status.id}}">{{status.label}}</option>
+        {{/each}}
+      </select>
+    </div>
+  </section>
+
   {{!-- Special Checks --}}
   <section class="special-checks">
     <h3>{{localize "ARIANRHOD.SpecialChecks"}}</h3>

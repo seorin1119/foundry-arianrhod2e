@@ -17,4 +17,22 @@ export class ArianrhodCombat extends Combat {
     // Final tie: alphabetical
     return (a.name || "").localeCompare(b.name || "");
   }
+
+  /** @override */
+  async _onStartTurn(combatant) {
+    await super._onStartTurn(combatant);
+    const actor = combatant.actor;
+    if (!actor) return;
+
+    // Process poison damage
+    if (actor.hasStatusEffect?.("poison")) {
+      const currentHP = actor.system.combat.hp.value;
+      const poisonDmg = 2;
+      await actor.update({"system.combat.hp.value": Math.max(0, currentHP - poisonDmg)});
+      await ChatMessage.create({
+        speaker: ChatMessage.getSpeaker({actor}),
+        content: `<div class="arianrhod status-msg"><img src="icons/svg/poison.svg" width="16" height="16"/> ${actor.name}: ${game.i18n.localize("ARIANRHOD.PoisonDamage")} (-${poisonDmg} HP)</div>`
+      });
+    }
+  }
 }

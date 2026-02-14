@@ -15,6 +15,7 @@ import { CharacterData, EnemyData } from "./module/data/actor-data.mjs";
 import { WeaponData, ArmorData, AccessoryData, SkillData, ItemData } from "./module/data/item-data.mjs";
 import { ArianrhodCombat } from "./module/documents/combat.mjs";
 import { rollCheck, rollCheckDialog } from "./module/dice.mjs";
+import { getStatusEffects } from "./module/helpers/status-effects.mjs";
 
 /* -------------------------------------------- */
 /*  Init Hook                                   */
@@ -38,6 +39,10 @@ Hooks.once("init", () => {
   CONFIG.Actor.documentClass = ArianrhodActor;
   CONFIG.Item.documentClass = ArianrhodItem;
   CONFIG.Combat.documentClass = ArianrhodCombat;
+
+  // Register status effects
+  CONFIG.statusEffects = getStatusEffects();
+  CONFIG.ActiveEffect.legacyTransferral = false;
 
   // Initiative: static value, no roll (行動値)
   CONFIG.Combat.initiative = {

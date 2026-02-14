@@ -358,6 +358,76 @@
 }
 
 /* ======================================== */
+/*  Status Effects                          */
+/* ======================================== */
+
+.arianrhod2e .status-effects {
+  margin-bottom: 12px;
+}
+
+.arianrhod2e .status-effects h3 {
+  font-size: 0.9em;
+  border-bottom: 1px solid var(--ar-border);
+  padding-bottom: 2px;
+  margin-bottom: 6px;
+  color: var(--ar-accent);
+}
+
+.arianrhod2e .status-effects-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.arianrhod2e .status-badge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 12px;
+  background: rgba(197, 48, 48, 0.15);
+  border: 1px solid var(--ar-beni);
+  cursor: pointer;
+  font-size: 0.8em;
+  transition: all 0.2s;
+}
+
+.arianrhod2e .status-badge:hover {
+  background: rgba(197, 48, 48, 0.3);
+}
+
+.arianrhod2e .status-badge img {
+  border: none;
+  border-radius: 50%;
+}
+
+.arianrhod2e .no-status {
+  color: var(--ar-text-light);
+  font-size: 0.85em;
+  font-style: italic;
+}
+
+.arianrhod2e .status-add select {
+  width: 100%;
+  margin-top: 4px;
+}
+
+/* Status message in chat */
+.arianrhod .status-msg {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 6px;
+  font-size: 0.9em;
+  color: var(--ar-beni);
+  font-weight: bold;
+}
+
+.arianrhod .status-msg img {
+  border: none;
+}
+
+/* ======================================== */
 /*  Special Checks                          */
 /* ======================================== */
 
@@ -1042,6 +1112,7 @@
 /* Section headers - illuminated manuscript style */
 .arianrhod2e .abilities-grid h3,
 .arianrhod2e .combat-stats h3,
+.arianrhod2e .status-effects h3,
 .arianrhod2e .equip-slots h3,
 .arianrhod2e .item-section-header h3 {
   color: var(--ar-accent-gold);
@@ -1056,6 +1127,7 @@
 
 .arianrhod2e .abilities-grid h3::after,
 .arianrhod2e .combat-stats h3::after,
+.arianrhod2e .status-effects h3::after,
 .arianrhod2e .equip-slots h3::after,
 .arianrhod2e .item-section-header h3::after {
   content: '';
