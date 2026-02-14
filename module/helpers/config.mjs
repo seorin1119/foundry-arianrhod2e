@@ -253,100 +253,100 @@ ARIANRHOD.classData = {
   warrior: {
     initialHp: 13,
     hpGrowth: 7,
-    initialMp: 11,
-    mpGrowth: 3,
+    initialMp: 10,
+    mpGrowth: 4,
     abilityMods: { str: 1, dex: 1, agi: 1 }
   },
   acolyte: {
     initialHp: 11,
     hpGrowth: 5,
     initialMp: 12,
-    mpGrowth: 4,
-    abilityMods: { dex: 1, men: 1 }
+    mpGrowth: 6,
+    abilityMods: { dex: 1, int: 1, men: 1 }
   },
   mage: {
     initialHp: 10,
     hpGrowth: 4,
     initialMp: 13,
-    mpGrowth: 4,
-    abilityMods: { int: 1, sen: 1 }
+    mpGrowth: 7,
+    abilityMods: { int: 1, sen: 1, men: 1 }
   },
   thief: {
     initialHp: 12,
     hpGrowth: 6,
     initialMp: 11,
-    mpGrowth: 3,
-    abilityMods: { dex: 1, sen: 1 }
+    mpGrowth: 5,
+    abilityMods: { dex: 1, agi: 1, sen: 1 }
   },
   gunslinger: {
     initialHp: 12,
-    hpGrowth: 4,
+    hpGrowth: 0,
     initialMp: 11,
-    mpGrowth: 3,
-    abilityMods: { dex: 1 }
+    mpGrowth: 0,
+    abilityMods: { dex: 1, sen: 1, men: 1 }
   },
   ninja: {
     initialHp: 10,
-    hpGrowth: 6,
-    initialMp: 11,
-    mpGrowth: 3,
-    abilityMods: { men: 1 }
+    hpGrowth: 0,
+    initialMp: 13,
+    mpGrowth: 0,
+    abilityMods: { dex: 1, agi: 1, int: 1 }
   },
   dancer: {
     initialHp: 11,
-    hpGrowth: 7,
-    initialMp: 13,
-    mpGrowth: 3,
-    abilityMods: { dex: 1 }
+    hpGrowth: 0,
+    initialMp: 12,
+    mpGrowth: 0,
+    abilityMods: { agi: 1, men: 1, luk: 1 }
   },
   ranger: {
     initialHp: 12,
-    hpGrowth: 5,
-    initialMp: 12,
-    mpGrowth: 3,
-    abilityMods: { men: 1 }
+    hpGrowth: 0,
+    initialMp: 11,
+    mpGrowth: 0,
+    abilityMods: { str: 1, dex: 1, sen: 1 }
   },
   monk: {
     initialHp: 12,
-    hpGrowth: 6,
+    hpGrowth: 0,
     initialMp: 11,
-    mpGrowth: 3,
-    abilityMods: { men: 1 }
+    mpGrowth: 0,
+    abilityMods: { str: 1, agi: 1, men: 1 }
   },
   bard: {
     initialHp: 10,
-    hpGrowth: 5,
+    hpGrowth: 0,
     initialMp: 13,
-    mpGrowth: 4,
-    abilityMods: { sen: 1 }
+    mpGrowth: 0,
+    abilityMods: { sen: 1, men: 1, luk: 1 }
   },
   samurai: {
     initialHp: 12,
-    hpGrowth: 7,
-    initialMp: 12,
-    mpGrowth: 3,
-    abilityMods: { str: 1 }
+    hpGrowth: 0,
+    initialMp: 11,
+    mpGrowth: 0,
+    abilityMods: { str: 1, dex: 1, men: 1 }
   },
   summoner: {
     initialHp: 8,
-    hpGrowth: 4,
+    hpGrowth: 0,
     initialMp: 15,
-    mpGrowth: 5,
-    abilityMods: { int: 1 }
+    mpGrowth: 0,
+    abilityMods: { int: 1, men: 1, luk: 1 }
   },
   sage: {
     initialHp: 9,
-    hpGrowth: 4,
+    hpGrowth: 0,
     initialMp: 14,
-    mpGrowth: 4,
-    abilityMods: { sen: 1 }
+    mpGrowth: 0,
+    abilityMods: { int: 1, sen: 1, luk: 1 }
   },
   alchemist: {
     initialHp: 10,
-    hpGrowth: 5,
+    hpGrowth: 0,
     initialMp: 13,
-    mpGrowth: 4,
-    abilityMods: { int: 1 }
+    mpGrowth: 0,
+    abilityMods: { dex: 1, int: 1, sen: 1 }
   },
 };
 

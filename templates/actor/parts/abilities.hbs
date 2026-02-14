@@ -11,13 +11,13 @@
               title="{{ability.label}} チェック (クリックでロール)">
           {{ability.abbr}}
         </span>
-        <button type="button" data-action="decreaseAbility" data-ability="{{key}}"
-                title="{{localize 'ARIANRHOD.DecreaseAbility'}}" style="width: 20px; padding: 1px; font-size: 0.9em;">-</button>
+        <button type="button" class="ability-adjust-btn" data-action="decreaseAbility" data-ability="{{key}}"
+                title="{{localize 'ARIANRHOD.DecreaseAbility'}}">-</button>
         <input class="ability-value" type="number"
                name="system.abilities.{{key}}.value"
                value="{{ability.value}}" data-dtype="Number" />
-        <button type="button" data-action="increaseAbility" data-ability="{{key}}"
-                title="{{localize 'ARIANRHOD.IncreaseAbility'}}" style="width: 20px; padding: 1px; font-size: 0.9em;">+</button>
+        <button type="button" class="ability-adjust-btn" data-action="increaseAbility" data-ability="{{key}}"
+                title="{{localize 'ARIANRHOD.IncreaseAbility'}}">+</button>
         {{#if ability.mod}}
         <span class="ability-modifier">+{{ability.mod}}</span>
         <span class="ability-total">={{ability.total}}</span>
@@ -34,32 +34,47 @@
     <div class="combat-grid">
       <div class="resource hp flexrow">
         <label>{{localize "ARIANRHOD.HP"}}</label>
-        <div class="resource-values">
-          <input type="number" name="system.combat.hp.value"
-                 value="{{system.combat.hp.value}}" data-dtype="Number" />
-          <span>/</span>
-          <input type="number" name="system.combat.hp.max"
-                 value="{{system.combat.hp.max}}" data-dtype="Number" />
+        <div class="resource-bar-container">
+          <div class="resource-bar" style="--bar-pct: {{hpPercent}}%">
+            <div class="resource-bar-fill"></div>
+          </div>
+          <div class="resource-values">
+            <input type="number" name="system.combat.hp.value"
+                   value="{{system.combat.hp.value}}" data-dtype="Number" />
+            <span>/</span>
+            <input type="number" name="system.combat.hp.max"
+                   value="{{system.combat.hp.max}}" data-dtype="Number" />
+          </div>
         </div>
       </div>
       <div class="resource mp flexrow">
         <label>{{localize "ARIANRHOD.MP"}}</label>
-        <div class="resource-values">
-          <input type="number" name="system.combat.mp.value"
-                 value="{{system.combat.mp.value}}" data-dtype="Number" />
-          <span>/</span>
-          <input type="number" name="system.combat.mp.max"
-                 value="{{system.combat.mp.max}}" data-dtype="Number" />
+        <div class="resource-bar-container">
+          <div class="resource-bar" style="--bar-pct: {{mpPercent}}%">
+            <div class="resource-bar-fill"></div>
+          </div>
+          <div class="resource-values">
+            <input type="number" name="system.combat.mp.value"
+                   value="{{system.combat.mp.value}}" data-dtype="Number" />
+            <span>/</span>
+            <input type="number" name="system.combat.mp.max"
+                   value="{{system.combat.mp.max}}" data-dtype="Number" />
+          </div>
         </div>
       </div>
       <div class="resource fate flexrow">
         <label>{{localize "ARIANRHOD.Fate"}}</label>
-        <div class="resource-values">
-          <input type="number" name="system.fate.value"
-                 value="{{system.fate.value}}" data-dtype="Number" />
-          <span>/</span>
-          <input type="number" name="system.fate.max"
-                 value="{{system.fate.max}}" data-dtype="Number" />
+        <div class="resource-bar-container">
+          <div class="resource-bar" style="--bar-pct: {{fatePercent}}%">
+            <div class="resource-bar-fill"></div>
+          </div>
+          <div class="resource-values">
+            <input type="number" name="system.fate.value"
+                   value="{{system.fate.value}}" data-dtype="Number" />
+            <span>/</span>
+            <input type="number" name="system.fate.max"
+                   value="{{system.fate.max}}" data-dtype="Number" />
+          </div>
         </div>
       </div>
       <div class="combat-detail flexrow">

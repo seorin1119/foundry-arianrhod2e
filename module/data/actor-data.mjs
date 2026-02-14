@@ -114,6 +114,9 @@ export class CharacterData extends foundry.abstract.TypeDataModel {
       ability.mod = raceMod + mainClassMod + supportClassMod;
       ability.total = ability.value + ability.mod;
 
+      // Race base value (기본치 = 종족 기본치, before class modifiers)
+      ability.base = ability.value + raceMod;
+
       // Calculate ability bonuses (能力ボーナス = floor(能力基本値 / 3))
       // Use total value (including all modifiers) for bonus calculation
       ability.bonus = Math.floor(ability.total / 3);
@@ -122,18 +125,18 @@ export class CharacterData extends foundry.abstract.TypeDataModel {
     // Calculate class-based HP/MP maximums
     if (mainClassData && supportClassData) {
       // Formula from Arianrhod 2E Rulebook p.62:
-      // Max HP = STR + Main initial HP + Support initial HP + (Main HP growth + Support HP growth) × (level - 1)
-      // Max MP = MEN + Main initial MP + Support initial MP + (Main MP growth + Support MP growth) × (level - 1)
-      // Use total ability value (including race modifiers)
-      const calculatedMaxHp = this.abilities.str.total
+      // Max HP = STR base (기본치) + Main initialHP + Support initialHP + Main hpGrowth × (level - 1)
+      // Max MP = MEN base (기본치) + Main initialMP + Support initialMP + Main mpGrowth × (level - 1)
+      // 기본치 = race base value (ability.value + raceMod, before class modifiers)
+      const calculatedMaxHp = this.abilities.str.base
         + mainClassData.initialHp
         + supportClassData.initialHp
-        + (mainClassData.hpGrowth + supportClassData.hpGrowth) * (this.level - 1);
+        + mainClassData.hpGrowth * (this.level - 1);
 
-      const calculatedMaxMp = this.abilities.men.total
+      const calculatedMaxMp = this.abilities.men.base
         + mainClassData.initialMp
         + supportClassData.initialMp
-        + (mainClassData.mpGrowth + supportClassData.mpGrowth) * (this.level - 1);
+        + mainClassData.mpGrowth * (this.level - 1);
 
       this.combat.hp.max = calculatedMaxHp;
       this.combat.mp.max = calculatedMaxMp;
@@ -141,14 +144,8 @@ export class CharacterData extends foundry.abstract.TypeDataModel {
     // If either class is missing/invalid, skip calculation (preserve manual values)
 
     // Set race-specific fate max
-    if ([3, 5, 6].includes(this.fate.max)) {
-      const oldMax = this.fate.max;
-      this.fate.max = this.race === "huulin" ? 6 : 5;
-      // If max increased and value was at old max, increase value too
-      if (this.fate.value === oldMax && this.fate.max > oldMax) {
-        this.fate.value = this.fate.max;
-      }
-    }
+    const raceFateMax = this.race === "huulin" ? 6 : 5;
+    this.fate.max = raceFateMax;
 
     // Clamp current values to max
     this.combat.hp.value = Math.min(this.combat.hp.value, this.combat.hp.max);

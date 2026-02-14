@@ -30,6 +30,14 @@
   --ar-leather: #654321;
   --ar-metal: #8b8680;
   --ar-magic: #7c3aed;
+
+  /* Japanese fantasy palette */
+  --ar-washi: #f5f0e8;
+  --ar-sumi: #2d2d2d;
+  --ar-beni: #c53d43;
+  --ar-ai: #264348;
+  --ar-kin: #c9a84c;
+  --ar-shirogane: #c0c0c0;
 }
 
 /* ======================================== */
@@ -801,6 +809,103 @@
 }
 
 /* ======================================== */
+/*  HP/MP/Fate Progress Bars               */
+/* ======================================== */
+
+.arianrhod2e .resource-bar-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.arianrhod2e .resource-bar {
+  height: 8px;
+  background: var(--ar-bg-darker);
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid var(--ar-border-light);
+}
+
+.arianrhod2e .resource-bar-fill {
+  height: 100%;
+  width: var(--bar-pct);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.arianrhod2e .resource.hp .resource-bar-fill {
+  background: linear-gradient(to right, var(--ar-beni), #e74c3c);
+}
+
+.arianrhod2e .resource.mp .resource-bar-fill {
+  background: linear-gradient(to right, var(--ar-ai), #3498db);
+}
+
+.arianrhod2e .resource.fate .resource-bar-fill {
+  background: linear-gradient(to right, var(--ar-fate), #f39c12);
+}
+
+/* ======================================== */
+/*  Header Utility Classes (inline removal) */
+/* ======================================== */
+
+.arianrhod2e .level-control {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+}
+
+.arianrhod2e .level-control button {
+  width: 24px;
+  padding: 2px;
+}
+
+.arianrhod2e .level-control input {
+  flex: 1;
+}
+
+.arianrhod2e .growth-display {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.arianrhod2e .growth-remaining {
+  font-weight: bold;
+}
+
+.arianrhod2e .growth-detail {
+  font-size: 0.85em;
+  color: var(--ar-text-light);
+}
+
+.arianrhod2e .lifepath-field {
+  display: flex;
+  gap: 4px;
+  flex-direction: column;
+}
+
+.arianrhod2e .lifepath-row {
+  display: flex;
+  gap: 4px;
+}
+
+.arianrhod2e .lifepath-row select {
+  flex: 1;
+}
+
+.arianrhod2e .lifepath-custom-input {
+  width: 100%;
+}
+
+.arianrhod2e .ability-adjust-btn {
+  width: 20px;
+  padding: 1px;
+  font-size: 0.9em;
+}
+
+/* ======================================== */
 /*  Fantasy RPG Style Enhancements         */
 /* ======================================== */
 
@@ -1059,19 +1164,17 @@
   box-shadow: 0 3px 8px rgba(139, 111, 71, 0.3);
 }
 
-/* Combat details - engraved metal style */
+/* Combat details - clean readable style */
 .arianrhod2e .combat-detail {
-  background: linear-gradient(135deg, var(--ar-metal), #a8a49f);
+  background: var(--ar-parchment);
   border: 1px solid var(--ar-border);
-  color: white;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-  box-shadow:
-    inset 0 1px 1px rgba(255, 255, 255, 0.3),
-    0 2px 4px rgba(0, 0, 0, 0.2);
+  border-left: 3px solid var(--ar-accent);
+  color: var(--ar-text);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .arianrhod2e .combat-detail label {
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--ar-accent);
   font-weight: 700;
   text-transform: uppercase;
   font-size: 0.7em;
@@ -1079,9 +1182,9 @@
 }
 
 .arianrhod2e .combat-detail input {
-  background: rgba(255, 255, 255, 0.95);
-  border: 1px solid rgba(139, 111, 71, 0.5);
-  color: var(--ar-leather);
+  background: white;
+  border: 1px solid var(--ar-border-light);
+  color: var(--ar-text);
   font-weight: 700;
 }
 
@@ -1116,6 +1219,22 @@
 
 .arianrhod2e ::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(to bottom, var(--ar-accent-gold), var(--ar-accent));
+}
+
+/* ======================================== */
+/*  Accessibility                           */
+/* ======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .arianrhod2e * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+.arianrhod2e :focus-visible {
+  outline: 2px solid var(--ar-accent-gold);
+  outline-offset: 2px;
 }
 
 } /* end @layer arianrhod */

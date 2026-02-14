@@ -53,10 +53,10 @@
       </div>
       <div class="field field-sm">
         <label>{{localize "ARIANRHOD.Level"}}</label>
-        <div style="display: flex; gap: 2px; align-items: center;">
-          <button type="button" data-action="levelDown" title="{{localize 'ARIANRHOD.LevelDown'}}" style="width: 24px; padding: 2px;">-</button>
-          <input type="number" name="system.level" value="{{system.level}}" data-dtype="Number" style="flex: 1;" />
-          <button type="button" data-action="levelUp" title="{{localize 'ARIANRHOD.LevelUp'}}" style="width: 24px; padding: 2px;">+</button>
+        <div class="level-control">
+          <button type="button" data-action="levelDown" title="{{localize 'ARIANRHOD.LevelDown'}}">-</button>
+          <input type="number" name="system.level" value="{{system.level}}" data-dtype="Number" />
+          <button type="button" data-action="levelUp" title="{{localize 'ARIANRHOD.LevelUp'}}">+</button>
         </div>
       </div>
       <div class="field field-sm">
@@ -65,9 +65,9 @@
       </div>
       <div class="field field-sm">
         <label>{{localize "ARIANRHOD.GrowthPoints"}}</label>
-        <div style="display: flex; align-items: center; gap: 4px;">
-          <span style="font-weight: bold;">{{system.growthPoints.remaining}}</span>
-          <span style="font-size: 0.85em; color: #666;">({{system.growthPoints.spent}}/{{system.growthPoints.total}})</span>
+        <div class="growth-display">
+          <span class="growth-remaining">{{system.growthPoints.remaining}}</span>
+          <span class="growth-detail">({{system.growthPoints.spent}}/{{system.growthPoints.total}})</span>
         </div>
       </div>
     </div>
@@ -80,9 +80,9 @@
     <div class="header-details flexrow">
       <div class="field">
         <label>{{localize "ARIANRHOD.Origin"}}</label>
-        <div style="display: flex; gap: 4px; flex-direction: column;">
-          <div style="display: flex; gap: 4px;">
-            <select name="system.lifePath.origin" style="flex: 1;">
+        <div class="lifepath-field">
+          <div class="lifepath-row">
+            <select name="system.lifePath.origin">
               <option value="">--</option>
               {{#each config.lifePath.origin as |label key|}}
                 <option value="{{key}}" {{#if (eq ../system.lifePath.origin key)}}selected{{/if}}>
@@ -99,15 +99,15 @@
           </div>
           {{#if (eq system.lifePath.origin "custom")}}
           <input type="text" name="system.lifePath.originCustom" value="{{system.lifePath.originCustom}}"
-                 placeholder="{{localize 'ARIANRHOD.LifePathCustomPlaceholder'}}" style="width: 100%;" />
+                 placeholder="{{localize 'ARIANRHOD.LifePathCustomPlaceholder'}}" class="lifepath-custom-input" />
           {{/if}}
         </div>
       </div>
       <div class="field">
         <label>{{localize "ARIANRHOD.Circumstance"}}</label>
-        <div style="display: flex; gap: 4px; flex-direction: column;">
-          <div style="display: flex; gap: 4px;">
-            <select name="system.lifePath.circumstance" style="flex: 1;">
+        <div class="lifepath-field">
+          <div class="lifepath-row">
+            <select name="system.lifePath.circumstance">
               <option value="">--</option>
               {{#each config.lifePath.circumstance as |label key|}}
                 <option value="{{key}}" {{#if (eq ../system.lifePath.circumstance key)}}selected{{/if}}>
@@ -124,15 +124,15 @@
           </div>
           {{#if (eq system.lifePath.circumstance "custom")}}
           <input type="text" name="system.lifePath.circumstanceCustom" value="{{system.lifePath.circumstanceCustom}}"
-                 placeholder="{{localize 'ARIANRHOD.LifePathCustomPlaceholder'}}" style="width: 100%;" />
+                 placeholder="{{localize 'ARIANRHOD.LifePathCustomPlaceholder'}}" class="lifepath-custom-input" />
           {{/if}}
         </div>
       </div>
       <div class="field">
         <label>{{localize "ARIANRHOD.Objective"}}</label>
-        <div style="display: flex; gap: 4px; flex-direction: column;">
-          <div style="display: flex; gap: 4px;">
-            <select name="system.lifePath.objective" style="flex: 1;">
+        <div class="lifepath-field">
+          <div class="lifepath-row">
+            <select name="system.lifePath.objective">
               <option value="">--</option>
               {{#each config.lifePath.objective as |label key|}}
                 <option value="{{key}}" {{#if (eq ../system.lifePath.objective key)}}selected{{/if}}>
@@ -149,7 +149,7 @@
           </div>
           {{#if (eq system.lifePath.objective "custom")}}
           <input type="text" name="system.lifePath.objectiveCustom" value="{{system.lifePath.objectiveCustom}}"
-                 placeholder="{{localize 'ARIANRHOD.LifePathCustomPlaceholder'}}" style="width: 100%;" />
+                 placeholder="{{localize 'ARIANRHOD.LifePathCustomPlaceholder'}}" class="lifepath-custom-input" />
           {{/if}}
         </div>
       </div>

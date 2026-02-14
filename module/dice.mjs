@@ -108,35 +108,29 @@ export async function rollCheckDialog({
     </form>
   `;
 
-  return new Promise((resolve) => {
-    new Dialog({
-      title: dialogTitle,
-      content: content,
-      buttons: {
-        roll: {
-          icon: '<i class="fas fa-dice"></i>',
-          label: game.i18n.localize("ARIANRHOD.Roll"),
-          callback: async (html) => {
-            const mod = parseInt(html.find('[name="modifier"]').val()) || 0;
-            const fate =
-              parseInt(html.find('[name="fateDice"]').val()) || 0;
-            const result = await rollCheck({
-              modifier: mod,
-              fateDice: Math.min(fate, maxFate),
-              label: label,
-              actor: actor,
-            });
-            resolve(result);
-          },
-        },
-        cancel: {
-          icon: '<i class="fas fa-times"></i>',
-          label: game.i18n.localize("ARIANRHOD.Cancel"),
-          callback: () => resolve(null),
-        },
+  const result = await foundry.applications.api.DialogV2.prompt({
+    window: { title: dialogTitle },
+    content: content,
+    ok: {
+      icon: "fas fa-dice",
+      label: game.i18n.localize("ARIANRHOD.Roll"),
+      callback: (event, button, dialog) => {
+        const form = button.form;
+        const mod = parseInt(form.querySelector('[name="modifier"]').value) || 0;
+        const fate = parseInt(form.querySelector('[name="fateDice"]')?.value) || 0;
+        return { modifier: mod, fateDice: Math.min(fate, maxFate) };
       },
-      default: "roll",
-    }).render(true);
+    },
+    rejectClose: false,
+  });
+
+  if (!result) return null;
+
+  return rollCheck({
+    modifier: result.modifier,
+    fateDice: result.fateDice,
+    label: label,
+    actor: actor,
   });
 }
 

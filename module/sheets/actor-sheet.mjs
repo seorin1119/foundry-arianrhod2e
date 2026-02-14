@@ -83,6 +83,14 @@ export class ArianrhodActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
     },
   };
 
+  static TABS = {
+    primary: {
+      id: "primary",
+      group: "primary",
+      initial: "abilities"
+    }
+  };
+
   /** @override */
   _configureRenderOptions(options) {
     super._configureRenderOptions(options);
@@ -91,62 +99,6 @@ export class ArianrhodActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
     } else {
       options.parts = ["enemyHeader", "tabs", "enemyAbilities", "skills", "description"];
     }
-  }
-
-  tabGroups = {
-    primary: "abilities",
-  };
-
-  /** @override */
-  _onRender(context, options) {
-    super._onRender(context, options);
-    this._activateTabNavigation();
-  }
-
-  /**
-   * Activate tab navigation handlers.
-   */
-  _activateTabNavigation() {
-    const tabs = this.element.querySelector('[data-group="primary"]');
-    if (!tabs) return;
-
-    // Add click handlers for all tab links
-    tabs.querySelectorAll('[data-tab]').forEach(tab => {
-      tab.addEventListener('click', (event) => {
-        event.preventDefault();
-        const tabId = tab.dataset.tab;
-        this._onChangeTab(tabId);
-      });
-    });
-  }
-
-  /**
-   * Handle tab changes.
-   */
-  _onChangeTab(tabId) {
-    // Update the active tab
-    this.tabGroups.primary = tabId;
-
-    // Update tab UI
-    const tabs = this.element.querySelector('[data-group="primary"]');
-    if (tabs) {
-      tabs.querySelectorAll('[data-tab]').forEach(tab => {
-        if (tab.dataset.tab === tabId) {
-          tab.classList.add('active');
-        } else {
-          tab.classList.remove('active');
-        }
-      });
-    }
-
-    // Update tab content visibility
-    this.element.querySelectorAll('.tab[data-group="primary"]').forEach(content => {
-      if (content.dataset.tab === tabId) {
-        content.classList.add('active');
-      } else {
-        content.classList.remove('active');
-      }
-    });
   }
 
   /** @override */
@@ -181,6 +133,14 @@ export class ArianrhodActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
         };
       }
     }
+
+    // Compute resource bar percentages
+    const hp = systemData.combat?.hp;
+    const mp = systemData.combat?.mp;
+    const fate = systemData.fate;
+    context.hpPercent = hp?.max ? Math.min(100, Math.max(0, Math.round((hp.value / hp.max) * 100))) : 0;
+    context.mpPercent = mp?.max ? Math.min(100, Math.max(0, Math.round((mp.value / mp.max) * 100))) : 0;
+    context.fatePercent = fate?.max ? Math.min(100, Math.max(0, Math.round((fate.value / fate.max) * 100))) : 0;
 
     // Categorize items
     context.weapons = this.actor.items.filter((i) => i.type === "weapon");

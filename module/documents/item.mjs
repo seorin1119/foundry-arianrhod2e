@@ -3,35 +3,32 @@
  * @extends {Item}
  */
 export class ArianrhodItem extends Item {
-  /** @override */
-  prepareData() {
-    super.prepareData();
-  }
-
   /**
    * Post the item's description to chat.
    * @returns {Promise<ChatMessage>}
    */
   async postToChat() {
     const systemData = this.system;
+    const esc = foundry.utils.escapeHTML;
+
     let content = `<div class="arianrhod item-chat">`;
-    content += `<h3>${this.name}</h3>`;
+    content += `<h3>${esc(this.name)}</h3>`;
 
     if (this.type === "skill") {
       if (systemData.timing) {
-        content += `<p><strong>${game.i18n.localize("ARIANRHOD.Timing")}:</strong> ${systemData.timing}</p>`;
+        content += `<p><strong>${game.i18n.localize("ARIANRHOD.Timing")}:</strong> ${esc(systemData.timing)}</p>`;
       }
       if (systemData.target) {
-        content += `<p><strong>${game.i18n.localize("ARIANRHOD.Target")}:</strong> ${systemData.target}</p>`;
+        content += `<p><strong>${game.i18n.localize("ARIANRHOD.Target")}:</strong> ${esc(systemData.target)}</p>`;
       }
       if (systemData.range) {
-        content += `<p><strong>${game.i18n.localize("ARIANRHOD.Range")}:</strong> ${systemData.range}</p>`;
+        content += `<p><strong>${game.i18n.localize("ARIANRHOD.Range")}:</strong> ${esc(systemData.range)}</p>`;
       }
       if (systemData.cost) {
-        content += `<p><strong>${game.i18n.localize("ARIANRHOD.Cost")}:</strong> ${systemData.cost}</p>`;
+        content += `<p><strong>${game.i18n.localize("ARIANRHOD.Cost")}:</strong> ${esc(systemData.cost)}</p>`;
       }
       if (systemData.effect) {
-        content += `<p><strong>${game.i18n.localize("ARIANRHOD.Effect")}:</strong> ${systemData.effect}</p>`;
+        content += `<p><strong>${game.i18n.localize("ARIANRHOD.Effect")}:</strong> ${esc(systemData.effect)}</p>`;
       }
     }
 

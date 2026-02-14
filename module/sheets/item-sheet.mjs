@@ -28,8 +28,12 @@ export class ArianrhodItemSheet extends HandlebarsApplicationMixin(ItemSheetV2) 
     description: { template: "systems/arianrhod2e/templates/item/parts/description.hbs" },
   };
 
-  tabGroups = {
-    primary: "attributes",
+  static TABS = {
+    primary: {
+      id: "primary",
+      group: "primary",
+      initial: "attributes"
+    }
   };
 
   /** @override */
