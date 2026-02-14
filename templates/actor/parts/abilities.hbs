@@ -75,18 +75,18 @@
           </div>
         </div>
       </div>
-      <div class="combat-detail computed flexrow"
+      <div class="combat-detail computed clickable flexrow" data-action="rollAttack"
            title="{{localize 'ARIANRHOD.Accuracy'}}: {{system.combat.accuracyBase}} + {{system.combat.accuracyEquip}}">
         <label>{{localize "ARIANRHOD.Accuracy"}}</label>
         <span class="computed-value">{{system.combat.accuracy}}</span>
         <span class="computed-breakdown">({{system.combat.accuracyBase}}+{{system.combat.accuracyEquip}})</span>
       </div>
-      <div class="combat-detail computed flexrow"
+      <div class="combat-detail computed clickable flexrow" data-action="rollDamage"
            title="{{localize 'ARIANRHOD.Attack'}}: {{system.combat.attackEquip}}">
         <label>{{localize "ARIANRHOD.Attack"}}</label>
         <span class="computed-value">{{system.combat.attack}}</span>
       </div>
-      <div class="combat-detail computed flexrow"
+      <div class="combat-detail computed clickable flexrow" data-action="rollEvasion"
            title="{{localize 'ARIANRHOD.Evasion'}}: {{system.combat.evasionEquip}}">
         <label>{{localize "ARIANRHOD.Evasion"}}</label>
         <span class="computed-value">{{system.combat.evasion}}</span>

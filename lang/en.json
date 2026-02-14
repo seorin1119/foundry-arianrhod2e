@@ -222,6 +222,17 @@
   "ARIANRHOD.SkillMaxLevelReached": "Skill is already at maximum level",
   "ARIANRHOD.SkillMinLevelReached": "Skill is already at minimum level (1)",
 
+  "ARIANRHOD.CombatStart": "Combat Start",
+  "ARIANRHOD.CombatRound": "Round",
+  "ARIANRHOD.CombatTurn": "Turn",
+
+  "ARIANRHOD.AttackRoll": "Attack Roll",
+  "ARIANRHOD.EvasionRoll": "Evasion Roll",
+  "ARIANRHOD.DamageRoll": "Damage",
+  "ARIANRHOD.SelectWeapon": "Select Weapon",
+  "ARIANRHOD.NoWeaponEquipped": "No weapon equipped",
+  "ARIANRHOD.Confirm": "Confirm",
+
   "ARIANRHOD.SkillActivate": "Skill Activate",
   "ARIANRHOD.InsufficientMP": "Insufficient MP",
   "ARIANRHOD.InsufficientHP": "Insufficient HP",

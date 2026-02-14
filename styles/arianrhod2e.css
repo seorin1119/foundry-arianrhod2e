@@ -1314,4 +1314,42 @@
   margin-top: 4px;
 }
 
+/* ======================================== */
+/*  Clickable Combat Stats                 */
+/* ======================================== */
+
+.arianrhod2e .combat-detail.clickable {
+  cursor: pointer;
+}
+
+.arianrhod2e .combat-detail.clickable:hover {
+  background: var(--ar-bg-darker);
+  border-left-color: var(--ar-accent-gold);
+}
+
+/* ======================================== */
+/*  Damage Chat Card                       */
+/* ======================================== */
+
+.arianrhod .damage-card {
+  text-align: center;
+}
+
+.arianrhod .damage-card h3 {
+  margin: 0 0 4px;
+  font-size: 0.9em;
+  color: var(--ar-text-light);
+}
+
+.arianrhod .damage-weapon {
+  font-size: 0.85em;
+  color: var(--ar-text-light);
+}
+
+.arianrhod .damage-value {
+  font-size: 1.8em;
+  font-weight: bold;
+  color: var(--ar-hp, #c53030);
+}
+
 } /* end @layer arianrhod */

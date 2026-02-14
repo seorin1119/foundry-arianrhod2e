@@ -13,6 +13,7 @@ import { ArianrhodActorSheet } from "./module/sheets/actor-sheet.mjs";
 import { ArianrhodItemSheet } from "./module/sheets/item-sheet.mjs";
 import { CharacterData, EnemyData } from "./module/data/actor-data.mjs";
 import { WeaponData, ArmorData, AccessoryData, SkillData, ItemData } from "./module/data/item-data.mjs";
+import { ArianrhodCombat } from "./module/documents/combat.mjs";
 import { rollCheck, rollCheckDialog } from "./module/dice.mjs";
 
 /* -------------------------------------------- */
@@ -36,6 +37,13 @@ Hooks.once("init", () => {
   // Define custom Document classes
   CONFIG.Actor.documentClass = ArianrhodActor;
   CONFIG.Item.documentClass = ArianrhodItem;
+  CONFIG.Combat.documentClass = ArianrhodCombat;
+
+  // Initiative: static value, no roll (行動値)
+  CONFIG.Combat.initiative = {
+    formula: "@combat.initiative",
+    decimals: 0
+  };
 
   // Register DataModel classes for Actor types
   Object.assign(CONFIG.Actor.dataModels, {

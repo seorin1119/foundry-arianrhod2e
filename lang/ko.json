@@ -314,6 +314,17 @@
   "ARIANRHOD.SkillMaxLevelReached": "스킬이 이미 최대 레벨입니다",
   "ARIANRHOD.SkillMinLevelReached": "스킬이 이미 최소 레벨(1)입니다",
 
+  "ARIANRHOD.CombatStart": "전투 개시",
+  "ARIANRHOD.CombatRound": "라운드",
+  "ARIANRHOD.CombatTurn": "턴",
+
+  "ARIANRHOD.AttackRoll": "명중 판정",
+  "ARIANRHOD.EvasionRoll": "회피 판정",
+  "ARIANRHOD.DamageRoll": "데미지",
+  "ARIANRHOD.SelectWeapon": "무기 선택",
+  "ARIANRHOD.NoWeaponEquipped": "장비한 무기가 없습니다",
+  "ARIANRHOD.Confirm": "확인",
+
   "ARIANRHOD.SkillActivate": "스킬 발동",
   "ARIANRHOD.InsufficientMP": "MP가 부족합니다",
   "ARIANRHOD.InsufficientHP": "HP가 부족합니다",

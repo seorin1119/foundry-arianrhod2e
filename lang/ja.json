@@ -222,6 +222,17 @@
   "ARIANRHOD.SkillMaxLevelReached": "スキルは既に最大レベルです",
   "ARIANRHOD.SkillMinLevelReached": "スキルは既に最小レベル(1)です",
 
+  "ARIANRHOD.CombatStart": "戦闘開始",
+  "ARIANRHOD.CombatRound": "ラウンド",
+  "ARIANRHOD.CombatTurn": "ターン",
+
+  "ARIANRHOD.AttackRoll": "命中判定",
+  "ARIANRHOD.EvasionRoll": "回避判定",
+  "ARIANRHOD.DamageRoll": "ダメージ",
+  "ARIANRHOD.SelectWeapon": "武器選択",
+  "ARIANRHOD.NoWeaponEquipped": "武器を装備していません",
+  "ARIANRHOD.Confirm": "確認",
+
   "ARIANRHOD.SkillActivate": "スキル発動",
   "ARIANRHOD.InsufficientMP": "MPが不足しています",
   "ARIANRHOD.InsufficientHP": "HPが不足しています",

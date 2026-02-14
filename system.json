@@ -62,6 +62,7 @@
     "distance": 1,
     "units": "sq"
   },
+  "initiative": "@combat.initiative",
   "primaryTokenAttribute": "combat.hp",
   "secondaryTokenAttribute": "combat.mp",
   "socket": false,

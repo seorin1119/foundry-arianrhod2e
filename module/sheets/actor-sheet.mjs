@@ -41,6 +41,9 @@ export class ArianrhodActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
       decreaseSkillLevel: ArianrhodActorSheet.#onDecreaseSkillLevel,
       filterSkills: ArianrhodActorSheet.#onFilterSkills,
       activateSkill: ArianrhodActorSheet.#onActivateSkill,
+      rollAttack: ArianrhodActorSheet.#onRollAttack,
+      rollDamage: ArianrhodActorSheet.#onRollDamage,
+      rollEvasion: ArianrhodActorSheet.#onRollEvasion,
     },
   };
 
@@ -463,5 +466,20 @@ export class ArianrhodActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
     const item = this.actor.items.get(itemId);
     if (!item) return;
     await activateSkill(this.actor, item);
+  }
+
+  static async #onRollAttack(event, target) {
+    event.preventDefault();
+    await this.actor.rollAttack();
+  }
+
+  static async #onRollDamage(event, target) {
+    event.preventDefault();
+    await this.actor.rollDamage();
+  }
+
+  static async #onRollEvasion(event, target) {
+    event.preventDefault();
+    await this.actor.rollEvasion();
   }
 }
