@@ -1,4 +1,7 @@
 {
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
   "permissions": {
     "allow": [
       "Bash(git add:*)",
@@ -38,7 +41,21 @@
       "Bash(then echo -e \"\\\\n# Rulebook reference \\(not for git\\)\\\\nRULEBOOK_REFERENCE.md\")",
       "Bash(else echo -e \"# Rulebook reference \\(not for git\\)\\\\nRULEBOOK_REFERENCE.md\")",
       "Bash(fi)",
-      "Bash(\"C:\\\\Program Files\\\\poppler-24.08.0\\\\Library\\\\bin\\\\pdftotext.exe\" \"C:\\\\Users\\\\js4u1\\\\Desktop\\\\learning\\\\아리안로드2e 기본 룰북.pdf\" -)"
+      "Bash(\"C:\\\\Program Files\\\\poppler-24.08.0\\\\Library\\\\bin\\\\pdftotext.exe\" \"C:\\\\Users\\\\js4u1\\\\Desktop\\\\learning\\\\아리안로드2e 기본 룰북.pdf\" -)",
+      "Bash(\"C:\\\\Program Files\\\\Git\\\\mingw64\\\\bin\\\\pdftotext.exe\" \"C:\\\\Users\\\\js4u1\\\\Desktop\\\\learning\\\\아리안로드2e 기본 룰북.pdf\" -)",
+      "Bash(\"C:\\\\Program Files\\\\Git\\\\mingw64\\\\bin\\\\pdftotext.exe\" -f 100 -l 120 \"C:\\\\Users\\\\js4u1\\\\Desktop\\\\learning\\\\아리안로드2e 기본 룰북.pdf\" -)",
+      "Bash(\"C:\\\\Program Files\\\\poppler-24.08.0\\\\Library\\\\bin\\\\pdftotext.exe\" -f 90 -l 95 \"C:\\\\Users\\\\js4u1\\\\Desktop\\\\learning\\\\아리안로드2e 기본 룰북.pdf\" -)",
+      "Bash(\"C:\\\\Program Files\\\\Git\\\\mingw64\\\\bin\\\\pdftotext.exe\" -f 80 -l 150 -layout \"C:\\\\Users\\\\js4u1\\\\Desktop\\\\learning\\\\아리안로드2e 기본 룰북.pdf\" -)",
+      "Bash(\"/c/Program Files/poppler-24.08.0/Library/bin/pdftotext.exe\" -f 90 -l 95 \"/c/Users/js4u1/Desktop/learning/아리안로드2e 기본 룰북.pdf\" -)",
+      "Bash(cmd.exe:*)",
+      "Bash(git config:*)",
+      "Bash(gh auth status:*)",
+      "Bash(curl:*)",
+      "Bash(tar:*)",
+      "Bash(export PATH=\"/tmp/gh_2.86.0_linux_amd64/bin:$PATH\")",
+      "Bash(gh:*)",
+      "Bash(git remote set-url:*)",
+      "Bash(git remote add:*)"
     ]
   }
 }
