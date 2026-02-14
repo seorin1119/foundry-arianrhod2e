@@ -46,6 +46,8 @@
   "ARIANRHOD.Evasion": "Evasion",
   "ARIANRHOD.Attack": "Attack",
   "ARIANRHOD.MagAttack": "Magic Attack",
+  "ARIANRHOD.InitiativeMod": "Initiative Mod",
+  "ARIANRHOD.MovementMod": "Movement Mod",
   "ARIANRHOD.CombatStats": "Combat Stats",
 
   "ARIANRHOD.Fate": "Fate",

@@ -42,8 +42,7 @@
             <input type="number" name="system.combat.hp.value"
                    value="{{system.combat.hp.value}}" data-dtype="Number" />
             <span>/</span>
-            <input type="number" name="system.combat.hp.max"
-                   value="{{system.combat.hp.max}}" data-dtype="Number" />
+            <span class="resource-max">{{system.combat.hp.max}}</span>
           </div>
         </div>
       </div>
@@ -57,8 +56,7 @@
             <input type="number" name="system.combat.mp.value"
                    value="{{system.combat.mp.value}}" data-dtype="Number" />
             <span>/</span>
-            <input type="number" name="system.combat.mp.max"
-                   value="{{system.combat.mp.max}}" data-dtype="Number" />
+            <span class="resource-max">{{system.combat.mp.max}}</span>
           </div>
         </div>
       </div>
@@ -77,40 +75,43 @@
           </div>
         </div>
       </div>
-      <div class="combat-detail flexrow">
-        <label>{{localize "ARIANRHOD.PhysDef"}}</label>
-        <input type="number" name="system.combat.physDef"
-               value="{{system.combat.physDef}}" data-dtype="Number" />
-      </div>
-      <div class="combat-detail flexrow">
-        <label>{{localize "ARIANRHOD.MagDef"}}</label>
-        <input type="number" name="system.combat.magDef"
-               value="{{system.combat.magDef}}" data-dtype="Number" />
-      </div>
-      <div class="combat-detail flexrow">
-        <label>{{localize "ARIANRHOD.Initiative"}}</label>
-        <input type="number" name="system.combat.initiative"
-               value="{{system.combat.initiative}}" data-dtype="Number" />
-      </div>
-      <div class="combat-detail flexrow">
-        <label>{{localize "ARIANRHOD.Movement"}}</label>
-        <input type="number" name="system.combat.movement"
-               value="{{system.combat.movement}}" data-dtype="Number" />
-      </div>
-      <div class="combat-detail flexrow">
+      <div class="combat-detail computed flexrow"
+           title="{{localize 'ARIANRHOD.Accuracy'}}: {{system.combat.accuracyBase}} + {{system.combat.accuracyEquip}}">
         <label>{{localize "ARIANRHOD.Accuracy"}}</label>
-        <input type="number" name="system.combat.accuracy"
-               value="{{system.combat.accuracy}}" data-dtype="Number" />
+        <span class="computed-value">{{system.combat.accuracy}}</span>
+        <span class="computed-breakdown">({{system.combat.accuracyBase}}+{{system.combat.accuracyEquip}})</span>
       </div>
-      <div class="combat-detail flexrow">
-        <label>{{localize "ARIANRHOD.Evasion"}}</label>
-        <input type="number" name="system.combat.evasion"
-               value="{{system.combat.evasion}}" data-dtype="Number" />
-      </div>
-      <div class="combat-detail flexrow">
+      <div class="combat-detail computed flexrow"
+           title="{{localize 'ARIANRHOD.Attack'}}: {{system.combat.attackEquip}}">
         <label>{{localize "ARIANRHOD.Attack"}}</label>
-        <input type="number" name="system.combat.attack"
-               value="{{system.combat.attack}}" data-dtype="Number" />
+        <span class="computed-value">{{system.combat.attack}}</span>
+      </div>
+      <div class="combat-detail computed flexrow"
+           title="{{localize 'ARIANRHOD.Evasion'}}: {{system.combat.evasionEquip}}">
+        <label>{{localize "ARIANRHOD.Evasion"}}</label>
+        <span class="computed-value">{{system.combat.evasion}}</span>
+      </div>
+      <div class="combat-detail computed flexrow"
+           title="{{localize 'ARIANRHOD.PhysDef'}}: {{system.combat.physDefEquip}}">
+        <label>{{localize "ARIANRHOD.PhysDef"}}</label>
+        <span class="computed-value">{{system.combat.physDef}}</span>
+      </div>
+      <div class="combat-detail computed flexrow"
+           title="{{localize 'ARIANRHOD.MagDef'}}: {{system.combat.magDefEquip}}">
+        <label>{{localize "ARIANRHOD.MagDef"}}</label>
+        <span class="computed-value">{{system.combat.magDef}}</span>
+      </div>
+      <div class="combat-detail computed flexrow"
+           title="{{localize 'ARIANRHOD.Initiative'}}: {{system.combat.initiativeBase}} + {{system.combat.initiativeEquip}}">
+        <label>{{localize "ARIANRHOD.Initiative"}}</label>
+        <span class="computed-value">{{system.combat.initiative}}</span>
+        <span class="computed-breakdown">({{system.combat.initiativeBase}}+{{system.combat.initiativeEquip}})</span>
+      </div>
+      <div class="combat-detail computed flexrow"
+           title="{{localize 'ARIANRHOD.Movement'}}: {{system.combat.movementBase}} + {{system.combat.movementEquip}}">
+        <label>{{localize "ARIANRHOD.Movement"}}</label>
+        <span class="computed-value">{{system.combat.movement}}</span>
+        <span class="computed-breakdown">({{system.combat.movementBase}}+{{system.combat.movementEquip}})</span>
       </div>
       <div class="combat-detail flexrow">
         <label>{{localize "ARIANRHOD.MagAttack"}}</label>

@@ -1237,4 +1237,34 @@
   outline-offset: 2px;
 }
 
+/* ======================================== */
+/*  Computed Combat Stats                  */
+/* ======================================== */
+
+.arianrhod2e .combat-detail.computed {
+  background: var(--ar-bg-dark);
+  border-left: 3px solid var(--ar-kin);
+}
+
+.arianrhod2e .computed-value {
+  font-weight: 700;
+  font-size: 0.95em;
+  color: var(--ar-text);
+  min-width: 28px;
+  text-align: center;
+}
+
+.arianrhod2e .computed-breakdown {
+  font-size: 0.65em;
+  color: var(--ar-text-light);
+  white-space: nowrap;
+}
+
+.arianrhod2e .resource-max {
+  font-weight: 700;
+  font-size: 0.9em;
+  min-width: 28px;
+  text-align: center;
+}
+
 } /* end @layer arianrhod */

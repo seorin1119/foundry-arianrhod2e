@@ -147,6 +147,57 @@ export class CharacterData extends foundry.abstract.TypeDataModel {
     const raceFateMax = this.race === "huulin" ? 6 : 5;
     this.fate.max = raceFateMax;
 
+    // === Equipment stat auto-calculation ===
+    const items = this.parent?.items;
+    const equippedWeapons = items?.filter(i => i.type === "weapon" && i.system.equipped) ?? [];
+    const equippedArmor = items?.filter(i => (i.type === "armor" || i.type === "accessory") && i.system.equipped) ?? [];
+
+    // Sum equipment modifiers
+    const weaponAccuracy = equippedWeapons.reduce((sum, i) => sum + (i.system.accuracy || 0), 0);
+    const weaponAttack = equippedWeapons.reduce((sum, i) => sum + (i.system.attack || 0), 0);
+    const armorPhysDef = equippedArmor.reduce((sum, i) => sum + (i.system.physDef || 0), 0);
+    const armorMagDef = equippedArmor.reduce((sum, i) => sum + (i.system.magDef || 0), 0);
+    const armorEvasion = equippedArmor.reduce((sum, i) => sum + (i.system.evasion || 0), 0);
+    const armorInitMod = equippedArmor.reduce((sum, i) => sum + (i.system.initiativeMod || 0), 0);
+    const armorMoveMod = equippedArmor.reduce((sum, i) => sum + (i.system.movementMod || 0), 0);
+
+    // Accuracy: class check ability bonuses + weapon accuracy
+    const checkAbilities = mainClassData?.checkAbilities ?? [];
+    const accuracyBase = checkAbilities.reduce((sum, key) => sum + (this.abilities[key]?.bonus || 0), 0);
+
+    // Store base and equipment breakdown values
+    this.combat.accuracyBase = accuracyBase;
+    this.combat.accuracyEquip = weaponAccuracy;
+    this.combat.accuracy = accuracyBase + weaponAccuracy;
+
+    this.combat.attackBase = 0;
+    this.combat.attackEquip = weaponAttack;
+    this.combat.attack = weaponAttack;
+
+    this.combat.physDefBase = 0;
+    this.combat.physDefEquip = armorPhysDef;
+    this.combat.physDef = armorPhysDef;
+
+    this.combat.magDefBase = 0;
+    this.combat.magDefEquip = armorMagDef;
+    this.combat.magDef = armorMagDef;
+
+    this.combat.evasionBase = 0;
+    this.combat.evasionEquip = armorEvasion;
+    this.combat.evasion = armorEvasion;
+
+    // Initiative: AGI bonus + SEN bonus + armor initiative mod
+    const initiativeBase = (this.abilities.agi?.bonus || 0) + (this.abilities.sen?.bonus || 0);
+    this.combat.initiativeBase = initiativeBase;
+    this.combat.initiativeEquip = armorInitMod;
+    this.combat.initiative = initiativeBase + armorInitMod;
+
+    // Movement: MAX(0, STR bonus + 5 + armor movement mod)
+    const movementBase = (this.abilities.str?.bonus || 0) + 5;
+    this.combat.movementBase = movementBase;
+    this.combat.movementEquip = armorMoveMod;
+    this.combat.movement = Math.max(0, movementBase + armorMoveMod);
+
     // Clamp current values to max
     this.combat.hp.value = Math.min(this.combat.hp.value, this.combat.hp.max);
     this.combat.mp.value = Math.min(this.combat.mp.value, this.combat.mp.max);

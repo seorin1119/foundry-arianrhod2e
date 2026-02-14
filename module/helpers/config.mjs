@@ -262,28 +262,32 @@ ARIANRHOD.classData = {
     hpGrowth: 7,
     initialMp: 10,
     mpGrowth: 4,
-    abilityMods: { str: 1, dex: 1, agi: 1 }
+    abilityMods: { str: 1, dex: 1, agi: 1 },
+    checkAbilities: ["str", "dex"]
   },
   acolyte: {
     initialHp: 11,
     hpGrowth: 5,
     initialMp: 12,
     mpGrowth: 6,
-    abilityMods: { dex: 1, int: 1, men: 1 }
+    abilityMods: { dex: 1, int: 1, men: 1 },
+    checkAbilities: ["dex", "men"]
   },
   mage: {
     initialHp: 10,
     hpGrowth: 4,
     initialMp: 13,
     mpGrowth: 7,
-    abilityMods: { int: 1, sen: 1, men: 1 }
+    abilityMods: { int: 1, sen: 1, men: 1 },
+    checkAbilities: ["int", "sen"]
   },
   thief: {
     initialHp: 12,
     hpGrowth: 6,
     initialMp: 11,
     mpGrowth: 5,
-    abilityMods: { dex: 1, agi: 1, sen: 1 }
+    abilityMods: { dex: 1, agi: 1, sen: 1 },
+    checkAbilities: ["dex", "sen"]
   },
   gunslinger: {
     initialHp: 12,

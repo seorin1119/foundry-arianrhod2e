@@ -46,6 +46,8 @@
   "ARIANRHOD.Evasion": "회피",
   "ARIANRHOD.Attack": "공격력",
   "ARIANRHOD.MagAttack": "마법공격력",
+  "ARIANRHOD.InitiativeMod": "행동수정",
+  "ARIANRHOD.MovementMod": "이동수정",
   "ARIANRHOD.CombatStats": "전투 능력치",
 
   "ARIANRHOD.Fate": "페이트",

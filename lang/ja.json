@@ -46,6 +46,8 @@
   "ARIANRHOD.Evasion": "回避",
   "ARIANRHOD.Attack": "攻撃力",
   "ARIANRHOD.MagAttack": "魔法攻撃力",
+  "ARIANRHOD.InitiativeMod": "行動修正",
+  "ARIANRHOD.MovementMod": "移動修正",
   "ARIANRHOD.CombatStats": "戦闘値",
 
   "ARIANRHOD.Fate": "フェイト",
