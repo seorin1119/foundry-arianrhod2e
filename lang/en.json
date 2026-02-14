@@ -220,5 +220,12 @@
   "ARIANRHOD.IncreaseSkillLevel": "Increase Skill Level",
   "ARIANRHOD.DecreaseSkillLevel": "Decrease Skill Level",
   "ARIANRHOD.SkillMaxLevelReached": "Skill is already at maximum level",
-  "ARIANRHOD.SkillMinLevelReached": "Skill is already at minimum level (1)"
+  "ARIANRHOD.SkillMinLevelReached": "Skill is already at minimum level (1)",
+
+  "ARIANRHOD.SkillActivate": "Skill Activate",
+  "ARIANRHOD.InsufficientMP": "Insufficient MP",
+  "ARIANRHOD.InsufficientHP": "Insufficient HP",
+  "ARIANRHOD.MPConsumed": "MP Consumed",
+  "ARIANRHOD.SkillNoCost": "No Cost",
+  "ARIANRHOD.PassiveSkill": "Passive Skill"
 }

@@ -1,5 +1,6 @@
 import { rollCheckDialog, rollLifePath } from "../dice.mjs";
 import { SkillSelectionDialog } from "../apps/skill-selection-dialog.mjs";
+import { activateSkill } from "../helpers/skill-activation.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -39,6 +40,7 @@ export class ArianrhodActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
       increaseSkillLevel: ArianrhodActorSheet.#onIncreaseSkillLevel,
       decreaseSkillLevel: ArianrhodActorSheet.#onDecreaseSkillLevel,
       filterSkills: ArianrhodActorSheet.#onFilterSkills,
+      activateSkill: ArianrhodActorSheet.#onActivateSkill,
     },
   };
 
@@ -453,5 +455,13 @@ export class ArianrhodActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
 
     // Re-render to apply filter
     this.render();
+  }
+
+  static async #onActivateSkill(event, target) {
+    event.preventDefault();
+    const itemId = target.closest("[data-item-id]")?.dataset.itemId;
+    const item = this.actor.items.get(itemId);
+    if (!item) return;
+    await activateSkill(this.actor, item);
   }
 }

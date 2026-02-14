@@ -312,5 +312,12 @@
   "ARIANRHOD.IncreaseSkillLevel": "스킬 레벨 증가",
   "ARIANRHOD.DecreaseSkillLevel": "스킬 레벨 감소",
   "ARIANRHOD.SkillMaxLevelReached": "스킬이 이미 최대 레벨입니다",
-  "ARIANRHOD.SkillMinLevelReached": "스킬이 이미 최소 레벨(1)입니다"
+  "ARIANRHOD.SkillMinLevelReached": "스킬이 이미 최소 레벨(1)입니다",
+
+  "ARIANRHOD.SkillActivate": "스킬 발동",
+  "ARIANRHOD.InsufficientMP": "MP가 부족합니다",
+  "ARIANRHOD.InsufficientHP": "HP가 부족합니다",
+  "ARIANRHOD.MPConsumed": "MP 소모",
+  "ARIANRHOD.SkillNoCost": "코스트 없음",
+  "ARIANRHOD.PassiveSkill": "패시브 스킬"
 }

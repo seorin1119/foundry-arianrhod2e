@@ -1267,4 +1267,51 @@
   text-align: center;
 }
 
+/* ======================================== */
+/*  Skill Activation                       */
+/* ======================================== */
+
+.arianrhod2e .skill-activate-btn {
+  color: var(--ar-magic);
+  cursor: pointer;
+  padding: 0 4px;
+  transition: color 0.2s;
+}
+
+.arianrhod2e .skill-activate-btn:hover {
+  color: var(--ar-accent-gold);
+}
+
+/* Skill Chat Card */
+.arianrhod .skill-chat-card h3 {
+  margin: 0 0 6px;
+  color: var(--ar-magic);
+  font-size: 1.1em;
+}
+
+.arianrhod .skill-meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px 8px;
+  font-size: 0.85em;
+  margin-bottom: 6px;
+  padding: 4px 6px;
+  background: rgba(0,0,0,0.05);
+  border-radius: 3px;
+}
+
+.arianrhod .skill-effect {
+  font-size: 0.9em;
+  padding: 4px 0;
+  border-top: 1px solid rgba(0,0,0,0.1);
+}
+
+.arianrhod .skill-cost-notice {
+  text-align: right;
+  font-weight: bold;
+  color: var(--ar-mp, #2563eb);
+  font-size: 0.85em;
+  margin-top: 4px;
+}
+
 } /* end @layer arianrhod */

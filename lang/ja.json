@@ -220,5 +220,12 @@
   "ARIANRHOD.IncreaseSkillLevel": "スキルレベル上昇",
   "ARIANRHOD.DecreaseSkillLevel": "スキルレベル低下",
   "ARIANRHOD.SkillMaxLevelReached": "スキルは既に最大レベルです",
-  "ARIANRHOD.SkillMinLevelReached": "スキルは既に最小レベル(1)です"
+  "ARIANRHOD.SkillMinLevelReached": "スキルは既に最小レベル(1)です",
+
+  "ARIANRHOD.SkillActivate": "スキル発動",
+  "ARIANRHOD.InsufficientMP": "MPが不足しています",
+  "ARIANRHOD.InsufficientHP": "HPが不足しています",
+  "ARIANRHOD.MPConsumed": "MP消費",
+  "ARIANRHOD.SkillNoCost": "コストなし",
+  "ARIANRHOD.PassiveSkill": "パッシブスキル"
 }

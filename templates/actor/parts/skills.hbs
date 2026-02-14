@@ -54,6 +54,11 @@
           <img src="{{item.img}}" width="24" height="24" />
           {{item.name}}
         </span>
+        {{#unless (eq item.system.timing "passive")}}
+        <a class="skill-activate-btn" data-action="activateSkill" title="{{localize 'ARIANRHOD.SkillActivate'}}">
+          <i class="fas fa-dice-d20"></i>
+        </a>
+        {{/unless}}
         <span class="item-detail-sm">
           <button type="button" data-action="decreaseSkillLevel" data-item-id="{{item._id}}"
                   style="width: 18px; padding: 0; font-size: 0.8em;" title="{{localize 'ARIANRHOD.DecreaseSkillLevel'}}">-</button>
