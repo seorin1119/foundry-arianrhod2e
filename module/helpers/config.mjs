@@ -1,4 +1,7 @@
 import { skillLibrary } from "./skill-library.mjs";
+import { equipmentLibrary } from "./equipment-library.mjs";
+import { guildSupports } from "./guild-supports.mjs";
+import { enemySkillLibrary } from "./enemy-skill-library.mjs";
 
 export const ARIANRHOD = {};
 
@@ -26,16 +29,20 @@ ARIANRHOD.abilityAbbreviations = {
 };
 
 /**
- * Weapon types
+ * Weapon types (categories matching equipment library)
  */
 ARIANRHOD.weaponTypes = {
-  sword: "ARIANRHOD.WeaponTypeSword",
+  unarmed: "ARIANRHOD.WeaponTypeUnarmed",
+  dagger: "ARIANRHOD.WeaponTypeDagger",
+  longsword: "ARIANRHOD.WeaponTypeLongsword",
+  greatsword: "ARIANRHOD.WeaponTypeGreatsword",
   axe: "ARIANRHOD.WeaponTypeAxe",
   spear: "ARIANRHOD.WeaponTypeSpear",
+  whip: "ARIANRHOD.WeaponTypeWhip",
+  blunt: "ARIANRHOD.WeaponTypeBlunt",
   bow: "ARIANRHOD.WeaponTypeBow",
-  staff: "ARIANRHOD.WeaponTypeStaff",
-  fist: "ARIANRHOD.WeaponTypeFist",
-  gun: "ARIANRHOD.WeaponTypeGun",
+  katana: "ARIANRHOD.WeaponTypeKatana",
+  alchemy: "ARIANRHOD.WeaponTypeAlchemy",
   other: "ARIANRHOD.WeaponTypeOther",
 };
 
@@ -362,7 +369,186 @@ ARIANRHOD.classData = {
 };
 
 /**
+ * Elemental attributes for Arianrhod RPG 2E
+ * 6 core elements + Null (notation only)
+ * Opposing pairs: Fire↔Water, Wind↔Earth, Light↔Dark
+ */
+ARIANRHOD.elements = {
+  none: "ARIANRHOD.ElementNone",
+  fire: "ARIANRHOD.ElementFire",
+  water: "ARIANRHOD.ElementWater",
+  wind: "ARIANRHOD.ElementWind",
+  earth: "ARIANRHOD.ElementEarth",
+  light: "ARIANRHOD.ElementLight",
+  dark: "ARIANRHOD.ElementDark",
+};
+
+/**
+ * Element opposing pairs mapping.
+ * Used for magic defense calculation:
+ *   Same element → magDef × 2 (reinforced)
+ *   Opposing element → magDef × 0 (negated)
+ *   No match (null) → magDef × 1 (normal)
+ */
+ARIANRHOD.elementOpposites = {
+  fire: "water",
+  water: "fire",
+  wind: "earth",
+  earth: "wind",
+  light: "dark",
+  dark: "light",
+};
+
+/**
+ * Skill range translations (Japanese → i18n key)
+ * Based on Arianrhod 2E Rulebook (p.753-758)
+ */
+ARIANRHOD.rangeMap = {
+  "自身": "ARIANRHOD.RangeSelf",
+  "武器": "ARIANRHOD.RangeWeapon",
+  "至近": "ARIANRHOD.RangeClose",
+  "効果参照": "ARIANRHOD.RangeSeeEffect",
+  "視界": "ARIANRHOD.RangeLineOfSight",
+  "10m": "ARIANRHOD.Range10m",
+  "20m": "ARIANRHOD.Range20m",
+};
+
+/**
+ * Skill target translations (Japanese → i18n key)
+ * Based on Arianrhod 2E Rulebook (p.739-749)
+ */
+ARIANRHOD.targetMap = {
+  "自身": "ARIANRHOD.TargetSelf",
+  "単体": "ARIANRHOD.TargetSingle",
+  "範囲": "ARIANRHOD.TargetArea",
+  "効果参照": "ARIANRHOD.TargetSeeEffect",
+  "範囲（選択）": "ARIANRHOD.TargetAreaSelect",
+  "SL体": "ARIANRHOD.TargetSLCount",
+  "[SL+1]体": "ARIANRHOD.TargetSLPlus1Count",
+};
+
+/**
  * Skill Library - imported from dedicated module
  * Contains all available skills from the Arianrhod 2E Rulebook (pp.89-149)
  */
 ARIANRHOD.skillLibrary = skillLibrary;
+
+/**
+ * Equipment Library - imported from dedicated module
+ * Contains all standard equipment from the Arianrhod 2E Rulebook
+ */
+ARIANRHOD.equipmentLibrary = equipmentLibrary;
+
+/**
+ * Guild Support Library - imported from dedicated module
+ * Contains all guild supports from the Arianrhod 2E Rulebook (pp.189-196)
+ */
+ARIANRHOD.guildSupports = guildSupports;
+
+/**
+ * Trap structure types
+ */
+ARIANRHOD.trapStructures = {
+  physical: "ARIANRHOD.TrapPhysical",
+  magical: "ARIANRHOD.TrapMagical",
+};
+
+/**
+ * Trap condition types (trigger mechanism)
+ */
+ARIANRHOD.trapConditions = {
+  trigger: "ARIANRHOD.TrapTrigger",
+  enchant: "ARIANRHOD.TrapEnchant",
+  continue: "ARIANRHOD.TrapContinue",
+};
+
+/**
+ * Class restriction options for equipment
+ */
+/**
+ * Enemy Skill Library - imported from dedicated module
+ * Contains all common enemy skills from the Arianrhod 2E Rulebook (pp.299-305)
+ */
+ARIANRHOD.enemySkillLibrary = enemySkillLibrary;
+
+/**
+ * Class restriction options for equipment
+ */
+/**
+ * Connection relationship types (D66 table, p.369)
+ * Pairs: 11-12, 13-14, 15-16, 21-22, ... mapped to keys.
+ */
+ARIANRHOD.connectionRelations = {
+  liege: "ARIANRHOD.RelationLiege",
+  friend: "ARIANRHOD.RelationFriend",
+  comrade: "ARIANRHOD.RelationComrade",
+  admiration: "ARIANRHOD.RelationAdmiration",
+  debt: "ARIANRHOD.RelationDebt",
+  transaction: "ARIANRHOD.RelationTransaction",
+  trust: "ARIANRHOD.RelationTrust",
+  protection: "ARIANRHOD.RelationProtection",
+  companion: "ARIANRHOD.RelationCompanion",
+  enmity: "ARIANRHOD.RelationEnmity",
+  kinship: "ARIANRHOD.RelationKinship",
+  patron: "ARIANRHOD.RelationPatron",
+  benefactor: "ARIANRHOD.RelationBenefactor",
+  dejavu: "ARIANRHOD.RelationDejavu",
+  gratitude: "ARIANRHOD.RelationGratitude",
+  rival: "ARIANRHOD.RelationRival",
+  guardian: "ARIANRHOD.RelationGuardian",
+  yearning: "ARIANRHOD.RelationYearning",
+};
+
+/**
+ * D66 → relation key mapping.
+ * Each pair of D66 values maps to a relation key.
+ */
+ARIANRHOD.connectionD66Table = {
+  11: "liege", 12: "liege",
+  13: "friend", 14: "friend",
+  15: "comrade", 16: "comrade",
+  21: "admiration", 22: "admiration",
+  23: "debt", 24: "debt",
+  25: "transaction", 26: "transaction",
+  31: "trust", 32: "trust",
+  33: "protection", 34: "protection",
+  35: "companion", 36: "companion",
+  41: "enmity", 42: "enmity",
+  43: "kinship", 44: "kinship",
+  45: "patron", 46: "patron",
+  51: "benefactor", 52: "benefactor",
+  53: "dejavu", 54: "dejavu",
+  55: "gratitude", 56: "gratitude",
+  61: "rival", 62: "rival",
+  63: "guardian", 64: "guardian",
+  65: "yearning", 66: "yearning",
+};
+
+/**
+ * Brightness levels (p.239)
+ * 1 = total darkness, 4 = full daylight
+ */
+ARIANRHOD.brightnessLevels = {
+  1: "ARIANRHOD.Brightness1",
+  2: "ARIANRHOD.Brightness2",
+  3: "ARIANRHOD.Brightness3",
+  4: "ARIANRHOD.Brightness4",
+};
+
+ARIANRHOD.classRestrictions = {
+  "": "ARIANRHOD.NoRestriction",
+  W: "ARIANRHOD.ClassWarrior",
+  A: "ARIANRHOD.ClassAcolyte",
+  M: "ARIANRHOD.ClassMage",
+  T: "ARIANRHOD.ClassThief",
+  WA: "ARIANRHOD.RestrictionWA",
+  WM: "ARIANRHOD.RestrictionWM",
+  WT: "ARIANRHOD.RestrictionWT",
+  AM: "ARIANRHOD.RestrictionAM",
+  AT: "ARIANRHOD.RestrictionAT",
+  MT: "ARIANRHOD.RestrictionMT",
+  WAM: "ARIANRHOD.RestrictionWAM",
+  WAT: "ARIANRHOD.RestrictionWAT",
+  WMT: "ARIANRHOD.RestrictionWMT",
+  AMT: "ARIANRHOD.RestrictionAMT",
+};

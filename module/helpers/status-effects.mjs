@@ -157,6 +157,19 @@ export function getStatusEffects() {
       flags: {
         arianrhod2e: { statusType: "hidden", breaksOnAction: true }
       }
+    },
+    {
+      id: "darkness",
+      name: "ARIANRHOD.StatusDarkness",
+      icon: "icons/svg/darkness.svg",
+      changes: [],
+      flags: {
+        arianrhod2e: {
+          statusType: "darkness",
+          darknessPenalty: true,
+          movementLimit: 5,
+        }
+      }
     }
   ];
 }

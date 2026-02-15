@@ -1,5 +1,6 @@
 import { rollCheckDialog, rollLifePath } from "../dice.mjs";
 import { SkillSelectionDialog } from "../apps/skill-selection-dialog.mjs";
+import { EquipmentSelectionDialog } from "../apps/equipment-selection-dialog.mjs";
 import { activateSkill } from "../helpers/skill-activation.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
@@ -39,13 +40,15 @@ export class ArianrhodActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
       decreaseAbility: ArianrhodActorSheet.#onDecreaseAbility,
       increaseSkillLevel: ArianrhodActorSheet.#onIncreaseSkillLevel,
       decreaseSkillLevel: ArianrhodActorSheet.#onDecreaseSkillLevel,
-      filterSkills: ArianrhodActorSheet.#onFilterSkills,
       activateSkill: ArianrhodActorSheet.#onActivateSkill,
       rollAttack: ArianrhodActorSheet.#onRollAttack,
       rollDamage: ArianrhodActorSheet.#onRollDamage,
       rollEvasion: ArianrhodActorSheet.#onRollEvasion,
       toggleStatus: ArianrhodActorSheet.#onToggleStatus,
-      addStatusEffect: ArianrhodActorSheet.#onAddStatusEffect,
+      rollSpecialCheck: ArianrhodActorSheet.#onRollSpecialCheck,
+      setFate: ArianrhodActorSheet.#onSetFate,
+      adjustResource: ArianrhodActorSheet.#onAdjustResource,
+      rollRelation: ArianrhodActorSheet.#onRollRelation,
     },
   };
 
@@ -58,23 +61,23 @@ export class ArianrhodActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
     },
     abilities: {
       template: "systems/arianrhod2e/templates/actor/parts/abilities.hbs",
-      scrollable: [""]
+      scrollable: []
     },
     items: {
       template: "systems/arianrhod2e/templates/actor/parts/items.hbs",
-      scrollable: [""]
+      scrollable: []
     },
     skills: {
       template: "systems/arianrhod2e/templates/actor/parts/skills.hbs",
-      scrollable: [""]
+      scrollable: []
     },
     biography: {
       template: "systems/arianrhod2e/templates/actor/parts/biography.hbs",
-      scrollable: [""]
+      scrollable: []
     },
     connections: {
       template: "systems/arianrhod2e/templates/actor/parts/connections.hbs",
-      scrollable: [""]
+      scrollable: []
     },
     // Enemy-specific parts
     enemyHeader: {
@@ -82,21 +85,56 @@ export class ArianrhodActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
     },
     enemyAbilities: {
       template: "systems/arianrhod2e/templates/actor/parts/enemy-abilities.hbs",
-      scrollable: [""]
+      scrollable: []
     },
     description: {
       template: "systems/arianrhod2e/templates/actor/parts/enemy-description.hbs",
-      scrollable: [""]
+      scrollable: []
     },
   };
 
   static TABS = {
     primary: {
-      id: "primary",
-      group: "primary",
-      initial: "abilities"
+      initial: "abilities",
+      tabs: [
+        { id: "abilities", label: "ARIANRHOD.TabAbilities" },
+        { id: "items", label: "ARIANRHOD.TabItems" },
+        { id: "skills", label: "ARIANRHOD.TabSkills" },
+        { id: "connections", label: "ARIANRHOD.TabConnections" },
+        { id: "biography", label: "ARIANRHOD.TabBiography" },
+        { id: "description", label: "ARIANRHOD.TabDescription" },
+      ]
     }
   };
+
+  /** @override */
+  _onRender(context, options) {
+    super._onRender(context, options);
+
+    // ApplicationV2 actions only handle click events by default.
+    // select/input elements that use data-action need change event listeners.
+    const html = this.element;
+
+    // filterSkills select — fires on change, not click
+    const filterSelect = html.querySelector('select[data-action="filterSkills"]');
+    if (filterSelect) {
+      filterSelect.addEventListener("change", (event) => {
+        this._skillFilter = event.target.value;
+        this.render();
+      });
+    }
+
+    // addStatusEffect select — fires on change
+    const statusSelect = html.querySelector('select[data-action="addStatusEffect"]');
+    if (statusSelect) {
+      statusSelect.addEventListener("change", async (event) => {
+        const statusId = event.target.value;
+        if (!statusId) return;
+        await this.actor.toggleStatusEffect(statusId);
+        event.target.value = "";
+      });
+    }
+  }
 
   /** @override */
   _configureRenderOptions(options) {
@@ -149,6 +187,14 @@ export class ArianrhodActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
     context.mpPercent = mp?.max ? Math.min(100, Math.max(0, Math.round((mp.value / mp.max) * 100))) : 0;
     context.fatePercent = fate?.max ? Math.min(100, Math.max(0, Math.round((fate.value / fate.max) * 100))) : 0;
 
+    // Fate dots for visual display
+    const fateMax = fate?.max ?? 5;
+    const fateVal = fate?.value ?? 0;
+    context.fateDots = [];
+    for (let i = 1; i <= fateMax; i++) {
+      context.fateDots.push({ index: i, filled: i <= fateVal, isMax: i === fateMax });
+    }
+
     // Prepare status effects
     const activeStatusIds = new Set();
     context.statusEffects = this.actor.effects
@@ -173,13 +219,60 @@ export class ArianrhodActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
     context.weapons = this.actor.items.filter((i) => i.type === "weapon");
     context.armors = this.actor.items.filter((i) => i.type === "armor");
     context.accessories = this.actor.items.filter((i) => i.type === "accessory");
-    context.skills = this.actor.items.filter((i) => i.type === "skill");
     context.items = this.actor.items.filter((i) => i.type === "item");
+
+    // Prepare skills with localized labels and apply filter
+    const allClasses = { ...CONFIG.ARIANRHOD.mainClasses, ...CONFIG.ARIANRHOD.supportClasses, general: "ARIANRHOD.GeneralSkills" };
+    let skillItems = this.actor.items.filter((i) => i.type === "skill");
+
+    // Apply skill filter if set
+    if (this._skillFilter && this._skillFilter !== "all") {
+      const mainClass = this.actor.system.mainClass;
+      const supportClass = this.actor.system.supportClass;
+      skillItems = skillItems.filter(skill => {
+        const sc = skill.system.skillClass;
+        switch (this._skillFilter) {
+          case "main": return sc === mainClass;
+          case "support": return sc === supportClass;
+          case "general": return sc === "general";
+          default: return true;
+        }
+      });
+    }
+
+    context.skills = skillItems.map(skill => {
+      const s = skill.toObject();
+      s.system.skillClassLabel = game.i18n.localize(allClasses[skill.system.skillClass] ?? skill.system.skillClass);
+      s.system.timingLabel = game.i18n.localize(CONFIG.ARIANRHOD.skillTimings[skill.system.timing] ?? skill.system.timing);
+      return s;
+    });
 
     // Prepare equipment slot summary
     if (context.isCharacter) {
       context.equipSlots = this._prepareEquipSlots(context);
     }
+
+    // Calculate inventory totals
+    let totalWeight = 0;
+    let totalValue = 0;
+    for (const item of this.actor.items) {
+      const w = item.system.weight ?? 0;
+      const p = item.system.price ?? 0;
+      const q = item.system.quantity ?? 1;
+      if (item.type === "item") {
+        totalWeight += w * q;
+        totalValue += p * q;
+      } else if (["weapon", "armor", "accessory"].includes(item.type)) {
+        totalWeight += w;
+        totalValue += p;
+      }
+    }
+    context.totalWeight = totalWeight;
+    context.totalValue = totalValue;
+    context.totalItems = this.actor.items.filter(i => i.type !== "skill").size;
+
+    // Connection relation dropdown options
+    context.connectionRelations = CONFIG.ARIANRHOD.connectionRelations ?? {};
 
     // Enrich HTML
     if (this.actor.type === "character") {
@@ -195,30 +288,44 @@ export class ArianrhodActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
       );
     }
 
-    // Tabs
-    context.tabs = this._prepareTabs();
+    // Tabs — use built-in v13 _prepareTabs and filter by actor type
+    const tabIcons = {
+      abilities: "fas fa-shield-halved",
+      items: "fas fa-suitcase",
+      skills: "fas fa-wand-magic-sparkles",
+      connections: "fas fa-handshake",
+      biography: "fas fa-scroll",
+      description: "fas fa-scroll",
+    };
+    const allTabs = this._prepareTabs("primary");
+    for (const [id, tab] of Object.entries(allTabs)) {
+      tab.icon = tabIcons[id] ?? "";
+    }
+    if (this.actor.type === "character") {
+      context.tabs = Object.fromEntries(
+        Object.entries(allTabs).filter(([id]) =>
+          ["abilities", "items", "skills", "connections", "biography"].includes(id)
+        )
+      );
+    } else {
+      context.tabs = Object.fromEntries(
+        Object.entries(allTabs).filter(([id]) =>
+          ["abilities", "skills", "description"].includes(id)
+        )
+      );
+    }
 
     return context;
   }
 
-  /**
-   * Prepare tab data for rendering.
-   */
-  _prepareTabs() {
-    const tabs = {};
-    const tabEntries = this.actor.type === "character"
-      ? { abilities: "ARIANRHOD.TabAbilities", items: "ARIANRHOD.TabItems", skills: "ARIANRHOD.TabSkills", connections: "ARIANRHOD.TabConnections", biography: "ARIANRHOD.TabBiography" }
-      : { abilities: "ARIANRHOD.TabAbilities", skills: "ARIANRHOD.TabSkills", description: "ARIANRHOD.TabDescription" };
-
-    for (const [id, label] of Object.entries(tabEntries)) {
-      tabs[id] = {
-        id,
-        label: game.i18n.localize(label),
-        active: this.tabGroups.primary === id,
-        cssClass: this.tabGroups.primary === id ? "active" : "",
-      };
-    }
-    return tabs;
+  /** @override */
+  async _preparePartContext(partId, context, options) {
+    context = await super._preparePartContext(partId, context, options);
+    // Map part IDs that differ from their tab IDs (e.g. enemyAbilities → abilities)
+    const partToTab = { enemyAbilities: "abilities" };
+    const tabId = partToTab[partId] ?? partId;
+    context.tab = context.tabs?.[tabId];
+    return context;
   }
 
   /**
@@ -227,12 +334,12 @@ export class ArianrhodActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
   _prepareEquipSlots(context) {
     const equipped = this.actor.items.filter((i) => i.system.equipped);
     const slotDefs = [
-      { key: "right", label: game.i18n.localize("ARIANRHOD.SlotRight") },
-      { key: "left", label: game.i18n.localize("ARIANRHOD.SlotLeft") },
-      { key: "head", label: game.i18n.localize("ARIANRHOD.SlotHead") },
-      { key: "body", label: game.i18n.localize("ARIANRHOD.SlotBody") },
-      { key: "accessory1", label: game.i18n.localize("ARIANRHOD.SlotAccessory1") },
-      { key: "accessory2", label: game.i18n.localize("ARIANRHOD.SlotAccessory2") },
+      { key: "right", label: game.i18n.localize("ARIANRHOD.SlotRight"), icon: "fa-hand-fist" },
+      { key: "left", label: game.i18n.localize("ARIANRHOD.SlotLeft"), icon: "fa-hand" },
+      { key: "head", label: game.i18n.localize("ARIANRHOD.SlotHead"), icon: "fa-hat-wizard" },
+      { key: "body", label: game.i18n.localize("ARIANRHOD.SlotBody"), icon: "fa-shirt" },
+      { key: "accessory1", label: game.i18n.localize("ARIANRHOD.SlotAccessory1"), icon: "fa-ring" },
+      { key: "accessory2", label: game.i18n.localize("ARIANRHOD.SlotAccessory2"), icon: "fa-ring" },
     ];
 
     return slotDefs.map((slot) => {
@@ -274,11 +381,12 @@ export class ArianrhodActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
     const label = game.i18n.localize(CONFIG.ARIANRHOD.abilities[abilityKey] ?? abilityKey);
     const maxFate = this.actor.type === "character" ? this.actor.system.fate.value : 0;
 
+    const checkLabel = game.i18n.localize("ARIANRHOD.Check");
     await rollCheckDialog({
-      title: `${label} チェック`,
+      title: `${label} ${checkLabel}`,
       modifier: ability.bonus,
       maxFate: maxFate,
-      label: `${label} チェック`,
+      label: `${label} ${checkLabel}`,
       actor: this.actor,
     });
   }
@@ -315,7 +423,14 @@ export class ArianrhodActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
       return;
     }
 
-    // For other item types, create blank item as before
+    // For equipment types, open the equipment selection dialog
+    if (["weapon", "armor", "accessory", "item"].includes(type)) {
+      const dialog = new EquipmentSelectionDialog(this.actor, type);
+      dialog.render(true);
+      return;
+    }
+
+    // Fallback: create blank item
     const name = `${game.i18n.localize("ARIANRHOD.ItemCreate")} ${game.i18n.localize(`ARIANRHOD.${type.charAt(0).toUpperCase() + type.slice(1)}`)}`;
     await Item.create({ name, type, system: {} }, { parent: this.actor });
   }
@@ -376,6 +491,33 @@ export class ArianrhodActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
     const log = [...(this.actor.system.growthLog ?? [])];
     log.splice(index, 1);
     await this.actor.update({ "system.growthLog": log });
+  }
+
+  static async #onRollRelation(event, target) {
+    event.preventDefault();
+    const index = Number(target.dataset.index);
+    const roll = new Roll("2d6");
+    await roll.evaluate();
+    const die1 = roll.dice[0].results[0].result;
+    const die2 = roll.dice[0].results[1].result;
+    const d66 = die1 * 10 + die2;
+    const table = CONFIG.ARIANRHOD.connectionD66Table ?? {};
+    const relationKey = table[d66] ?? "friend";
+    const relationLabel = game.i18n.localize(CONFIG.ARIANRHOD.connectionRelations[relationKey] ?? relationKey);
+
+    const connections = [...(this.actor.system.connections ?? [])];
+    if (connections[index]) {
+      connections[index].relation = relationKey;
+      await this.actor.update({ "system.connections": connections });
+    }
+
+    const speaker = ChatMessage.getSpeaker({ actor: this.actor });
+    await ChatMessage.create({
+      speaker,
+      flavor: `<i class="fas fa-dice"></i> ${game.i18n.localize("ARIANRHOD.RollRelation")}`,
+      content: `<div class="ar-combat-card"><div class="ar-card-row"><span class="ar-card-label">D66: ${die1}${die2}</span><span class="ar-card-value">${relationLabel}</span></div></div>`,
+      rolls: [roll],
+    });
   }
 
   static async #onLevelUp(event, target) {
@@ -470,18 +612,6 @@ export class ArianrhodActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
     await item.update({ "system.level": currentLevel - 1 });
   }
 
-  static #onFilterSkills(event, target) {
-    event.preventDefault();
-    event.stopPropagation();
-    const filterValue = target.value;
-
-    // Store filter preference (could be expanded to save to actor flags)
-    this._skillFilter = filterValue;
-
-    // Re-render to apply filter
-    this.render();
-  }
-
   static async #onActivateSkill(event, target) {
     event.preventDefault();
     const itemId = target.closest("[data-item-id]")?.dataset.itemId;
@@ -494,13 +624,6 @@ export class ArianrhodActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
     event.preventDefault();
     const statusId = target.dataset.statusId;
     if (statusId) await this.actor.toggleStatusEffect(statusId);
-  }
-
-  static async #onAddStatusEffect(event, target) {
-    const statusId = target.value;
-    if (!statusId) return;
-    await this.actor.toggleStatusEffect(statusId);
-    target.value = "";
   }
 
   static async #onRollAttack(event, target) {
@@ -516,5 +639,50 @@ export class ArianrhodActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
   static async #onRollEvasion(event, target) {
     event.preventDefault();
     await this.actor.rollEvasion();
+  }
+
+  static async #onAdjustResource(event, target) {
+    event.preventDefault();
+    const resource = target.dataset.resource;
+    const delta = Number(target.dataset.delta);
+    const path = resource === "hp" ? "system.combat.hp" : "system.combat.mp";
+    const current = resource === "hp" ? this.actor.system.combat.hp : this.actor.system.combat.mp;
+    const newValue = Math.max(0, Math.min(current.value + delta, current.max));
+    await this.actor.update({ [`${path}.value`]: newValue });
+  }
+
+  static async #onSetFate(event, target) {
+    event.preventDefault();
+    const value = Number(target.dataset.value);
+    const currentValue = this.actor.system.fate.value;
+    // Toggle: if clicking the same dot that matches current value, decrease by 1
+    const newValue = (value === currentValue) ? value - 1 : value;
+    await this.actor.update({ "system.fate.value": Math.max(0, newValue) });
+  }
+
+  static async #onRollSpecialCheck(event, target) {
+    event.preventDefault();
+    const checkKey = target.dataset.check;
+    const checkValue = this.actor.system.specialChecks?.[checkKey] ?? 0;
+    const checkLabels = {
+      alchemy: "ARIANRHOD.CheckAlchemy",
+      trapDisarm: "ARIANRHOD.CheckTrapDisarm",
+      trapDetect: "ARIANRHOD.CheckTrapDetect",
+      dangerSense: "ARIANRHOD.CheckDangerSense",
+      magicCheck: "ARIANRHOD.CheckMagic",
+      enemyIdentify: "ARIANRHOD.CheckEnemyIdentify",
+      itemAppraise: "ARIANRHOD.CheckItemAppraise",
+    };
+    const label = game.i18n.localize(checkLabels[checkKey] ?? checkKey);
+    const checkLabel = game.i18n.localize("ARIANRHOD.Check");
+    const maxFate = this.actor.type === "character" ? this.actor.system.fate.value : 0;
+
+    await rollCheckDialog({
+      title: `${label} ${checkLabel}`,
+      modifier: checkValue,
+      maxFate: maxFate,
+      label: `${label} ${checkLabel}`,
+      actor: this.actor,
+    });
   }
 }

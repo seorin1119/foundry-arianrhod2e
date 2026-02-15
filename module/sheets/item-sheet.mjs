@@ -18,6 +18,7 @@ export class ArianrhodItemSheet extends HandlebarsApplicationMixin(ItemSheetV2) 
     },
     actions: {
       postToChat: ArianrhodItemSheet.#onPostToChat,
+      editImage: ArianrhodItemSheet.#onEditImage,
     },
   };
 
@@ -30,9 +31,11 @@ export class ArianrhodItemSheet extends HandlebarsApplicationMixin(ItemSheetV2) 
 
   static TABS = {
     primary: {
-      id: "primary",
-      group: "primary",
-      initial: "attributes"
+      initial: "attributes",
+      tabs: [
+        { id: "attributes", label: "ARIANRHOD.CombatStats" },
+        { id: "description", label: "ARIANRHOD.Description" },
+      ]
     }
   };
 
@@ -46,28 +49,53 @@ export class ArianrhodItemSheet extends HandlebarsApplicationMixin(ItemSheetV2) 
     context.itemType = this.item.type;
     context.editable = this.isEditable;
 
+    // Prepare combined skill class options for skill items
+    if (this.item.type === "skill") {
+      context.allSkillClasses = {
+        general: "ARIANRHOD.GeneralSkills",
+        ...CONFIG.ARIANRHOD.supportClasses
+      };
+    }
+
+    // Prepare trap config options
+    if (this.item.type === "trap") {
+      context.trapStructures = CONFIG.ARIANRHOD.trapStructures;
+      context.trapConditions = CONFIG.ARIANRHOD.trapConditions;
+    }
+
     // Enrich description
     context.enrichedDescription = await TextEditor.enrichHTML(
       systemData.description ?? "",
       { async: true }
     );
 
-    // Tabs
-    context.tabs = {};
-    for (const [id, label] of Object.entries({ attributes: "ARIANRHOD.CombatStats", description: "ARIANRHOD.Description" })) {
-      context.tabs[id] = {
-        id,
-        label: game.i18n.localize(label),
-        active: this.tabGroups.primary === id,
-        cssClass: this.tabGroups.primary === id ? "active" : "",
-      };
-    }
+    // Tabs — use built-in v13 _prepareTabs
+    context.tabs = this._prepareTabs("primary");
 
+    return context;
+  }
+
+  /** @override */
+  async _preparePartContext(partId, context, options) {
+    context = await super._preparePartContext(partId, context, options);
+    context.tab = context.tabs?.[partId];
     return context;
   }
 
   static async #onPostToChat(event, target) {
     event.preventDefault();
     await this.item.postToChat();
+  }
+
+  static async #onEditImage(event, target) {
+    event.preventDefault();
+    const fp = new FilePicker({
+      type: "image",
+      current: this.item.img,
+      callback: async (path) => {
+        await this.item.update({ img: path });
+      },
+    });
+    return fp.browse();
   }
 }

@@ -1,0 +1,125 @@
+{{!-- Equipment Selection Dialog Template --}}
+<form class="equipment-selection-form">
+
+  {{!-- Type Tabs --}}
+  <nav class="equip-dialog-tabs">
+    <a class="equip-tab {{#if (eq activeType "weapon")}}active{{/if}}" data-action="setType" data-type="weapon">
+      <i class="fas fa-gavel"></i> {{localize "ARIANRHOD.Weapon"}}
+    </a>
+    <a class="equip-tab {{#if (eq activeType "armor")}}active{{/if}}" data-action="setType" data-type="armor">
+      <i class="fas fa-shield-halved"></i> {{localize "ARIANRHOD.Armor"}}
+    </a>
+    <a class="equip-tab {{#if (eq activeType "accessory")}}active{{/if}}" data-action="setType" data-type="accessory">
+      <i class="fas fa-ring"></i> {{localize "ARIANRHOD.Accessory"}}
+    </a>
+    <a class="equip-tab {{#if (eq activeType "item")}}active{{/if}}" data-action="setType" data-type="item">
+      <i class="fas fa-flask"></i> {{localize "ARIANRHOD.Item"}}
+    </a>
+  </nav>
+
+  {{!-- Filters --}}
+  <section class="equip-dialog-filters">
+    <div class="equip-dialog-filter-row">
+      {{#if showCategoryFilter}}
+      <div class="equip-dialog-filter-field">
+        <label><i class="fas fa-filter"></i></label>
+        <select class="filter-category-select">
+          <option value="all">{{localize "ARIANRHOD.AllCategories"}}</option>
+          {{#each categoryOptions as |opt|}}
+          <option value="{{opt.value}}" {{#if (eq opt.value ../filterCategory)}}selected{{/if}}>{{opt.label}}</option>
+          {{/each}}
+        </select>
+      </div>
+      {{/if}}
+      <div class="equip-dialog-filter-field">
+        <label><i class="fas fa-search"></i></label>
+        <input type="text" class="equip-search-input" value="{{searchQuery}}"
+               placeholder="{{localize 'ARIANRHOD.SearchEquipment'}}" />
+      </div>
+      <button type="button" class="equip-custom-btn" data-action="createCustom" title="{{localize 'ARIANRHOD.CreateCustomEquipment'}}">
+        <i class="fas fa-pen-fancy"></i> {{localize "ARIANRHOD.Custom"}}
+      </button>
+    </div>
+  </section>
+
+  {{!-- Equipment List --}}
+  <section class="equip-dialog-list">
+    {{#if equipment}}
+      <table class="equip-dialog-table">
+        <thead>
+          <tr>
+            <th class="col-name">{{localize "ARIANRHOD.Name"}}</th>
+            {{#if isWeapon}}
+            <th class="col-stat">{{localize "ARIANRHOD.Accuracy"}}</th>
+            <th class="col-stat">{{localize "ARIANRHOD.Attack"}}</th>
+            <th class="col-stat">{{localize "ARIANRHOD.Range"}}</th>
+            {{/if}}
+            {{#if isArmor}}
+            <th class="col-stat">{{localize "ARIANRHOD.PhysDef"}}</th>
+            <th class="col-stat">{{localize "ARIANRHOD.MagDef"}}</th>
+            <th class="col-stat">{{localize "ARIANRHOD.Evasion"}}</th>
+            {{/if}}
+            {{#if isAccessory}}
+            <th class="col-effect">{{localize "ARIANRHOD.Effect"}}</th>
+            {{/if}}
+            {{#if isItem}}
+            <th class="col-effect">{{localize "ARIANRHOD.Effect"}}</th>
+            {{/if}}
+            <th class="col-stat">CL</th>
+            <th class="col-stat">{{localize "ARIANRHOD.Weight"}}</th>
+            <th class="col-stat">{{localize "ARIANRHOD.Price"}}</th>
+            <th class="col-action"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each equipment as |equip|}}
+          <tr>
+            <td class="col-name">
+              <strong>{{equip.displayName}}</strong>
+              {{#if equip.displayNameSub}}
+                <br><span class="equip-name-sub">{{equip.displayNameSub}}</span>
+              {{/if}}
+              {{#if equip.restriction}}
+                <span class="equip-restriction-badge">{{equip.restriction}}</span>
+              {{/if}}
+              {{#if equip.note}}
+                <span class="equip-note" title="{{equip.note}}"><i class="fas fa-info-circle"></i></span>
+              {{/if}}
+            </td>
+            {{#if ../isWeapon}}
+            <td class="col-stat">{{equip.accuracy}}</td>
+            <td class="col-stat">{{equip.attack}}</td>
+            <td class="col-stat">{{#if equip.range}}{{equip.range}}m{{else}}—{{/if}}</td>
+            {{/if}}
+            {{#if ../isArmor}}
+            <td class="col-stat">{{equip.physDef}}</td>
+            <td class="col-stat">{{equip.magDef}}</td>
+            <td class="col-stat">{{equip.evasion}}</td>
+            {{/if}}
+            {{#if ../isAccessory}}
+            <td class="col-effect">{{equip.displayEffect}}</td>
+            {{/if}}
+            {{#if ../isItem}}
+            <td class="col-effect">{{equip.displayEffect}}</td>
+            {{/if}}
+            <td class="col-stat">{{equip.cl}}</td>
+            <td class="col-stat">{{equip.weight}}</td>
+            <td class="col-stat">{{equip.displayPrice}}</td>
+            <td class="col-action">
+              <button type="button" class="equip-add-btn" data-action="addEquipment" data-equip-id="{{equip.id}}" data-equip-type="{{../activeType}}">
+                <i class="fas fa-plus"></i>
+              </button>
+            </td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    {{else}}
+      <div class="equip-dialog-empty">
+        <i class="fas fa-box-open"></i>
+        <p>{{localize "ARIANRHOD.NoEquipmentFound"}}</p>
+      </div>
+    {{/if}}
+  </section>
+
+</form>

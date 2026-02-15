@@ -1,5 +1,5 @@
 {{!-- Item Attributes Tab --}}
-<section class="tab attributes{{#if tabs.attributes.active}} active{{/if}}" data-group="primary" data-tab="attributes">
+<section class="tab attributes {{tab.cssClass}}" data-group="primary" data-tab="attributes">
 
   {{!-- Weapon attributes --}}
   {{#if (eq itemType "weapon")}}
@@ -24,7 +24,17 @@
   </div>
   <div class="form-group">
     <label>{{localize "ARIANRHOD.Range"}}</label>
-    <input type="number" name="system.range" value="{{system.range}}" data-dtype="Number" />
+    <input type="text" name="system.range" value="{{system.range}}" />
+  </div>
+  <div class="form-group">
+    <label>{{localize "ARIANRHOD.Element"}}</label>
+    <select name="system.element">
+      {{#each config.elements as |label key|}}
+      <option value="{{key}}" {{#if (eq key ../system.element)}}selected{{/if}}>
+        {{localize label}}
+      </option>
+      {{/each}}
+    </select>
   </div>
   <div class="form-group">
     <label>{{localize "ARIANRHOD.Weight"}}</label>
@@ -35,7 +45,29 @@
     <input type="number" name="system.price" value="{{system.price}}" data-dtype="Number" />
   </div>
   <div class="form-group">
-    <label>{{localize "ARIANRHOD.SlotRight"}}</label>
+    <label>{{localize "ARIANRHOD.AppraisalDC"}}</label>
+    <input type="number" name="system.appraisalDC" value="{{system.appraisalDC}}" data-dtype="Number" />
+  </div>
+  <div class="form-group">
+    <label>{{localize "ARIANRHOD.ClassRestriction"}}</label>
+    <select name="system.classRestriction">
+      {{#each config.classRestrictions as |label key|}}
+      <option value="{{key}}" {{#if (eq key ../system.classRestriction)}}selected{{/if}}>
+        {{localize label}}
+      </option>
+      {{/each}}
+    </select>
+  </div>
+  <div class="form-group">
+    <label>{{localize "ARIANRHOD.IsMagical"}}</label>
+    <input type="checkbox" name="system.isMagical" {{#if system.isMagical}}checked{{/if}} />
+  </div>
+  <div class="form-group">
+    <label>{{localize "ARIANRHOD.MPCost"}}</label>
+    <input type="number" name="system.mpCost" value="{{system.mpCost}}" data-dtype="Number" min="0" />
+  </div>
+  <div class="form-group">
+    <label>{{localize "ARIANRHOD.EquipSlot"}}</label>
     <select name="system.slot">
       {{#each config.equipSlots as |label key|}}
       <option value="{{key}}" {{#if (eq key ../system.slot)}}selected{{/if}}>
@@ -88,7 +120,25 @@
     <input type="number" name="system.price" value="{{system.price}}" data-dtype="Number" />
   </div>
   <div class="form-group">
-    <label>{{localize "ARIANRHOD.SlotBody"}}</label>
+    <label>{{localize "ARIANRHOD.AppraisalDC"}}</label>
+    <input type="number" name="system.appraisalDC" value="{{system.appraisalDC}}" data-dtype="Number" />
+  </div>
+  <div class="form-group">
+    <label>{{localize "ARIANRHOD.ClassRestriction"}}</label>
+    <select name="system.classRestriction">
+      {{#each config.classRestrictions as |label key|}}
+      <option value="{{key}}" {{#if (eq key ../system.classRestriction)}}selected{{/if}}>
+        {{localize label}}
+      </option>
+      {{/each}}
+    </select>
+  </div>
+  <div class="form-group">
+    <label>{{localize "ARIANRHOD.IsMagical"}}</label>
+    <input type="checkbox" name="system.isMagical" {{#if system.isMagical}}checked{{/if}} />
+  </div>
+  <div class="form-group">
+    <label>{{localize "ARIANRHOD.EquipSlot"}}</label>
     <select name="system.slot">
       {{#each config.equipSlots as |label key|}}
       <option value="{{key}}" {{#if (eq key ../system.slot)}}selected{{/if}}>
@@ -133,13 +183,34 @@
     <label>{{localize "ARIANRHOD.Price"}}</label>
     <input type="number" name="system.price" value="{{system.price}}" data-dtype="Number" />
   </div>
+  <div class="form-group">
+    <label>{{localize "ARIANRHOD.AppraisalDC"}}</label>
+    <input type="number" name="system.appraisalDC" value="{{system.appraisalDC}}" data-dtype="Number" />
+  </div>
+  <div class="form-group">
+    <label>{{localize "ARIANRHOD.ClassRestriction"}}</label>
+    <select name="system.classRestriction">
+      {{#each config.classRestrictions as |label key|}}
+      <option value="{{key}}" {{#if (eq key ../system.classRestriction)}}selected{{/if}}>
+        {{localize label}}
+      </option>
+      {{/each}}
+    </select>
+  </div>
   {{/if}}
 
   {{!-- Skill attributes --}}
   {{#if (eq itemType "skill")}}
   <div class="form-group">
     <label>{{localize "ARIANRHOD.SkillClass"}}</label>
-    <input type="text" name="system.skillClass" value="{{system.skillClass}}" />
+    <select name="system.skillClass">
+      <option value="">---</option>
+      {{#each allSkillClasses as |label key|}}
+      <option value="{{key}}" {{#if (eq key ../system.skillClass)}}selected{{/if}}>
+        {{localize label}}
+      </option>
+      {{/each}}
+    </select>
   </div>
   <div class="form-group flexrow">
     <div class="form-field">
@@ -153,7 +224,14 @@
   </div>
   <div class="form-group">
     <label>{{localize "ARIANRHOD.Timing"}}</label>
-    <input type="text" name="system.timing" value="{{system.timing}}" />
+    <select name="system.timing">
+      <option value="">---</option>
+      {{#each config.skillTimings as |label key|}}
+      <option value="{{key}}" {{#if (eq key ../system.timing)}}selected{{/if}}>
+        {{localize label}}
+      </option>
+      {{/each}}
+    </select>
   </div>
   <div class="form-group">
     <label>{{localize "ARIANRHOD.Target"}}</label>
@@ -166,6 +244,16 @@
   <div class="form-group">
     <label>{{localize "ARIANRHOD.Cost"}}</label>
     <input type="text" name="system.cost" value="{{system.cost}}" />
+  </div>
+  <div class="form-group">
+    <label>{{localize "ARIANRHOD.Element"}}</label>
+    <select name="system.element">
+      {{#each config.elements as |label key|}}
+      <option value="{{key}}" {{#if (eq key ../system.element)}}selected{{/if}}>
+        {{localize label}}
+      </option>
+      {{/each}}
+    </select>
   </div>
   <div class="form-group">
     <label>{{localize "ARIANRHOD.Effect"}}</label>
@@ -190,6 +278,84 @@
   <div class="form-group">
     <label>{{localize "ARIANRHOD.Price"}}</label>
     <input type="number" name="system.price" value="{{system.price}}" data-dtype="Number" />
+  </div>
+  <div class="form-group">
+    <label>{{localize "ARIANRHOD.Consumable"}}</label>
+    <input type="checkbox" name="system.consumable" {{#if system.consumable}}checked{{/if}} />
+  </div>
+  {{/if}}
+
+  {{!-- Trap attributes --}}
+  {{#if (eq itemType "trap")}}
+  <div class="form-group">
+    <label>{{localize "ARIANRHOD.TrapLevel"}}</label>
+    <input type="number" name="system.trapLevel" value="{{system.trapLevel}}" data-dtype="Number" min="1" />
+  </div>
+  <div class="form-group">
+    <label>{{localize "ARIANRHOD.TrapStructure"}}</label>
+    <select name="system.structure">
+      {{#each config.trapStructures as |label key|}}
+      <option value="{{key}}" {{#if (eq key ../system.structure)}}selected{{/if}}>
+        {{localize label}}
+      </option>
+      {{/each}}
+    </select>
+  </div>
+  <div class="form-group">
+    <label>{{localize "ARIANRHOD.TrapCondition"}}</label>
+    <select name="system.conditionType">
+      {{#each config.trapConditions as |label key|}}
+      <option value="{{key}}" {{#if (eq key ../system.conditionType)}}selected{{/if}}>
+        {{localize label}}
+      </option>
+      {{/each}}
+    </select>
+  </div>
+  <div class="form-group flexrow">
+    <div class="form-field">
+      <label>{{localize "ARIANRHOD.DetectionDC"}}</label>
+      <input type="number" name="system.detectionDC" value="{{system.detectionDC}}" data-dtype="Number" />
+    </div>
+    <div class="form-field">
+      <label>{{localize "ARIANRHOD.DisarmDC"}}</label>
+      <input type="number" name="system.disarmDC" value="{{system.disarmDC}}" data-dtype="Number" />
+    </div>
+  </div>
+  <div class="form-group flexrow">
+    <div class="form-field">
+      <label>{{localize "ARIANRHOD.ResistCheck"}}</label>
+      <input type="text" name="system.resistCheck" value="{{system.resistCheck}}" />
+    </div>
+    <div class="form-field">
+      <label>{{localize "ARIANRHOD.ResistDC"}}</label>
+      <input type="number" name="system.resistDC" value="{{system.resistDC}}" data-dtype="Number" />
+    </div>
+  </div>
+  <div class="form-group">
+    <label>{{localize "ARIANRHOD.Target"}}</label>
+    <input type="text" name="system.target" value="{{system.target}}" />
+  </div>
+  <div class="form-group">
+    <label>{{localize "ARIANRHOD.Range"}}</label>
+    <input type="text" name="system.range" value="{{system.range}}" />
+  </div>
+  <div class="form-group">
+    <label>{{localize "ARIANRHOD.Element"}}</label>
+    <select name="system.element">
+      {{#each config.elements as |label key|}}
+      <option value="{{key}}" {{#if (eq key ../system.element)}}selected{{/if}}>
+        {{localize label}}
+      </option>
+      {{/each}}
+    </select>
+  </div>
+  <div class="form-group">
+    <label>{{localize "ARIANRHOD.Damage"}}</label>
+    <input type="text" name="system.damage" value="{{system.damage}}" />
+  </div>
+  <div class="form-group">
+    <label>{{localize "ARIANRHOD.Effect"}}</label>
+    <textarea name="system.effect" rows="3">{{system.effect}}</textarea>
   </div>
   {{/if}}
 

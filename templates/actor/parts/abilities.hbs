@@ -1,5 +1,5 @@
 {{!-- Abilities Tab --}}
-<section class="tab abilities{{#if tabs.abilities.active}} active{{/if}}" data-group="primary" data-tab="abilities">
+<section class="tab abilities {{tab.cssClass}}" data-group="primary" data-tab="abilities">
 
   {{!-- Ability Scores --}}
   <section class="abilities-grid">
@@ -7,8 +7,9 @@
     <div class="ability-list">
       {{#each abilities as |ability key|}}
       <div class="ability flexrow">
-        <span class="ability-label" data-action="rollAbility" data-ability="{{key}}"
-              title="{{ability.label}} チェック (クリックでロール)">
+        <span class="ability-label rollable" data-action="rollAbility" data-ability="{{key}}"
+              title="{{ability.label}} {{localize 'ARIANRHOD.CheckClickToRoll'}}">
+          <i class="fas fa-dice-d6 ability-roll-icon"></i>
           {{ability.abbr}}
         </span>
         <button type="button" class="ability-adjust-btn" data-action="decreaseAbility" data-ability="{{key}}"
@@ -33,46 +34,48 @@
     <h3>{{localize "ARIANRHOD.CombatStats"}}</h3>
     <div class="combat-grid">
       <div class="resource hp flexrow">
-        <label>{{localize "ARIANRHOD.HP"}}</label>
+        <label><i class="fas fa-heart"></i> {{localize "ARIANRHOD.HP"}}</label>
         <div class="resource-bar-container">
           <div class="resource-bar" style="--bar-pct: {{hpPercent}}%">
             <div class="resource-bar-fill"></div>
           </div>
           <div class="resource-values">
+            <button type="button" class="resource-btn minus" data-action="adjustResource" data-resource="hp" data-delta="-1" title="-1">-</button>
             <input type="number" name="system.combat.hp.value"
                    value="{{system.combat.hp.value}}" data-dtype="Number" />
             <span>/</span>
             <span class="resource-max">{{system.combat.hp.max}}</span>
+            <button type="button" class="resource-btn plus" data-action="adjustResource" data-resource="hp" data-delta="1" title="+1">+</button>
           </div>
         </div>
       </div>
       <div class="resource mp flexrow">
-        <label>{{localize "ARIANRHOD.MP"}}</label>
+        <label><i class="fas fa-sparkles"></i> {{localize "ARIANRHOD.MP"}}</label>
         <div class="resource-bar-container">
           <div class="resource-bar" style="--bar-pct: {{mpPercent}}%">
             <div class="resource-bar-fill"></div>
           </div>
           <div class="resource-values">
+            <button type="button" class="resource-btn minus" data-action="adjustResource" data-resource="mp" data-delta="-1" title="-1">-</button>
             <input type="number" name="system.combat.mp.value"
                    value="{{system.combat.mp.value}}" data-dtype="Number" />
             <span>/</span>
             <span class="resource-max">{{system.combat.mp.max}}</span>
+            <button type="button" class="resource-btn plus" data-action="adjustResource" data-resource="mp" data-delta="1" title="+1">+</button>
           </div>
         </div>
       </div>
       <div class="resource fate flexrow">
-        <label>{{localize "ARIANRHOD.Fate"}}</label>
-        <div class="resource-bar-container">
-          <div class="resource-bar" style="--bar-pct: {{fatePercent}}%">
-            <div class="resource-bar-fill"></div>
-          </div>
-          <div class="resource-values">
-            <input type="number" name="system.fate.value"
-                   value="{{system.fate.value}}" data-dtype="Number" />
-            <span>/</span>
-            <input type="number" name="system.fate.max"
-                   value="{{system.fate.max}}" data-dtype="Number" />
-          </div>
+        <label><i class="fas fa-star"></i> {{localize "ARIANRHOD.Fate"}}</label>
+        <div class="fate-dots">
+          {{#each fateDots as |dot|}}
+          <span class="fate-dot {{#if dot.filled}}filled{{/if}} {{#if dot.isMax}}is-max{{/if}}"
+                data-action="setFate" data-value="{{dot.index}}"
+                title="{{localize 'ARIANRHOD.Fate'}} {{dot.index}}/{{../system.fate.max}}">
+            <i class="fas fa-star"></i>
+          </span>
+          {{/each}}
+          <span class="fate-count">({{system.fate.value}}/{{system.fate.max}})</span>
         </div>
       </div>
       <div class="combat-detail computed clickable flexrow" data-action="rollAttack"
@@ -149,37 +152,37 @@
   <section class="special-checks">
     <h3>{{localize "ARIANRHOD.SpecialChecks"}}</h3>
     <div class="special-checks-grid">
-      <div class="combat-detail flexrow">
+      <div class="combat-detail clickable flexrow" data-action="rollSpecialCheck" data-check="alchemy">
         <label>{{localize "ARIANRHOD.CheckAlchemy"}}</label>
         <input type="number" name="system.specialChecks.alchemy"
                value="{{system.specialChecks.alchemy}}" data-dtype="Number" />
       </div>
-      <div class="combat-detail flexrow">
+      <div class="combat-detail clickable flexrow" data-action="rollSpecialCheck" data-check="trapDisarm">
         <label>{{localize "ARIANRHOD.CheckTrapDisarm"}}</label>
         <input type="number" name="system.specialChecks.trapDisarm"
                value="{{system.specialChecks.trapDisarm}}" data-dtype="Number" />
       </div>
-      <div class="combat-detail flexrow">
+      <div class="combat-detail clickable flexrow" data-action="rollSpecialCheck" data-check="trapDetect">
         <label>{{localize "ARIANRHOD.CheckTrapDetect"}}</label>
         <input type="number" name="system.specialChecks.trapDetect"
                value="{{system.specialChecks.trapDetect}}" data-dtype="Number" />
       </div>
-      <div class="combat-detail flexrow">
+      <div class="combat-detail clickable flexrow" data-action="rollSpecialCheck" data-check="dangerSense">
         <label>{{localize "ARIANRHOD.CheckDangerSense"}}</label>
         <input type="number" name="system.specialChecks.dangerSense"
                value="{{system.specialChecks.dangerSense}}" data-dtype="Number" />
       </div>
-      <div class="combat-detail flexrow">
+      <div class="combat-detail clickable flexrow" data-action="rollSpecialCheck" data-check="magicCheck">
         <label>{{localize "ARIANRHOD.CheckMagic"}}</label>
         <input type="number" name="system.specialChecks.magicCheck"
                value="{{system.specialChecks.magicCheck}}" data-dtype="Number" />
       </div>
-      <div class="combat-detail flexrow">
+      <div class="combat-detail clickable flexrow" data-action="rollSpecialCheck" data-check="enemyIdentify">
         <label>{{localize "ARIANRHOD.CheckEnemyIdentify"}}</label>
         <input type="number" name="system.specialChecks.enemyIdentify"
                value="{{system.specialChecks.enemyIdentify}}" data-dtype="Number" />
       </div>
-      <div class="combat-detail flexrow">
+      <div class="combat-detail clickable flexrow" data-action="rollSpecialCheck" data-check="itemAppraise">
         <label>{{localize "ARIANRHOD.CheckItemAppraise"}}</label>
         <input type="number" name="system.specialChecks.itemAppraise"
                value="{{system.specialChecks.itemAppraise}}" data-dtype="Number" />

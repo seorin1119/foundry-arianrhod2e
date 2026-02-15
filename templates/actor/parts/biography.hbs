@@ -1,7 +1,102 @@
 {{!-- Biography Tab --}}
-<section class="tab biography{{#if tabs.biography.active}} active{{/if}}" data-group="primary" data-tab="biography">
-  <div class="biography-content">
-    {{editor enrichedBiography target="system.biography"
-             button=true editable=editable}}
-  </div>
+<section class="tab biography {{tab.cssClass}}" data-group="primary" data-tab="biography">
+
+  {{!-- Life Path Section --}}
+  <section class="lifepath-section">
+    <h3><i class="fas fa-road"></i> {{localize "ARIANRHOD.LifePath"}}</h3>
+    <div class="lifepath-cards">
+
+      <div class="lifepath-card">
+        <div class="lifepath-card-header">
+          <i class="fas fa-home"></i>
+          <span>{{localize "ARIANRHOD.Origin"}}</span>
+          <button type="button" class="lifepath-roll-btn" data-action="rollLifePath" data-category="origin" title="{{localize 'ARIANRHOD.LifePathRoll'}}">
+            <i class="fas fa-dice"></i> D66
+          </button>
+        </div>
+        <div class="lifepath-card-body">
+          <select name="system.lifePath.origin">
+            <option value="">--</option>
+            {{#each config.lifePath.origin as |label key|}}
+              <option value="{{key}}" {{#if (eq ../system.lifePath.origin key)}}selected{{/if}}>
+                {{localize label}}
+              </option>
+            {{/each}}
+            <option value="custom" {{#if (eq system.lifePath.origin "custom")}}selected{{/if}}>
+              {{localize "ARIANRHOD.LifePathCustom"}}
+            </option>
+          </select>
+          {{#if (eq system.lifePath.origin "custom")}}
+          <input type="text" name="system.lifePath.originCustom" value="{{system.lifePath.originCustom}}"
+                 placeholder="{{localize 'ARIANRHOD.LifePathCustomPlaceholder'}}" />
+          {{/if}}
+        </div>
+      </div>
+
+      <div class="lifepath-card">
+        <div class="lifepath-card-header">
+          <i class="fas fa-compass"></i>
+          <span>{{localize "ARIANRHOD.Circumstance"}}</span>
+          <button type="button" class="lifepath-roll-btn" data-action="rollLifePath" data-category="circumstance" title="{{localize 'ARIANRHOD.LifePathRoll'}}">
+            <i class="fas fa-dice"></i> D66
+          </button>
+        </div>
+        <div class="lifepath-card-body">
+          <select name="system.lifePath.circumstance">
+            <option value="">--</option>
+            {{#each config.lifePath.circumstance as |label key|}}
+              <option value="{{key}}" {{#if (eq ../system.lifePath.circumstance key)}}selected{{/if}}>
+                {{localize label}}
+              </option>
+            {{/each}}
+            <option value="custom" {{#if (eq system.lifePath.circumstance "custom")}}selected{{/if}}>
+              {{localize "ARIANRHOD.LifePathCustom"}}
+            </option>
+          </select>
+          {{#if (eq system.lifePath.circumstance "custom")}}
+          <input type="text" name="system.lifePath.circumstanceCustom" value="{{system.lifePath.circumstanceCustom}}"
+                 placeholder="{{localize 'ARIANRHOD.LifePathCustomPlaceholder'}}" />
+          {{/if}}
+        </div>
+      </div>
+
+      <div class="lifepath-card">
+        <div class="lifepath-card-header">
+          <i class="fas fa-bullseye"></i>
+          <span>{{localize "ARIANRHOD.Objective"}}</span>
+          <button type="button" class="lifepath-roll-btn" data-action="rollLifePath" data-category="objective" title="{{localize 'ARIANRHOD.LifePathRoll'}}">
+            <i class="fas fa-dice"></i> D66
+          </button>
+        </div>
+        <div class="lifepath-card-body">
+          <select name="system.lifePath.objective">
+            <option value="">--</option>
+            {{#each config.lifePath.objective as |label key|}}
+              <option value="{{key}}" {{#if (eq ../system.lifePath.objective key)}}selected{{/if}}>
+                {{localize label}}
+              </option>
+            {{/each}}
+            <option value="custom" {{#if (eq system.lifePath.objective "custom")}}selected{{/if}}>
+              {{localize "ARIANRHOD.LifePathCustom"}}
+            </option>
+          </select>
+          {{#if (eq system.lifePath.objective "custom")}}
+          <input type="text" name="system.lifePath.objectiveCustom" value="{{system.lifePath.objectiveCustom}}"
+                 placeholder="{{localize 'ARIANRHOD.LifePathCustomPlaceholder'}}" />
+          {{/if}}
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  {{!-- Biography Editor --}}
+  <section class="biography-editor-section">
+    <h3><i class="fas fa-feather-alt"></i> {{localize "ARIANRHOD.Biography"}}</h3>
+    <div class="biography-content">
+      {{editor enrichedBiography target="system.biography"
+               button=true editable=editable}}
+    </div>
+  </section>
+
 </section>

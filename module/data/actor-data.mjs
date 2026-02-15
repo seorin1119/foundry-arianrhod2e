@@ -242,7 +242,10 @@ export class EnemyData extends foundry.abstract.TypeDataModel {
         attack: new NumberField({ required: true, integer: true, initial: 0 }),
         magAttack: new NumberField({ required: true, integer: true, initial: 0 }),
       }),
+      element: new StringField({ initial: "none" }),
       drops: new StringField({ initial: "" }),
+      tags: new StringField({ initial: "" }),
+      attackPattern: new StringField({ initial: "" }),
       exp: new NumberField({ required: true, integer: true, min: 0, initial: 0 }),
     };
   }

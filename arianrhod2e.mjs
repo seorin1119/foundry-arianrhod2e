@@ -12,9 +12,9 @@ import { ArianrhodItem } from "./module/documents/item.mjs";
 import { ArianrhodActorSheet } from "./module/sheets/actor-sheet.mjs";
 import { ArianrhodItemSheet } from "./module/sheets/item-sheet.mjs";
 import { CharacterData, EnemyData } from "./module/data/actor-data.mjs";
-import { WeaponData, ArmorData, AccessoryData, SkillData, ItemData } from "./module/data/item-data.mjs";
+import { WeaponData, ArmorData, AccessoryData, SkillData, ItemData, TrapData } from "./module/data/item-data.mjs";
 import { ArianrhodCombat } from "./module/documents/combat.mjs";
-import { rollCheck, rollCheckDialog } from "./module/dice.mjs";
+import { rollCheck, rollCheckDialog, rollFSCheck, calculateFSProgress } from "./module/dice.mjs";
 import { getStatusEffects } from "./module/helpers/status-effects.mjs";
 
 /* -------------------------------------------- */
@@ -30,6 +30,8 @@ Hooks.once("init", () => {
     ArianrhodItem,
     rollCheck,
     rollCheckDialog,
+    rollFSCheck,
+    calculateFSProgress,
   };
 
   // Add system config to global CONFIG
@@ -63,6 +65,7 @@ Hooks.once("init", () => {
     accessory: AccessoryData,
     skill: SkillData,
     item: ItemData,
+    trap: TrapData,
   });
 
   // Register trackable attributes for token bars
@@ -103,6 +106,44 @@ Hooks.once("init", () => {
 
 /* -------------------------------------------- */
 /*  Ready Hook                                  */
+/* -------------------------------------------- */
+
+/* -------------------------------------------- */
+/*  Chat Card Button Handlers                  */
+/* -------------------------------------------- */
+
+Hooks.on("renderChatMessage", (message, html) => {
+  // "Roll Damage" button on attack cards
+  html.querySelectorAll(".ar-damage-btn").forEach(btn => {
+    btn.addEventListener("click", async (event) => {
+      event.preventDefault();
+      const actorId = btn.dataset.actorId;
+      const weaponId = btn.dataset.weaponId;
+      const isCritical = btn.dataset.critical === "true";
+      const actor = game.actors.get(actorId);
+      if (!actor) return;
+      await actor.rollDamage(weaponId, isCritical);
+    });
+  });
+
+  // "Apply Damage" button on damage cards
+  html.querySelectorAll(".ar-apply-btn").forEach(btn => {
+    btn.addEventListener("click", async (event) => {
+      event.preventDefault();
+      const targetId = btn.dataset.targetId;
+      const damage = parseInt(btn.dataset.damage) || 0;
+      const targetActor = game.actors.get(targetId);
+      if (!targetActor) return;
+      await targetActor.applyDamage(damage);
+      ui.notifications.info(game.i18n.format("ARIANRHOD.DamageApplied", { name: targetActor.name, damage }));
+      btn.disabled = true;
+      btn.textContent = game.i18n.localize("ARIANRHOD.DamageAppliedShort");
+    });
+  });
+});
+
+/* -------------------------------------------- */
+/*  Ready Hook                                 */
 /* -------------------------------------------- */
 
 Hooks.once("ready", async () => {

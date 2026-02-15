@@ -55,6 +55,9 @@
       },
       "item": {
         "htmlFields": ["description"]
+      },
+      "trap": {
+        "htmlFields": ["description"]
       }
     }
   },

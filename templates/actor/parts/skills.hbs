@@ -1,25 +1,25 @@
 {{!-- Skills Tab --}}
-<section class="tab skills{{#if tabs.skills.active}} active{{/if}}" data-group="primary" data-tab="skills">
+<section class="tab skills {{tab.cssClass}}" data-group="primary" data-tab="skills">
 
   {{!-- Class Info and Filter --}}
-  <section class="skills-header" style="margin-bottom: 10px; padding: 8px; background: rgba(0,0,0,0.1); border-radius: 4px;">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-      <div>
+  <section class="skills-header">
+    <div class="skills-header-row">
+      <div class="skills-class-info">
         <strong>{{localize "ARIANRHOD.AvailableClasses"}}:</strong>
         {{#if system.mainClass}}
-          <span style="color: #4a90e2;">{{localize (lookup config.mainClasses system.mainClass)}}</span>
+          <span class="class-main">{{localize (lookup config.mainClasses system.mainClass)}}</span>
         {{else}}
-          <span style="color: #888;">{{localize "ARIANRHOD.NoMainClass"}}</span>
+          <span class="class-none">{{localize "ARIANRHOD.NoMainClass"}}</span>
         {{/if}}
         {{#if system.supportClass}}
-          / <span style="color: #e2904a;">{{localize (lookup config.supportClasses system.supportClass)}}</span>
+          / <span class="class-support">{{localize (lookup config.supportClasses system.supportClass)}}</span>
         {{else}}
-          / <span style="color: #888;">{{localize "ARIANRHOD.NoSupportClass"}}</span>
+          / <span class="class-none">{{localize "ARIANRHOD.NoSupportClass"}}</span>
         {{/if}}
       </div>
-      <div>
-        <label style="margin-right: 8px;">{{localize "ARIANRHOD.FilterSkills"}}:</label>
-        <select data-action="filterSkills" style="padding: 2px 8px;">
+      <div class="skills-filter">
+        <label>{{localize "ARIANRHOD.FilterSkills"}}:</label>
+        <select data-action="filterSkills">
           <option value="all">{{localize "ARIANRHOD.AllSkills"}}</option>
           <option value="main">{{localize "ARIANRHOD.MainClassOnly"}}</option>
           <option value="support">{{localize "ARIANRHOD.SupportClassOnly"}}</option>
@@ -40,36 +40,42 @@
     {{#if skills}}
     <ol class="item-list skills-list">
       <li class="item-header flexrow">
-        <span class="item-name">{{localize "ARIANRHOD.CharacterName"}}</span>
-        <span class="item-detail-sm">{{localize "ARIANRHOD.SkillLevel"}}</span>
+        <span class="item-name">{{localize "ARIANRHOD.Name"}}</span>
+        <span class="skill-level-col">{{localize "ARIANRHOD.SkillLevel"}}</span>
         <span class="item-detail">{{localize "ARIANRHOD.SkillClass"}}</span>
-        <span class="item-detail">{{localize "ARIANRHOD.Timing"}}</span>
-        <span class="item-detail">{{localize "ARIANRHOD.Cost"}}</span>
-        <span class="item-detail">{{localize "ARIANRHOD.Range"}}</span>
+        <span class="skill-timing-col">{{localize "ARIANRHOD.Timing"}}</span>
+        <span class="item-detail-sm">{{localize "ARIANRHOD.Cost"}}</span>
+        <span class="item-detail-sm">{{localize "ARIANRHOD.Range"}}</span>
+        <span class="item-detail-sm">{{localize "ARIANRHOD.Target"}}</span>
         <span class="item-controls"></span>
       </li>
       {{#each skills as |item|}}
-      <li class="item flexrow" data-item-id="{{item._id}}">
-        <span class="item-name clickable" data-action="postItem">
-          <img src="{{item.img}}" width="24" height="24" />
-          {{item.name}}
+      <li class="item flexrow" data-item-id="{{item._id}}" title="{{item.system.effect}}">
+        <span class="item-name">
+          {{#unless (eq item.system.timing "passive")}}
+          <a class="skill-activate-btn" data-action="activateSkill" title="{{localize 'ARIANRHOD.SkillActivate'}}">
+            <i class="fas fa-dice-d20"></i>
+          </a>
+          {{/unless}}
+          <span class="clickable" data-action="postItem">
+            <img src="{{item.img}}" width="24" height="24" />
+            {{item.name}}
+          </span>
         </span>
-        {{#unless (eq item.system.timing "passive")}}
-        <a class="skill-activate-btn" data-action="activateSkill" title="{{localize 'ARIANRHOD.SkillActivate'}}">
-          <i class="fas fa-dice-d20"></i>
-        </a>
-        {{/unless}}
-        <span class="item-detail-sm">
-          <button type="button" data-action="decreaseSkillLevel" data-item-id="{{item._id}}"
-                  style="width: 18px; padding: 0; font-size: 0.8em;" title="{{localize 'ARIANRHOD.DecreaseSkillLevel'}}">-</button>
-          {{item.system.level}}/{{item.system.maxLevel}}
-          <button type="button" data-action="increaseSkillLevel" data-item-id="{{item._id}}"
-                  style="width: 18px; padding: 0; font-size: 0.8em;" title="{{localize 'ARIANRHOD.IncreaseSkillLevel'}}">+</button>
+        <span class="skill-level-col">
+          <button type="button" class="skill-level-btn" data-action="decreaseSkillLevel" data-item-id="{{item._id}}"
+                  title="{{localize 'ARIANRHOD.DecreaseSkillLevel'}}">-</button>
+          <span class="skill-level-value">{{item.system.level}}/{{item.system.maxLevel}}</span>
+          <button type="button" class="skill-level-btn" data-action="increaseSkillLevel" data-item-id="{{item._id}}"
+                  title="{{localize 'ARIANRHOD.IncreaseSkillLevel'}}">+</button>
         </span>
-        <span class="item-detail">{{localize (lookup config.supportClasses item.system.skillClass)}}</span>
-        <span class="item-detail">{{localize (lookup config.skillTimings item.system.timing)}}</span>
-        <span class="item-detail">{{item.system.cost}}</span>
-        <span class="item-detail">{{item.system.range}}</span>
+        <span class="item-detail">{{item.system.skillClassLabel}}</span>
+        <span class="skill-timing-col">
+          <span class="timing-badge timing-{{item.system.timing}}">{{item.system.timingLabel}}</span>
+        </span>
+        <span class="item-detail-sm">{{item.system.cost}}</span>
+        <span class="item-detail-sm">{{item.system.range}}</span>
+        <span class="item-detail-sm">{{item.system.target}}</span>
         <span class="item-controls">
           <a data-action="editItem" title="{{localize 'ARIANRHOD.ItemEdit'}}"><i class="fas fa-edit"></i></a>
           <a data-action="deleteItem" title="{{localize 'ARIANRHOD.ItemDelete'}}"><i class="fas fa-trash"></i></a>
@@ -78,20 +84,8 @@
       {{/each}}
     </ol>
     {{else}}
-    <p style="text-align: center; color: #888; padding: 20px;">{{localize "ARIANRHOD.NoSkillsAcquired"}}</p>
+    <p class="no-skills-msg">{{localize "ARIANRHOD.NoSkillsAcquired"}}</p>
     {{/if}}
-  </section>
-
-  {{!-- Skill Library (Available Skills) --}}
-  <section class="item-section" style="margin-top: 20px;">
-    <div class="item-section-header flexrow">
-      <h3>{{localize "ARIANRHOD.SkillLibrary"}}</h3>
-      <span style="font-size: 0.9em; color: #666;">{{localize "ARIANRHOD.SkillLibraryHint"}}</span>
-    </div>
-    <div style="padding: 10px; background: rgba(0,0,0,0.05); border-radius: 4px; text-align: center; color: #888;">
-      <p>{{localize "ARIANRHOD.SkillLibraryComingSoon"}}</p>
-      <p style="font-size: 0.9em;">{{localize "ARIANRHOD.ManualSkillCreation"}}</p>
-    </div>
   </section>
 
 </section>

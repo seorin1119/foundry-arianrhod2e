@@ -1,12 +1,13 @@
 {{!-- Enemy Abilities Tab --}}
-<section class="tab abilities{{#if tabs.abilities.active}} active{{/if}}" data-group="primary" data-tab="abilities">
+<section class="tab abilities {{tab.cssClass}}" data-group="primary" data-tab="abilities">
 
   <section class="abilities-grid">
     <h3>{{localize "ARIANRHOD.Abilities"}}</h3>
     <div class="ability-list">
       {{#each abilities as |ability key|}}
       <div class="ability flexrow">
-        <span class="ability-label" data-action="rollAbility" data-ability="{{key}}">
+        <span class="ability-label rollable" data-action="rollAbility" data-ability="{{key}}"
+              title="{{ability.label}} {{localize 'ARIANRHOD.CheckClickToRoll'}}">
           {{ability.abbr}}
         </span>
         <input class="ability-value" type="number"
@@ -22,23 +23,37 @@
     <h3>{{localize "ARIANRHOD.CombatStats"}}</h3>
     <div class="combat-grid">
       <div class="resource hp flexrow">
-        <label>{{localize "ARIANRHOD.HP"}}</label>
-        <div class="resource-values">
-          <input type="number" name="system.combat.hp.value"
-                 value="{{system.combat.hp.value}}" data-dtype="Number" />
-          <span>/</span>
-          <input type="number" name="system.combat.hp.max"
-                 value="{{system.combat.hp.max}}" data-dtype="Number" />
+        <label><i class="fas fa-heart"></i> {{localize "ARIANRHOD.HP"}}</label>
+        <div class="resource-bar-container">
+          <div class="resource-bar" style="--bar-pct: {{hpPercent}}%">
+            <div class="resource-bar-fill"></div>
+          </div>
+          <div class="resource-values">
+            <button type="button" class="resource-btn minus" data-action="adjustResource" data-resource="hp" data-delta="-1" title="-1">-</button>
+            <input type="number" name="system.combat.hp.value"
+                   value="{{system.combat.hp.value}}" data-dtype="Number" />
+            <span>/</span>
+            <input type="number" name="system.combat.hp.max"
+                   value="{{system.combat.hp.max}}" data-dtype="Number" />
+            <button type="button" class="resource-btn plus" data-action="adjustResource" data-resource="hp" data-delta="1" title="+1">+</button>
+          </div>
         </div>
       </div>
       <div class="resource mp flexrow">
-        <label>{{localize "ARIANRHOD.MP"}}</label>
-        <div class="resource-values">
-          <input type="number" name="system.combat.mp.value"
-                 value="{{system.combat.mp.value}}" data-dtype="Number" />
-          <span>/</span>
-          <input type="number" name="system.combat.mp.max"
-                 value="{{system.combat.mp.max}}" data-dtype="Number" />
+        <label><i class="fas fa-sparkles"></i> {{localize "ARIANRHOD.MP"}}</label>
+        <div class="resource-bar-container">
+          <div class="resource-bar" style="--bar-pct: {{mpPercent}}%">
+            <div class="resource-bar-fill"></div>
+          </div>
+          <div class="resource-values">
+            <button type="button" class="resource-btn minus" data-action="adjustResource" data-resource="mp" data-delta="-1" title="-1">-</button>
+            <input type="number" name="system.combat.mp.value"
+                   value="{{system.combat.mp.value}}" data-dtype="Number" />
+            <span>/</span>
+            <input type="number" name="system.combat.mp.max"
+                   value="{{system.combat.mp.max}}" data-dtype="Number" />
+            <button type="button" class="resource-btn plus" data-action="adjustResource" data-resource="mp" data-delta="1" title="+1">+</button>
+          </div>
         </div>
       </div>
       <div class="combat-detail flexrow">
@@ -61,17 +76,20 @@
         <input type="number" name="system.combat.movement"
                value="{{system.combat.movement}}" data-dtype="Number" />
       </div>
-      <div class="combat-detail flexrow">
+      <div class="combat-detail clickable flexrow" data-action="rollAttack"
+           title="{{localize 'ARIANRHOD.AttackRoll'}}">
         <label>{{localize "ARIANRHOD.Accuracy"}}</label>
         <input type="number" name="system.combat.accuracy"
                value="{{system.combat.accuracy}}" data-dtype="Number" />
       </div>
-      <div class="combat-detail flexrow">
+      <div class="combat-detail clickable flexrow" data-action="rollEvasion"
+           title="{{localize 'ARIANRHOD.EvasionRoll'}}">
         <label>{{localize "ARIANRHOD.Evasion"}}</label>
         <input type="number" name="system.combat.evasion"
                value="{{system.combat.evasion}}" data-dtype="Number" />
       </div>
-      <div class="combat-detail flexrow">
+      <div class="combat-detail clickable flexrow" data-action="rollDamage"
+           title="{{localize 'ARIANRHOD.DamageRoll'}}">
         <label>{{localize "ARIANRHOD.Attack"}}</label>
         <input type="number" name="system.combat.attack"
                value="{{system.combat.attack}}" data-dtype="Number" />
@@ -84,6 +102,52 @@
     </div>
   </section>
 
+  {{!-- Status Effects --}}
+  <section class="status-effects">
+    <h3>{{localize "ARIANRHOD.StatusEffects"}}</h3>
+    <div class="status-effects-grid">
+      {{#each statusEffects as |effect|}}
+      <div class="status-badge {{effect.id}}" data-action="toggleStatus" data-status-id="{{effect.id}}" title="{{effect.label}}">
+        <img src="{{effect.icon}}" width="24" height="24" />
+        <span class="status-label">{{effect.label}}</span>
+      </div>
+      {{/each}}
+      {{#unless statusEffects.length}}
+      <span class="no-status">{{localize "ARIANRHOD.NoStatusEffects"}}</span>
+      {{/unless}}
+    </div>
+    <div class="status-add">
+      <select data-action="addStatusEffect">
+        <option value="">{{localize "ARIANRHOD.AddStatusEffect"}}...</option>
+        {{#each availableStatuses as |status|}}
+        <option value="{{status.id}}">{{status.label}}</option>
+        {{/each}}
+      </select>
+    </div>
+  </section>
+
+  {{!-- Element --}}
+  <section class="element-section">
+    <h3>{{localize "ARIANRHOD.Element"}}</h3>
+    <div class="form-group">
+      <label>{{localize "ARIANRHOD.EssenceElement"}}</label>
+      <select name="system.element">
+        {{#each config.elements as |label key|}}
+        <option value="{{key}}" {{#if (eq key ../system.element)}}selected{{/if}}>
+          {{localize label}}
+        </option>
+        {{/each}}
+      </select>
+    </div>
+  </section>
+
+  {{!-- Attack Pattern --}}
+  <section class="attack-pattern-section">
+    <h3>{{localize "ARIANRHOD.AttackPattern"}}</h3>
+    <textarea name="system.attackPattern" rows="3" placeholder="{{localize 'ARIANRHOD.AttackPattern'}}...">{{system.attackPattern}}</textarea>
+  </section>
+
+  {{!-- Drops --}}
   <section class="drops-section">
     <label>{{localize "ARIANRHOD.Drops"}}</label>
     <input type="text" name="system.drops" value="{{system.drops}}" />

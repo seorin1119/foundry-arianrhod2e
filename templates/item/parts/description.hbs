@@ -1,5 +1,5 @@
 {{!-- Item Description Tab --}}
-<section class="tab description{{#if tabs.description.active}} active{{/if}}" data-group="primary" data-tab="description">
+<section class="tab description {{tab.cssClass}}" data-group="primary" data-tab="description">
   {{editor enrichedDescription target="system.description"
            button=true editable=editable}}
 </section>

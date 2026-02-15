@@ -1,4 +1,31 @@
 /**
+ * Resolve a localized field from a skill data object.
+ * Fallback chain: locale-specific → nameEn → base (Japanese).
+ * @param {object} skill - Skill data object from the library
+ * @param {string} field - Base field name (e.g. "name", "description", "range", "target")
+ * @param {string} lang - Current language code (e.g. "ko", "en", "ja")
+ * @returns {string} The resolved field value
+ */
+function resolveLocalizedField(skill, field, lang) {
+  if (lang === "ko") {
+    const koField = `${field}Ko`;
+    if (skill[koField]) return skill[koField];
+    // For name, fall back to English before Japanese
+    if (field === "name") {
+      return skill.nameEn || skill.name;
+    }
+    return skill[field];
+  }
+  if (lang === "en") {
+    const enField = `${field}En`;
+    if (skill[enField]) return skill[enField];
+    return skill[field];
+  }
+  // Default (ja): use base field
+  return skill[field];
+}
+
+/**
  * Dialog for selecting skills from the skill library
  */
 export class SkillSelectionDialog extends foundry.applications.api.HandlebarsApplicationMixin(
@@ -24,8 +51,6 @@ export class SkillSelectionDialog extends foundry.applications.api.HandlebarsApp
     },
     actions: {
       selectSkill: SkillSelectionDialog.#onSelectSkill,
-      filterClass: SkillSelectionDialog.#onFilterClass,
-      search: SkillSelectionDialog.#onSearch,
     },
   };
 
@@ -39,8 +64,44 @@ export class SkillSelectionDialog extends foundry.applications.api.HandlebarsApp
     return game.i18n.localize("ARIANRHOD.SkillSelection");
   }
 
+  /** @override */
+  _onRender(context, options) {
+    super._onRender(context, options);
+    const html = this.element;
+
+    // filterClass select — change event (NOT data-action, which fires on click and re-renders immediately)
+    const filterSelect = html.querySelector('select.filter-class-select');
+    if (filterSelect) {
+      filterSelect.addEventListener("change", (event) => {
+        this._filterClass = event.target.value;
+        this.render();
+      });
+    }
+
+    // search input — input event with debounce (NOT data-action)
+    const searchInput = html.querySelector('input.search-input');
+    if (searchInput) {
+      searchInput.addEventListener("input", (event) => {
+        this._searchQuery = event.target.value;
+        clearTimeout(this._searchTimeout);
+        this._searchTimeout = setTimeout(() => {
+          this.render();
+        }, 300);
+      });
+      // Restore focus to search input after re-render
+      if (this._searchQuery) {
+        searchInput.focus();
+        searchInput.selectionStart = searchInput.selectionEnd = searchInput.value.length;
+      }
+    }
+  }
+
   async _prepareContext(options) {
     const context = await super._prepareContext(options);
+    context.config = CONFIG.ARIANRHOD;
+
+    // Current locale for field resolution
+    const lang = game.i18n.lang;
 
     // Get character's classes
     const mainClass = this.actor.system.mainClass;
@@ -76,25 +137,41 @@ export class SkillSelectionDialog extends foundry.applications.api.HandlebarsApp
       filteredSkills = filteredSkills.filter(s => s.skillClass === filterClass);
     }
 
-    // Apply search filter
+    // Apply search filter (search across all locale variants)
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
-      filteredSkills = filteredSkills.filter(s =>
-        s.name.toLowerCase().includes(query) ||
-        s.nameEn.toLowerCase().includes(query) ||
-        s.description.toLowerCase().includes(query)
-      );
+      filteredSkills = filteredSkills.filter(s => {
+        const displayName = resolveLocalizedField(s, "name", lang);
+        const displayDesc = resolveLocalizedField(s, "description", lang);
+        return displayName.toLowerCase().includes(query) ||
+          s.name.toLowerCase().includes(query) ||
+          (s.nameEn && s.nameEn.toLowerCase().includes(query)) ||
+          displayDesc.toLowerCase().includes(query);
+      });
     }
 
-    // Mark acquired skills and add localized timing
-    filteredSkills = filteredSkills.map(skill => ({
-      ...skill,
-      acquired: acquiredSkillIds.includes(skill.id),
-      timingLabel: game.i18n.localize(CONFIG.ARIANRHOD.skillTimings[skill.timing] || skill.timing),
-      classLabel: skill.skillClass === "general"
-        ? game.i18n.localize("ARIANRHOD.GeneralSkills")
-        : game.i18n.localize(CONFIG.ARIANRHOD.supportClasses[skill.skillClass] || skill.skillClass)
-    }));
+    // Mark acquired skills and resolve locale-appropriate display fields
+    filteredSkills = filteredSkills.map(skill => {
+      const displayName = resolveLocalizedField(skill, "name", lang);
+      // Subtitle: show alternate name when primary differs from original
+      // ja → show English name; en/ko → show Japanese original
+      const displayNameSub = (lang === "ja")
+        ? skill.nameEn
+        : (displayName !== skill.name ? skill.name : skill.nameEn);
+      return {
+        ...skill,
+        displayName,
+        displayNameSub,
+        displayDescription: resolveLocalizedField(skill, "description", lang),
+        displayRange: game.i18n.localize(CONFIG.ARIANRHOD.rangeMap?.[skill.range] ?? skill.range),
+        displayTarget: game.i18n.localize(CONFIG.ARIANRHOD.targetMap?.[skill.target] ?? skill.target),
+        acquired: acquiredSkillIds.includes(skill.id),
+        timingLabel: game.i18n.localize(CONFIG.ARIANRHOD.skillTimings[skill.timing] || skill.timing),
+        classLabel: skill.skillClass === "general"
+          ? game.i18n.localize("ARIANRHOD.GeneralSkills")
+          : game.i18n.localize(CONFIG.ARIANRHOD.supportClasses[skill.skillClass] || skill.skillClass)
+      };
+    });
 
     context.skills = filteredSkills;
     context.hasMainClass = !!mainClass;
@@ -158,24 +235,32 @@ export class SkillSelectionDialog extends foundry.applications.api.HandlebarsApp
       return;
     }
 
-    // Create the skill item
+    // Resolve locale-appropriate fields for item creation
+    const lang = game.i18n.lang;
+    const displayName = resolveLocalizedField(selectedSkill, "name", lang);
+    const displayDescription = resolveLocalizedField(selectedSkill, "description", lang);
+    const displayRange = resolveLocalizedField(selectedSkill, "range", lang);
+    const displayTarget = resolveLocalizedField(selectedSkill, "target", lang);
+
+    // Create the skill item with locale-appropriate display values
     const itemData = {
-      name: selectedSkill.name,
+      name: displayName,
       type: "skill",
       system: {
-        description: selectedSkill.description,
+        description: displayDescription,
         skillClass: selectedSkill.skillClass,
         level: 1,
         maxLevel: selectedSkill.maxLevel,
         timing: selectedSkill.timing,
-        target: selectedSkill.target,
-        range: selectedSkill.range,
+        target: displayTarget,
+        range: displayRange,
         cost: selectedSkill.cost,
-        effect: selectedSkill.description
+        effect: displayDescription
       },
       flags: {
         arianrhod2e: {
           skillId: selectedSkill.id,
+          nameJa: selectedSkill.name,
           nameEn: selectedSkill.nameEn
         }
       }
@@ -183,25 +268,10 @@ export class SkillSelectionDialog extends foundry.applications.api.HandlebarsApp
 
     await Item.create(itemData, { parent: this.actor });
 
-    ui.notifications.info(game.i18n.format("ARIANRHOD.SkillAcquired", { name: selectedSkill.name }));
+    ui.notifications.info(game.i18n.format("ARIANRHOD.SkillAcquired", { name: displayName }));
 
     // Close dialog or re-render
     this.render();
   }
 
-  static #onFilterClass(event, target) {
-    event.preventDefault();
-    this._filterClass = target.value;
-    this.render();
-  }
-
-  static #onSearch(event, target) {
-    event.preventDefault();
-    this._searchQuery = target.value;
-    // Debounce search
-    clearTimeout(this._searchTimeout);
-    this._searchTimeout = setTimeout(() => {
-      this.render();
-    }, 300);
-  }
 }

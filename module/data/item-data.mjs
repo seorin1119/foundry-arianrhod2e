@@ -13,6 +13,11 @@ export class WeaponData extends foundry.abstract.TypeDataModel {
       range: new NumberField({ required: true, integer: true, min: 0, initial: 0 }),
       weight: new NumberField({ required: true, integer: true, min: 0, initial: 0 }),
       price: new NumberField({ required: true, integer: true, min: 0, initial: 0 }),
+      element: new StringField({ initial: "none" }),
+      appraisalDC: new NumberField({ required: true, integer: true, min: 0, initial: 0 }),
+      classRestriction: new StringField({ initial: "" }),
+      isMagical: new BooleanField({ initial: false }),
+      mpCost: new NumberField({ required: true, integer: true, min: 0, initial: 0 }),
       equipped: new BooleanField({ initial: false }),
       slot: new StringField({ initial: "right" }),
     };
@@ -34,6 +39,9 @@ export class ArmorData extends foundry.abstract.TypeDataModel {
       movementMod: new NumberField({ required: true, integer: true, initial: 0 }),
       weight: new NumberField({ required: true, integer: true, min: 0, initial: 0 }),
       price: new NumberField({ required: true, integer: true, min: 0, initial: 0 }),
+      appraisalDC: new NumberField({ required: true, integer: true, min: 0, initial: 0 }),
+      classRestriction: new StringField({ initial: "" }),
+      isMagical: new BooleanField({ initial: false }),
       equipped: new BooleanField({ initial: false }),
       slot: new StringField({ initial: "body" }),
     };
@@ -55,6 +63,8 @@ export class AccessoryData extends foundry.abstract.TypeDataModel {
       movementMod: new NumberField({ required: true, integer: true, initial: 0 }),
       weight: new NumberField({ required: true, integer: true, min: 0, initial: 0 }),
       price: new NumberField({ required: true, integer: true, min: 0, initial: 0 }),
+      appraisalDC: new NumberField({ required: true, integer: true, min: 0, initial: 0 }),
+      classRestriction: new StringField({ initial: "" }),
       equipped: new BooleanField({ initial: false }),
       slot: new StringField({ initial: "accessory1" }),
     };
@@ -75,6 +85,7 @@ export class SkillData extends foundry.abstract.TypeDataModel {
       target: new StringField({ initial: "" }),
       range: new StringField({ initial: "" }),
       cost: new StringField({ initial: "" }),
+      element: new StringField({ initial: "none" }),
       effect: new StringField({ initial: "" }),
     };
   }
@@ -91,6 +102,31 @@ export class ItemData extends foundry.abstract.TypeDataModel {
       weight: new NumberField({ required: true, integer: true, min: 0, initial: 0 }),
       price: new NumberField({ required: true, integer: true, min: 0, initial: 0 }),
       quantity: new NumberField({ required: true, integer: true, min: 0, initial: 1 }),
+      consumable: new BooleanField({ initial: false }),
+      effect: new StringField({ initial: "" }),
+    };
+  }
+}
+
+/**
+ * Data model for Trap items (GM tool).
+ * Covers trigger, enchant, and continue-type traps.
+ */
+export class TrapData extends foundry.abstract.TypeDataModel {
+  static defineSchema() {
+    return {
+      description: new HTMLField(),
+      trapLevel: new NumberField({ required: true, integer: true, min: 1, initial: 1 }),
+      structure: new StringField({ initial: "physical" }),
+      conditionType: new StringField({ initial: "trigger" }),
+      detectionDC: new NumberField({ required: true, integer: true, min: 0, initial: 12 }),
+      disarmDC: new NumberField({ required: true, integer: true, min: 0, initial: 10 }),
+      resistCheck: new StringField({ initial: "" }),
+      resistDC: new NumberField({ required: true, integer: true, min: 0, initial: 0 }),
+      target: new StringField({ initial: "single" }),
+      range: new StringField({ initial: "close" }),
+      element: new StringField({ initial: "none" }),
+      damage: new StringField({ initial: "" }),
       effect: new StringField({ initial: "" }),
     };
   }

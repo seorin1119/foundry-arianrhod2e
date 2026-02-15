@@ -1,12 +1,19 @@
 {{!-- Enemy Sheet Header --}}
-<header class="sheet-header flexrow">
+<header class="sheet-header flexrow enemy-sheet-header">
   <img class="profile-img" src="{{actor.img}}" data-action="editImage"
        title="{{actor.name}}" height="100" width="100" />
   <div class="header-fields">
-    <h1 class="charname">
-      <input name="name" type="text" value="{{actor.name}}"
-             placeholder="{{localize 'ARIANRHOD.CharacterName'}}" />
-    </h1>
+    <div class="enemy-name-row">
+      <h1 class="charname">
+        <input name="name" type="text" value="{{actor.name}}"
+               placeholder="{{localize 'ARIANRHOD.Name'}}" />
+      </h1>
+      {{#if system.enemyType}}
+      <span class="enemy-type-badge type-{{system.enemyType}}">
+        {{localize (lookup config.enemyTypes system.enemyType)}}
+      </span>
+      {{/if}}
+    </div>
     <div class="header-details flexrow">
       <div class="field">
         <label>{{localize "ARIANRHOD.EnemyType"}}</label>
@@ -26,6 +33,13 @@
       <div class="field field-sm">
         <label>{{localize "ARIANRHOD.EnemyExp"}}</label>
         <input type="number" name="system.exp" value="{{system.exp}}" data-dtype="Number" />
+      </div>
+    </div>
+    <div class="header-details flexrow">
+      <div class="field">
+        <label>{{localize "ARIANRHOD.Tags"}}</label>
+        <input type="text" name="system.tags" value="{{system.tags}}"
+               placeholder="e.g. beast, undead, demon" />
       </div>
     </div>
   </div>

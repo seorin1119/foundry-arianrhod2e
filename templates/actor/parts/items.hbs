@@ -1,15 +1,24 @@
 {{!-- Items Tab --}}
-<section class="tab items{{#if tabs.items.active}} active{{/if}}" data-group="primary" data-tab="items">
+<section class="tab items {{tab.cssClass}}" data-group="primary" data-tab="items">
 
-  {{!-- Equipment Slots Summary --}}
+  {{!-- Equipment Slots Visual Grid --}}
   <section class="equip-slots">
-    <h3>{{localize "ARIANRHOD.EquipSlots"}}</h3>
-    <div class="equip-slots-table">
+    <h3><i class="fas fa-gem"></i> {{localize "ARIANRHOD.EquipSlots"}}</h3>
+    <div class="equip-slots-grid">
       {{#each equipSlots as |slot|}}
-      <div class="equip-slot flexrow{{#if slot.item}} filled{{/if}}">
-        <span class="slot-label">{{slot.label}}</span>
-        <span class="slot-item">{{#if slot.item}}{{slot.item.name}}{{else}}—{{/if}}</span>
-        <span class="slot-stat">{{#if slot.item}}{{slot.summary}}{{/if}}</span>
+      <div class="equip-slot-card{{#if slot.item}} filled{{/if}}" title="{{slot.label}}{{#if slot.item}}: {{slot.item.name}}{{/if}}">
+        <div class="slot-icon">
+          <i class="fas {{slot.icon}}"></i>
+        </div>
+        <div class="slot-info">
+          <span class="slot-label">{{slot.label}}</span>
+          {{#if slot.item}}
+          <span class="slot-item-name">{{slot.item.name}}</span>
+          <span class="slot-stats">{{slot.summary}}</span>
+          {{else}}
+          <span class="slot-empty">—</span>
+          {{/if}}
+        </div>
       </div>
       {{/each}}
     </div>
@@ -18,18 +27,19 @@
   {{!-- Weapons --}}
   <section class="item-section">
     <div class="item-section-header flexrow">
-      <h3>{{localize "ARIANRHOD.Weapon"}}</h3>
+      <h3><i class="fas fa-gavel"></i> {{localize "ARIANRHOD.Weapon"}}</h3>
       <a data-action="createItem" data-type="weapon" title="{{localize 'ARIANRHOD.ItemCreate'}}">
         <i class="fas fa-plus"></i>
       </a>
     </div>
     <ol class="item-list">
       <li class="item-header flexrow">
-        <span class="item-name">{{localize "ARIANRHOD.CharacterName"}}</span>
-        <span class="item-detail">{{localize "ARIANRHOD.Accuracy"}}</span>
-        <span class="item-detail">{{localize "ARIANRHOD.Attack"}}</span>
-        <span class="item-detail">{{localize "ARIANRHOD.Range"}}</span>
-        <span class="item-detail">{{localize "ARIANRHOD.Equipped"}}</span>
+        <span class="item-name">{{localize "ARIANRHOD.Name"}}</span>
+        <span class="item-detail-sm">{{localize "ARIANRHOD.Accuracy"}}</span>
+        <span class="item-detail-sm">{{localize "ARIANRHOD.Attack"}}</span>
+        <span class="item-detail-sm">{{localize "ARIANRHOD.Range"}}</span>
+        <span class="item-detail-sm">{{localize "ARIANRHOD.Weight"}}</span>
+        <span class="item-detail-sm">{{localize "ARIANRHOD.Equipped"}}</span>
         <span class="item-controls"></span>
       </li>
       {{#each weapons as |item|}}
@@ -38,10 +48,11 @@
           <img src="{{item.img}}" width="24" height="24" />
           {{item.name}}
         </span>
-        <span class="item-detail">{{item.system.accuracy}}</span>
-        <span class="item-detail">{{item.system.attack}}</span>
-        <span class="item-detail">{{item.system.range}}</span>
-        <span class="item-detail">
+        <span class="item-detail-sm">{{item.system.accuracy}}</span>
+        <span class="item-detail-sm">{{item.system.attack}}</span>
+        <span class="item-detail-sm">{{item.system.range}}</span>
+        <span class="item-detail-sm">{{item.system.weight}}</span>
+        <span class="item-detail-sm">
           <a data-action="equipItem" title="{{localize 'ARIANRHOD.ItemEquip'}}">
             <i class="fas {{#if item.system.equipped}}fa-check-circle{{else}}fa-circle{{/if}}"></i>
           </a>
@@ -58,18 +69,19 @@
   {{!-- Armor --}}
   <section class="item-section">
     <div class="item-section-header flexrow">
-      <h3>{{localize "ARIANRHOD.Armor"}}</h3>
+      <h3><i class="fas fa-shield-halved"></i> {{localize "ARIANRHOD.Armor"}}</h3>
       <a data-action="createItem" data-type="armor" title="{{localize 'ARIANRHOD.ItemCreate'}}">
         <i class="fas fa-plus"></i>
       </a>
     </div>
     <ol class="item-list">
       <li class="item-header flexrow">
-        <span class="item-name">{{localize "ARIANRHOD.CharacterName"}}</span>
-        <span class="item-detail">{{localize "ARIANRHOD.PhysDef"}}</span>
-        <span class="item-detail">{{localize "ARIANRHOD.MagDef"}}</span>
-        <span class="item-detail">{{localize "ARIANRHOD.Evasion"}}</span>
-        <span class="item-detail">{{localize "ARIANRHOD.Equipped"}}</span>
+        <span class="item-name">{{localize "ARIANRHOD.Name"}}</span>
+        <span class="item-detail-sm">{{localize "ARIANRHOD.PhysDef"}}</span>
+        <span class="item-detail-sm">{{localize "ARIANRHOD.MagDef"}}</span>
+        <span class="item-detail-sm">{{localize "ARIANRHOD.Evasion"}}</span>
+        <span class="item-detail-sm">{{localize "ARIANRHOD.Weight"}}</span>
+        <span class="item-detail-sm">{{localize "ARIANRHOD.Equipped"}}</span>
         <span class="item-controls"></span>
       </li>
       {{#each armors as |item|}}
@@ -78,10 +90,11 @@
           <img src="{{item.img}}" width="24" height="24" />
           {{item.name}}
         </span>
-        <span class="item-detail">{{item.system.physDef}}</span>
-        <span class="item-detail">{{item.system.magDef}}</span>
-        <span class="item-detail">{{item.system.evasion}}</span>
-        <span class="item-detail">
+        <span class="item-detail-sm">{{item.system.physDef}}</span>
+        <span class="item-detail-sm">{{item.system.magDef}}</span>
+        <span class="item-detail-sm">{{item.system.evasion}}</span>
+        <span class="item-detail-sm">{{item.system.weight}}</span>
+        <span class="item-detail-sm">
           <a data-action="equipItem" title="{{localize 'ARIANRHOD.ItemEquip'}}">
             <i class="fas {{#if item.system.equipped}}fa-check-circle{{else}}fa-circle{{/if}}"></i>
           </a>
@@ -98,14 +111,14 @@
   {{!-- Accessories --}}
   <section class="item-section">
     <div class="item-section-header flexrow">
-      <h3>{{localize "ARIANRHOD.Accessory"}}</h3>
+      <h3><i class="fas fa-ring"></i> {{localize "ARIANRHOD.Accessory"}}</h3>
       <a data-action="createItem" data-type="accessory" title="{{localize 'ARIANRHOD.ItemCreate'}}">
         <i class="fas fa-plus"></i>
       </a>
     </div>
     <ol class="item-list">
       <li class="item-header flexrow">
-        <span class="item-name">{{localize "ARIANRHOD.CharacterName"}}</span>
+        <span class="item-name">{{localize "ARIANRHOD.Name"}}</span>
         <span class="item-detail-wide">{{localize "ARIANRHOD.Effect"}}</span>
         <span class="item-detail">{{localize "ARIANRHOD.Equipped"}}</span>
         <span class="item-controls"></span>
@@ -134,16 +147,16 @@
   {{!-- General Items --}}
   <section class="item-section">
     <div class="item-section-header flexrow">
-      <h3>{{localize "ARIANRHOD.Item"}}</h3>
+      <h3><i class="fas fa-flask"></i> {{localize "ARIANRHOD.Item"}}</h3>
       <a data-action="createItem" data-type="item" title="{{localize 'ARIANRHOD.ItemCreate'}}">
         <i class="fas fa-plus"></i>
       </a>
     </div>
     <ol class="item-list">
       <li class="item-header flexrow">
-        <span class="item-name">{{localize "ARIANRHOD.CharacterName"}}</span>
-        <span class="item-detail">{{localize "ARIANRHOD.Quantity"}}</span>
-        <span class="item-detail">{{localize "ARIANRHOD.Weight"}}</span>
+        <span class="item-name">{{localize "ARIANRHOD.Name"}}</span>
+        <span class="item-detail-sm">{{localize "ARIANRHOD.Quantity"}}</span>
+        <span class="item-detail-sm">{{localize "ARIANRHOD.Weight"}}</span>
         <span class="item-detail-wide">{{localize "ARIANRHOD.Effect"}}</span>
         <span class="item-controls"></span>
       </li>
@@ -153,8 +166,8 @@
           <img src="{{item.img}}" width="24" height="24" />
           {{item.name}}
         </span>
-        <span class="item-detail">{{item.system.quantity}}</span>
-        <span class="item-detail">{{item.system.weight}}</span>
+        <span class="item-detail-sm">{{item.system.quantity}}</span>
+        <span class="item-detail-sm">{{item.system.weight}}</span>
         <span class="item-detail-wide">{{item.system.effect}}</span>
         <span class="item-controls">
           <a data-action="editItem" title="{{localize 'ARIANRHOD.ItemEdit'}}"><i class="fas fa-edit"></i></a>
@@ -163,6 +176,24 @@
       </li>
       {{/each}}
     </ol>
+  </section>
+
+  {{!-- Inventory Summary --}}
+  <section class="inventory-summary">
+    <div class="inventory-summary-row">
+      <span class="summary-item">
+        <i class="fas fa-cubes"></i>
+        <strong>{{localize "ARIANRHOD.TotalItems"}}:</strong> {{totalItems}}
+      </span>
+      <span class="summary-item">
+        <i class="fas fa-weight-hanging"></i>
+        <strong>{{localize "ARIANRHOD.TotalWeight"}}:</strong> {{totalWeight}}
+      </span>
+      <span class="summary-item">
+        <i class="fas fa-coins"></i>
+        <strong>{{localize "ARIANRHOD.TotalValue"}}:</strong> {{totalValue}}{{localize "ARIANRHOD.CurrencyUnit"}}
+      </span>
+    </div>
   </section>
 
 </section>
