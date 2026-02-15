@@ -1,5 +1,8 @@
 import { rollCheckDialog, analyzeRoll } from "../dice.mjs";
 
+const ATTACK_CARD_TEMPLATE = "systems/arianrhod2e/templates/chat/attack-card.hbs";
+const DAMAGE_CARD_TEMPLATE = "systems/arianrhod2e/templates/chat/damage-card.hbs";
+
 /**
  * Extend the base Actor document for Arianrhod RPG 2E.
  * @extends {Actor}
@@ -16,7 +19,8 @@ export class ArianrhodActor extends Actor {
 
     const label = game.i18n.localize(CONFIG.ARIANRHOD.abilities[abilityKey] ?? abilityKey);
     const checkLabel = game.i18n.localize("ARIANRHOD.Check");
-    const maxFate = this.type === "character" ? this.system.fate.value : 0;
+    const fateEnabled = game.settings?.get("arianrhod2e", "fateEnabled") ?? true;
+    const maxFate = (fateEnabled && this.type === "character") ? this.system.fate.value : 0;
 
     return rollCheckDialog({
       title: `${label} ${checkLabel}`,
@@ -49,7 +53,8 @@ export class ArianrhodActor extends Actor {
     }
 
     const accuracy = this.system.combat?.accuracy ?? 0;
-    const maxFate = this.type === "character" ? (this.system.fate?.value ?? 0) : 0;
+    const fateEnabled = game.settings?.get("arianrhod2e", "fateEnabled") ?? true;
+    const maxFate = (fateEnabled && this.type === "character") ? (this.system.fate?.value ?? 0) : 0;
 
     // Show roll dialog
     const dialogResult = await this._combatRollDialog({
@@ -74,31 +79,26 @@ export class ArianrhodActor extends Actor {
     await roll.evaluate();
     const { isCritical, isFumble, sixCount } = analyzeRoll(roll, dialogResult.fateDice);
 
-    // Build flavor
-    let flavor = `<strong>${game.i18n.localize("ARIANRHOD.AttackRoll")}</strong> — ${weapon.name}`;
-    if (isCritical) flavor += ` <span class="ar-critical">${game.i18n.localize("ARIANRHOD.Critical")}! (6×${sixCount})</span>`;
-    else if (isFumble) flavor += ` <span class="ar-fumble">${game.i18n.localize("ARIANRHOD.Fumble")}!</span>`;
-    if (dialogResult.fateDice > 0) flavor += ` <span class="ar-fate-used">(${game.i18n.format("ARIANRHOD.FateUsed", { count: dialogResult.fateDice })})</span>`;
+    // Render attack card template
+    const fateNotice = dialogResult.fateDice > 0
+      ? game.i18n.format("ARIANRHOD.FateUsed", { count: dialogResult.fateDice })
+      : "";
 
-    // Build card content with damage button
-    const content = `<div class="ar-combat-card">
-      <div class="ar-card-row">
-        <span class="ar-card-label">${game.i18n.localize("ARIANRHOD.Achievement")}</span>
-        <span class="ar-card-value ${isCritical ? "critical" : ""} ${isFumble ? "fumble" : ""}">${roll.total}</span>
-      </div>
-      <div class="ar-card-actions">
-        <button type="button" class="ar-chat-btn ar-damage-btn"
-                data-actor-id="${this.id}"
-                data-weapon-id="${weapon.id}"
-                data-critical="${isCritical}">
-          <i class="fas fa-burst"></i> ${game.i18n.localize("ARIANRHOD.RollDamage")}
-        </button>
-      </div>
-    </div>`;
+    const content = await renderTemplate(ATTACK_CARD_TEMPLATE, {
+      weaponImg: weapon.img || "icons/svg/sword.svg",
+      weaponName: weapon.name,
+      total: roll.total,
+      isCritical,
+      isFumble,
+      sixCount,
+      fateDice: dialogResult.fateDice,
+      fateNotice,
+      actorId: this.id,
+      weaponId: weapon.id,
+    });
 
     await roll.toMessage({
       speaker: ChatMessage.getSpeaker({ actor: this }),
-      flavor,
       content,
     });
 
@@ -134,9 +134,10 @@ export class ArianrhodActor extends Actor {
     const roll = new Roll(formula);
     await roll.evaluate();
 
-    // Get target info
+    // Get target info (if auto damage calc is enabled)
+    const autoDamageCalc = game.settings?.get("arianrhod2e", "autoDamageCalc") ?? true;
     const targets = game.user.targets;
-    const targetToken = targets.size > 0 ? targets.first() : null;
+    const targetToken = autoDamageCalc && targets.size > 0 ? targets.first() : null;
     const targetActor = targetToken?.actor;
     const targetElement = targetActor?.system.element ?? "none";
 
@@ -174,51 +175,34 @@ export class ArianrhodActor extends Actor {
     const rawDamage = roll.total;
     const finalDamage = targetActor ? Math.max(0, rawDamage - defense) : rawDamage;
 
-    // Build flavor
-    const elementLabel = weaponElement !== "none"
-      ? ` <span class="ar-element-badge element-${weaponElement}">${game.i18n.localize(CONFIG.ARIANRHOD.elements[weaponElement])}</span>`
+    // Build element badge HTML
+    const elementBadge = weaponElement !== "none"
+      ? `<span class="ar-element-badge element-${weaponElement}">${game.i18n.localize(CONFIG.ARIANRHOD.elements[weaponElement])}</span>`
       : "";
-    let flavor = `<strong>${game.i18n.localize("ARIANRHOD.DamageRoll")}</strong> — ${weapon.name}${elementLabel}`;
-    if (isCritical) flavor += ` <span class="ar-critical">${game.i18n.localize("ARIANRHOD.CriticalHit")}</span>`;
 
-    // Build card content
-    let targetHtml = "";
-    if (targetActor) {
-      const elementNoteHtml = elementNote ? ` <span class="ar-element-note">${elementNote}</span>` : "";
-      targetHtml = `
-        <div class="ar-card-row ar-card-defense">
-          <span class="ar-card-label">vs ${defenseLabel} (${targetActor.name})${elementNoteHtml}</span>
-          <span class="ar-card-value">-${defense}</span>
-        </div>
-        <div class="ar-card-row ar-card-final">
-          <span class="ar-card-label">${game.i18n.localize("ARIANRHOD.FinalDamage")}</span>
-          <span class="ar-card-value ar-final-damage">${finalDamage}</span>
-        </div>
-        <div class="ar-card-actions">
-          <button type="button" class="ar-chat-btn ar-apply-btn"
-                  data-target-id="${targetActor.id}"
-                  data-damage="${finalDamage}">
-            <i class="fas fa-heart-crack"></i> ${game.i18n.localize("ARIANRHOD.ApplyDamage")} (${finalDamage})
-          </button>
-        </div>`;
-    } else {
-      targetHtml = `
-        <div class="ar-card-row ar-card-hint">
-          <span class="ar-card-label ar-hint">${game.i18n.localize("ARIANRHOD.SelectTargetHint")}</span>
-        </div>`;
-    }
+    // Build element note HTML
+    const elementNoteHtml = elementNote
+      ? `<span class="ar-element-note">${elementNote}</span>`
+      : "";
 
-    const content = `<div class="ar-combat-card ar-damage-card">
-      <div class="ar-card-row">
-        <span class="ar-card-label">${game.i18n.localize("ARIANRHOD.DamageTotal")}</span>
-        <span class="ar-card-value">${rawDamage}</span>
-      </div>
-      ${targetHtml}
-    </div>`;
+    // Render damage card template
+    const content = await renderTemplate(DAMAGE_CARD_TEMPLATE, {
+      weaponImg: weapon.img || "icons/svg/sword.svg",
+      weaponName: weapon.name,
+      elementBadge,
+      isCritical,
+      rawDamage,
+      hasTarget: !!targetActor,
+      defenseLabel,
+      targetName: targetActor?.name ?? "",
+      elementNote: elementNoteHtml,
+      defense,
+      finalDamage,
+      targetId: targetActor?.id ?? "",
+    });
 
     await roll.toMessage({
       speaker: ChatMessage.getSpeaker({ actor: this }),
-      flavor,
       content,
     });
 
@@ -234,7 +218,8 @@ export class ArianrhodActor extends Actor {
    */
   async rollEvasion(options = {}) {
     const evasion = this.system.combat?.evasion ?? 0;
-    const maxFate = this.type === "character" ? (this.system.fate?.value ?? 0) : 0;
+    const fateEnabled = game.settings?.get("arianrhod2e", "fateEnabled") ?? true;
+    const maxFate = (fateEnabled && this.type === "character") ? (this.system.fate?.value ?? 0) : 0;
 
     return rollCheckDialog({
       title: game.i18n.localize("ARIANRHOD.EvasionRoll"),
@@ -260,7 +245,8 @@ export class ArianrhodActor extends Actor {
     await this.update({ "system.combat.hp.value": newHp });
 
     // Notify incapacitation
-    if (newHp === 0) {
+    const autoIncapacitation = game.settings?.get("arianrhod2e", "autoIncapacitation") ?? true;
+    if (newHp === 0 && autoIncapacitation) {
       ui.notifications.warn(game.i18n.format("ARIANRHOD.Incapacitated", { name: this.name }));
     }
   }

@@ -1,0 +1,31 @@
+{{!-- Item Chat Card --}}
+<div class="arianrhod ar-chat-card ar-item-card item-type-{{itemType}}">
+  <header class="ar-card-header">
+    <img class="ar-card-icon" src="{{itemImg}}" alt="{{itemName}}" width="36" height="36" />
+    <div class="ar-card-title">
+      <h3>{{itemName}}</h3>
+      <span class="ar-card-subtitle">{{typeLabel}}</span>
+    </div>
+  </header>
+  <div class="ar-card-body">
+    {{#if hasStats}}
+    <div class="ar-card-stats">
+      {{#each stats}}
+      <div class="ar-stat-item">
+        <span class="ar-stat-label">{{this.label}}</span>
+        <span class="ar-stat-value">{{this.value}}</span>
+      </div>
+      {{/each}}
+    </div>
+    {{/if}}
+    {{#if effect}}
+    <div class="ar-card-effect">
+      <span class="ar-effect-label">{{localize "ARIANRHOD.Effect"}}</span>
+      <p>{{effect}}</p>
+    </div>
+    {{/if}}
+    {{#if description}}
+    <div class="ar-card-description">{{{description}}}</div>
+    {{/if}}
+  </div>
+</div>

@@ -3,6 +3,8 @@
  * Handles cost parsing, MP/HP deduction, and chat card creation.
  */
 
+const SKILL_CARD_TEMPLATE = "systems/arianrhod2e/templates/chat/skill-card.hbs";
+
 /**
  * Parse a skill cost string into numeric MP and HP values.
  * @param {string} costString - The cost string (e.g. "3", "SL×2", "SLx3")
@@ -83,19 +85,26 @@ export async function activateSkill(actor, item) {
     ? game.i18n.localize(CONFIG.ARIANRHOD.skillTimings[timingKey] ?? timingKey)
     : "";
 
-  // Build chat HTML
-  const content = `
-<div class="arianrhod skill-chat-card">
-  <h3>\u300A${item.name}\u300B Lv.${skillLevel}</h3>
-  <div class="skill-meta">
-    <span><strong>${game.i18n.localize("ARIANRHOD.Timing")}:</strong> ${timingLabel}</span>
-    <span><strong>${game.i18n.localize("ARIANRHOD.Target")}:</strong> ${item.system.target ?? ""}</span>
-    <span><strong>${game.i18n.localize("ARIANRHOD.Range")}:</strong> ${item.system.range ?? ""}</span>
-    <span><strong>${game.i18n.localize("ARIANRHOD.Cost")}:</strong> ${costDisplay}</span>
-  </div>
-  <div class="skill-effect">${item.system.effect ?? ""}</div>
-  ${costParts.length ? `<div class="skill-cost-notice">${costParts.map(p => `-${p}`).join(" / ")}</div>` : ""}
-</div>`.trim();
+  // Skill class label
+  const allClasses = { ...CONFIG.ARIANRHOD.mainClasses, ...CONFIG.ARIANRHOD.supportClasses, general: "ARIANRHOD.GeneralSkills" };
+  const skillClassLabel = game.i18n.localize(allClasses[item.system.skillClass] ?? item.system.skillClass);
+
+  // Cost notice
+  const costNotice = costParts.length ? costParts.map(p => `-${p}`).join(" / ") : "";
+
+  // Render template
+  const content = await renderTemplate(SKILL_CARD_TEMPLATE, {
+    skillName: item.name,
+    skillImg: item.img || "icons/svg/item-bag.svg",
+    skillLevel,
+    skillClassLabel,
+    timingLabel,
+    target: item.system.target ?? "",
+    range: item.system.range ?? "",
+    costDisplay,
+    effect: item.system.effect ?? "",
+    costNotice,
+  });
 
   // Post chat message
   await ChatMessage.create({

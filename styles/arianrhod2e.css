@@ -109,6 +109,35 @@
   min-width: 60px;
 }
 
+.arianrhod2e .header-details .field-io {
+  flex: 0 0 auto;
+  display: flex;
+  gap: 4px;
+  align-items: flex-end;
+  padding-bottom: 2px;
+}
+
+.arianrhod2e .io-btn {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid var(--ar-border-light);
+  border-radius: 3px;
+  background: var(--ar-bg);
+  color: var(--ar-text-light);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85em;
+}
+
+.arianrhod2e .io-btn:hover {
+  background: var(--ar-bg-dark);
+  color: var(--ar-accent);
+  border-color: var(--ar-accent);
+}
+
 .arianrhod2e .header-details label {
   font-size: 0.75em;
   font-weight: bold;
@@ -2191,6 +2220,239 @@
 }
 
 /* ======================================== */
+/*  Chat Card Shared (Template-based)       */
+/* ======================================== */
+
+.ar-chat-card {
+  border-radius: 6px;
+  background: var(--ar-parchment, #fef6e4);
+  border: 1px solid var(--ar-border-light, #b8a896);
+  overflow: hidden;
+}
+
+.ar-chat-card .ar-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  background: rgba(0,0,0,0.04);
+  border-bottom: 1px solid var(--ar-border-light, #b8a896);
+}
+
+.ar-chat-card .ar-card-icon {
+  border-radius: 4px;
+  border: 1px solid var(--ar-border-light, #b8a896);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.ar-chat-card .ar-card-title h3 {
+  margin: 0;
+  font-size: 1em;
+  font-weight: 700;
+  color: var(--ar-text, #2a1f13);
+  line-height: 1.2;
+}
+
+.ar-chat-card .ar-card-subtitle {
+  font-size: 0.78em;
+  color: var(--ar-text-light, #6b5d4f);
+}
+
+.ar-chat-card .ar-card-body {
+  padding: 6px 8px;
+}
+
+/* Skill Card Meta Grid */
+.ar-chat-card .ar-card-meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3px 10px;
+  font-size: 0.85em;
+  margin-bottom: 6px;
+}
+
+.ar-chat-card .ar-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ar-chat-card .ar-meta-item i {
+  color: var(--ar-accent, #8b6f47);
+  font-size: 0.85em;
+  width: 14px;
+  text-align: center;
+}
+
+.ar-chat-card .ar-meta-label {
+  font-weight: 600;
+  color: var(--ar-text-light, #6b5d4f);
+}
+
+.ar-chat-card .ar-meta-value {
+  color: var(--ar-text, #2a1f13);
+}
+
+/* Skill Card Effect */
+.ar-chat-card .ar-card-effect {
+  padding: 4px 0;
+  border-top: 1px solid rgba(0,0,0,0.08);
+}
+
+.ar-chat-card .ar-card-effect .ar-effect-label {
+  font-size: 0.78em;
+  font-weight: 700;
+  color: var(--ar-accent, #8b6f47);
+  text-transform: uppercase;
+}
+
+.ar-chat-card .ar-card-effect p {
+  margin: 2px 0 0;
+  font-size: 0.9em;
+  color: var(--ar-text, #2a1f13);
+}
+
+.ar-chat-card .ar-card-cost-notice {
+  text-align: right;
+  font-weight: 700;
+  color: var(--ar-mp, #2563eb);
+  font-size: 0.85em;
+  margin-top: 4px;
+  padding-top: 4px;
+  border-top: 1px dashed rgba(0,0,0,0.08);
+}
+
+/* Skill Card type variant */
+.ar-skill-card {
+  border-left: 3px solid var(--ar-magic, #7c3aed);
+}
+
+.ar-skill-card .ar-card-header {
+  background: rgba(124, 58, 237, 0.06);
+}
+
+/* Item Card Styles */
+.ar-item-card .ar-card-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px 8px;
+  font-size: 0.85em;
+  margin-bottom: 6px;
+}
+
+.ar-item-card .ar-stat-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 2px 4px;
+  background: rgba(0,0,0,0.03);
+  border-radius: 2px;
+}
+
+.ar-item-card .ar-stat-label {
+  font-weight: 600;
+  color: var(--ar-text-light, #6b5d4f);
+}
+
+.ar-item-card .ar-stat-value {
+  font-weight: 700;
+  color: var(--ar-text, #2a1f13);
+}
+
+.ar-item-card .ar-card-description {
+  margin-top: 4px;
+  padding-top: 4px;
+  border-top: 1px dashed var(--ar-border-light, #b8a896);
+  font-size: 0.9em;
+}
+
+.ar-item-card.item-type-weapon {
+  border-left: 3px solid var(--ar-hp, #c53030);
+}
+
+.ar-item-card.item-type-armor {
+  border-left: 3px solid var(--ar-mp, #2563eb);
+}
+
+.ar-item-card.item-type-accessory {
+  border-left: 3px solid var(--ar-fate, #d97706);
+}
+
+.ar-item-card.item-type-skill {
+  border-left: 3px solid var(--ar-magic, #7c3aed);
+}
+
+.ar-item-card.item-type-item {
+  border-left: 3px solid var(--ar-equipped, #16a34a);
+}
+
+/* Attack Card with header */
+.ar-combat-card .ar-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  margin: -6px -8px 6px;
+  background: rgba(0,0,0,0.04);
+  border-bottom: 1px solid var(--ar-border-light, #b8a896);
+}
+
+.ar-combat-card .ar-card-icon {
+  border-radius: 4px;
+  border: 1px solid var(--ar-border-light, #b8a896);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.ar-combat-card .ar-card-title h3 {
+  margin: 0;
+  font-size: 1em;
+  font-weight: 700;
+  color: var(--ar-text, #2a1f13);
+  line-height: 1.2;
+}
+
+.ar-combat-card .ar-card-subtitle {
+  font-size: 0.78em;
+  color: var(--ar-text-light, #6b5d4f);
+}
+
+/* Critical/Fumble badges */
+.ar-card-badge {
+  text-align: center;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 0.85em;
+  font-weight: 700;
+  margin: 4px 0;
+}
+
+.ar-badge-critical {
+  background: rgba(212, 175, 55, 0.15);
+  color: var(--ar-accent-gold, #d4af37);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.ar-badge-fumble {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--ar-fumble, #ef4444);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.ar-card-fate-notice {
+  text-align: center;
+  font-size: 0.85em;
+  color: var(--ar-fate, #d97706);
+  font-style: italic;
+  margin: 4px 0;
+}
+
+/* Achievement row emphasis */
+.ar-combat-card .ar-achievement-row .ar-card-value {
+  font-size: 1.6em;
+}
+
+/* ======================================== */
 /*  Clickable Combat Stats                 */
 /* ======================================== */
 
@@ -2791,7 +3053,163 @@
 }
 
 /* ======================================== */
-/*  Combat Chat Cards                      */
+/*  Rich Chat Cards (Skill & Item)         */
+/* ======================================== */
+
+.ar-chat-card {
+  border-radius: 6px;
+  background: var(--ar-parchment, #fef6e4);
+  border: 1px solid var(--ar-border-light, #b8a896);
+  overflow: hidden;
+}
+
+.ar-chat-card .ar-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  background: linear-gradient(135deg, var(--ar-primary, #3a2f1f), var(--ar-leather, #654321));
+  color: var(--ar-parchment, #fef6e4);
+}
+
+.ar-chat-card .ar-card-icon {
+  border-radius: 4px;
+  border: 1px solid var(--ar-accent-gold, #d4af37);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.ar-chat-card .ar-card-title h3 {
+  margin: 0;
+  font-size: 1em;
+  font-weight: 700;
+  color: var(--ar-parchment, #fef6e4);
+  line-height: 1.2;
+}
+
+.ar-chat-card .ar-card-subtitle {
+  font-size: 0.8em;
+  color: var(--ar-accent-gold, #d4af37);
+}
+
+.ar-chat-card .ar-card-body {
+  padding: 8px 10px;
+}
+
+.ar-chat-card .ar-card-meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px 12px;
+  margin-bottom: 6px;
+}
+
+.ar-chat-card .ar-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.85em;
+}
+
+.ar-chat-card .ar-meta-item i {
+  color: var(--ar-accent, #8b6f47);
+  width: 14px;
+  text-align: center;
+  font-size: 0.85em;
+}
+
+.ar-chat-card .ar-meta-label {
+  font-weight: 600;
+  color: var(--ar-text-light, #6b5d4f);
+}
+
+.ar-chat-card .ar-meta-value {
+  font-weight: 700;
+  color: var(--ar-text, #2a1f13);
+}
+
+.ar-chat-card .ar-card-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 4px 8px;
+  margin-bottom: 6px;
+  padding: 6px 8px;
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 4px;
+}
+
+.ar-chat-card .ar-stat-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85em;
+}
+
+.ar-chat-card .ar-stat-label {
+  font-weight: 600;
+  color: var(--ar-text-light, #6b5d4f);
+}
+
+.ar-chat-card .ar-stat-value {
+  font-weight: 700;
+  color: var(--ar-text, #2a1f13);
+}
+
+.ar-chat-card .ar-card-effect {
+  padding: 6px 8px;
+  background: rgba(124, 58, 237, 0.06);
+  border-left: 3px solid var(--ar-magic, #7c3aed);
+  border-radius: 0 4px 4px 0;
+  margin-top: 4px;
+}
+
+.ar-chat-card .ar-effect-label {
+  font-size: 0.75em;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--ar-magic, #7c3aed);
+  letter-spacing: 0.5px;
+}
+
+.ar-chat-card .ar-card-effect p {
+  margin: 2px 0 0;
+  font-size: 0.88em;
+  color: var(--ar-text, #2a1f13);
+  line-height: 1.4;
+}
+
+.ar-chat-card .ar-card-cost-notice {
+  text-align: right;
+  font-weight: 700;
+  color: var(--ar-mp, #2563eb);
+  font-size: 0.85em;
+  margin-top: 6px;
+  padding-top: 4px;
+  border-top: 1px dashed var(--ar-border-light, #b8a896);
+}
+
+.ar-chat-card .ar-card-description {
+  font-size: 0.85em;
+  color: var(--ar-text, #2a1f13);
+  margin-top: 6px;
+  padding-top: 4px;
+  border-top: 1px dashed var(--ar-border-light, #b8a896);
+  line-height: 1.4;
+}
+
+/* Skill card variant */
+.ar-skill-card {
+  border-left: 3px solid var(--ar-magic, #7c3aed);
+}
+
+/* Item card type variants */
+.ar-item-card.item-type-weapon { border-left: 3px solid var(--ar-hp, #c53030); }
+.ar-item-card.item-type-armor { border-left: 3px solid var(--ar-ai, #264348); }
+.ar-item-card.item-type-accessory { border-left: 3px solid var(--ar-accent-gold, #d4af37); }
+.ar-item-card.item-type-skill { border-left: 3px solid var(--ar-magic, #7c3aed); }
+.ar-item-card.item-type-item { border-left: 3px solid var(--ar-accent, #8b6f47); }
+.ar-item-card.item-type-trap { border-left: 3px solid var(--ar-fumble, #ef4444); }
+
+/* ======================================== */
+/*  Combat Chat Cards (Attack & Damage)    */
 /* ======================================== */
 
 .ar-combat-card {
@@ -2799,6 +3217,69 @@
   border-radius: 6px;
   background: var(--ar-parchment, #fef6e4);
   border: 1px solid var(--ar-border-light, #b8a896);
+  overflow: hidden;
+}
+
+.ar-combat-card .ar-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  margin: -6px -8px 6px;
+  background: linear-gradient(135deg, var(--ar-primary, #3a2f1f), var(--ar-leather, #654321));
+  color: var(--ar-parchment, #fef6e4);
+}
+
+.ar-combat-card .ar-card-icon {
+  border-radius: 4px;
+  border: 1px solid var(--ar-accent-gold, #d4af37);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.ar-combat-card .ar-card-title h3 {
+  margin: 0;
+  font-size: 0.95em;
+  font-weight: 700;
+  color: var(--ar-parchment, #fef6e4);
+}
+
+.ar-combat-card .ar-card-subtitle {
+  font-size: 0.8em;
+  color: var(--ar-accent-gold, #d4af37);
+}
+
+.ar-combat-card .ar-card-badge {
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 0.85em;
+  font-weight: 700;
+  text-align: center;
+  margin: 4px 0;
+}
+
+.ar-badge-critical {
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(251, 191, 36, 0.15));
+  color: var(--ar-accent-gold, #d4af37);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+}
+
+.ar-badge-fumble {
+  background: rgba(239, 68, 68, 0.12);
+  color: var(--ar-fumble, #ef4444);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.ar-combat-card .ar-card-fate-notice {
+  font-size: 0.82em;
+  color: var(--ar-fate, #d97706);
+  font-style: italic;
+  text-align: center;
+  padding: 2px 0;
+}
+
+.ar-combat-card .ar-achievement-row .ar-card-value {
+  font-size: 1.6em;
 }
 
 .ar-combat-card .ar-card-row {
@@ -3371,6 +3852,137 @@
 .arianrhod2e.guild .guild-section .editor {
   min-height: 120px;
   padding: 8px 12px;
+}
+
+/* ======================================== */
+/*  Token HUD Enhancements                 */
+/* ======================================== */
+
+.ar-token-hud-panel {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 220px;
+  background: var(--ar-parchment, #fef6e4);
+  border: 2px solid var(--ar-accent-gold, #d4af37);
+  border-radius: 8px;
+  padding: 6px 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ar-token-hud-panel .ar-hud-resource {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ar-token-hud-panel .ar-hud-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ar-token-hud-panel .ar-hud-label {
+  font-weight: 700;
+  font-size: 0.75em;
+  text-transform: uppercase;
+  min-width: 22px;
+}
+
+.ar-token-hud-panel .hp-label {
+  color: var(--ar-hp, #c53030);
+}
+
+.ar-token-hud-panel .mp-label {
+  color: var(--ar-mp, #2563eb);
+}
+
+.ar-token-hud-panel .ar-hud-bar {
+  flex: 1;
+  height: 6px;
+  background: var(--ar-bg-darker, #d4c9ba);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.ar-token-hud-panel .ar-hud-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.2s ease;
+}
+
+.ar-token-hud-panel .hp-fill {
+  background: linear-gradient(to right, var(--ar-hp, #c53030), #e74c3c);
+}
+
+.ar-token-hud-panel .mp-fill {
+  background: linear-gradient(to right, var(--ar-mp, #2563eb), #3498db);
+}
+
+.ar-token-hud-panel .ar-hud-val {
+  font-size: 0.72em;
+  font-weight: 700;
+  color: var(--ar-text, #2a1f13);
+  min-width: 44px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.ar-token-hud-panel .ar-hud-btns {
+  display: flex;
+  gap: 2px;
+  justify-content: center;
+}
+
+.ar-token-hud-panel .ar-hud-btns button {
+  flex: 1;
+  padding: 2px 0;
+  font-size: 0.72em;
+  font-weight: 700;
+  border: 1px solid var(--ar-border-light, #b8a896);
+  border-radius: 3px;
+  background: var(--ar-bg, #f4ede4);
+  color: var(--ar-text, #2a1f13);
+  cursor: pointer;
+  transition: all 0.15s;
+  line-height: 1.2;
+}
+
+.ar-token-hud-panel .ar-hud-btns button:hover {
+  background: var(--ar-accent, #8b6f47);
+  color: var(--ar-parchment, #fef6e4);
+  border-color: var(--ar-accent, #8b6f47);
+}
+
+.ar-token-hud-panel .ar-hud-actions {
+  display: flex;
+  gap: 4px;
+  margin-top: 2px;
+  border-top: 1px solid var(--ar-border-light, #b8a896);
+  padding-top: 4px;
+}
+
+.ar-token-hud-panel .ar-hud-action {
+  flex: 1;
+  padding: 3px 0;
+  font-size: 0.8em;
+  border: 1px solid var(--ar-border-light, #b8a896);
+  border-radius: 4px;
+  background: linear-gradient(180deg, var(--ar-bg, #f4ede4), var(--ar-bg-dark, #e4d9ca));
+  color: var(--ar-text, #2a1f13);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.ar-token-hud-panel .ar-hud-action:hover {
+  background: linear-gradient(180deg, var(--ar-accent, #8b6f47), var(--ar-leather, #654321));
+  color: var(--ar-parchment, #fef6e4);
+  border-color: var(--ar-leather, #654321);
 }
 
 } /* end @layer arianrhod */

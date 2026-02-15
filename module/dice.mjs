@@ -17,11 +17,12 @@ export function analyzeRoll(roll, fateDice = 0) {
   const allDice = roll.dice.flatMap(d => d.results.map(r => r.result));
   const sixCount = allDice.filter(d => d === 6).length;
   const oneCount = allDice.filter(d => d === 1).length;
+  const criticalRange = game.settings?.get("arianrhod2e", "criticalRange") ?? 2;
   return {
     allDice,
     sixCount,
     oneCount,
-    isCritical: sixCount >= 2,
+    isCritical: sixCount >= criticalRange,
     isFumble: oneCount >= 2 && fateDice === 0,
   };
 }
@@ -94,6 +95,8 @@ export async function rollCheckDialog({
   actor = null,
 } = {}) {
   const dialogTitle = title || game.i18n.localize("ARIANRHOD.RollCheck");
+  const fateEnabled = game.settings?.get("arianrhod2e", "fateEnabled") ?? true;
+  if (!fateEnabled) maxFate = 0;
 
   const content = `
     <form>

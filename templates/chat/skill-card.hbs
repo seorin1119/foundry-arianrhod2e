@@ -1,0 +1,43 @@
+{{!-- Skill Activation Chat Card --}}
+<div class="arianrhod ar-chat-card ar-skill-card">
+  <header class="ar-card-header">
+    <img class="ar-card-icon" src="{{skillImg}}" alt="{{skillName}}" width="36" height="36" />
+    <div class="ar-card-title">
+      <h3>{{skillName}}</h3>
+      <span class="ar-card-subtitle">Lv.{{skillLevel}} {{skillClassLabel}}</span>
+    </div>
+  </header>
+  <div class="ar-card-body">
+    <div class="ar-card-meta">
+      <div class="ar-meta-item">
+        <i class="fas fa-clock"></i>
+        <span class="ar-meta-label">{{localize "ARIANRHOD.Timing"}}</span>
+        <span class="ar-meta-value">{{timingLabel}}</span>
+      </div>
+      <div class="ar-meta-item">
+        <i class="fas fa-crosshairs"></i>
+        <span class="ar-meta-label">{{localize "ARIANRHOD.Target"}}</span>
+        <span class="ar-meta-value">{{target}}</span>
+      </div>
+      <div class="ar-meta-item">
+        <i class="fas fa-arrows-left-right"></i>
+        <span class="ar-meta-label">{{localize "ARIANRHOD.Range"}}</span>
+        <span class="ar-meta-value">{{range}}</span>
+      </div>
+      <div class="ar-meta-item">
+        <i class="fas fa-droplet"></i>
+        <span class="ar-meta-label">{{localize "ARIANRHOD.Cost"}}</span>
+        <span class="ar-meta-value">{{costDisplay}}</span>
+      </div>
+    </div>
+    {{#if effect}}
+    <div class="ar-card-effect">
+      <span class="ar-effect-label">{{localize "ARIANRHOD.Effect"}}</span>
+      <p>{{effect}}</p>
+    </div>
+    {{/if}}
+    {{#if costNotice}}
+    <div class="ar-card-cost-notice">{{costNotice}}</div>
+    {{/if}}
+  </div>
+</div>

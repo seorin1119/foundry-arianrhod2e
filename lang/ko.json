@@ -529,5 +529,36 @@
   "ARIANRHOD.GuildLevelDown": "길드 레벨 내리기",
   "ARIANRHOD.GuildMaxLevel": "길드 레벨은 5가 최대입니다",
   "ARIANRHOD.GuildMinLevel": "길드 레벨은 1이 최소입니다",
-  "ARIANRHOD.EditImage": "이미지 변경"
+  "ARIANRHOD.EditImage": "이미지 변경",
+
+  "ARIANRHOD.MacroSkillNotFound": "스킬을 찾을 수 없습니다: {name}",
+  "ARIANRHOD.MacroWeaponNotFound": "무기를 찾을 수 없습니다: {name}",
+  "ARIANRHOD.MacroWeaponNotEquipped": "무기가 장착되지 않았습니다: {name}",
+  "ARIANRHOD.MacroItemNotFound": "아이템을 찾을 수 없습니다: {name}",
+  "ARIANRHOD.MacroNoActor": "매크로를 실행할 캐릭터가 선택되지 않았습니다",
+
+  "ARIANRHOD.SettingCriticalRange": "크리티컬 범위",
+  "ARIANRHOD.SettingCriticalRangeHint": "크리티컬이 발생하는 데 필요한 6의 개수입니다. 기본값은 2개 (6이 2개 이상)입니다.",
+  "ARIANRHOD.SettingCriticalDefault": "기본 (6이 2개 이상)",
+  "ARIANRHOD.SettingCriticalEasy": "완화 (6이 1개 이상)",
+  "ARIANRHOD.SettingFateEnabled": "페이트 사용",
+  "ARIANRHOD.SettingFateEnabledHint": "판정 시 페이트 다이스 사용을 허용합니다.",
+  "ARIANRHOD.SettingAutoDamageCalc": "자동 데미지 계산",
+  "ARIANRHOD.SettingAutoDamageCalcHint": "대상 토큰의 방어력을 자동으로 데미지에서 차감합니다.",
+  "ARIANRHOD.SettingAutoIncapacitation": "HP 0 자동 전투불능",
+  "ARIANRHOD.SettingAutoIncapacitationHint": "HP가 0이 되면 자동으로 전투불능 알림을 표시합니다.",
+  "ARIANRHOD.SettingInitiativeVariant": "이니셔티브 방식",
+  "ARIANRHOD.SettingInitiativeVariantHint": "이니셔티브(행동순서)를 결정하는 방식입니다.",
+  "ARIANRHOD.SettingInitiativeStatic": "고정 (행동값 사용)",
+  "ARIANRHOD.SettingInitiativeRoll": "롤 (2D6 + 행동값)",
+
+  "ARIANRHOD.ExportCharacter": "캐릭터 내보내기 (JSON)",
+  "ARIANRHOD.ImportCharacter": "캐릭터 가져오기 (JSON)",
+  "ARIANRHOD.ExportSuccess": "{name} 데이터를 내보냈습니다",
+  "ARIANRHOD.ImportSuccess": "{name} 캐릭터를 가져왔습니다",
+  "ARIANRHOD.ImportFailed": "캐릭터 가져오기에 실패했습니다",
+  "ARIANRHOD.ImportInvalidFormat": "유효하지 않은 파일 형식입니다",
+  "ARIANRHOD.ImportWrongSystem": "이 파일은 아리안로드 2E 시스템용이 아닙니다",
+  "ARIANRHOD.ImportInvalidType": "지원하지 않는 액터 타입입니다",
+  "ARIANRHOD.ImportVersionMismatch": "버전 불일치 경고: 파일 v{imported}, 현재 v{current}"
 }

@@ -528,5 +528,36 @@
   "ARIANRHOD.GuildLevelDown": "ギルドレベルを下げる",
   "ARIANRHOD.GuildMaxLevel": "ギルドレベルは最大5です",
   "ARIANRHOD.GuildMinLevel": "ギルドレベルは最小1です",
-  "ARIANRHOD.EditImage": "画像を変更"
+  "ARIANRHOD.EditImage": "画像を変更",
+
+  "ARIANRHOD.MacroSkillNotFound": "スキルが見つかりません: {name}",
+  "ARIANRHOD.MacroWeaponNotFound": "武器が見つかりません: {name}",
+  "ARIANRHOD.MacroWeaponNotEquipped": "武器が装備されていません: {name}",
+  "ARIANRHOD.MacroItemNotFound": "アイテムが見つかりません: {name}",
+  "ARIANRHOD.MacroNoActor": "マクロを実行するキャラクターが選択されていません",
+
+  "ARIANRHOD.SettingCriticalRange": "クリティカル範囲",
+  "ARIANRHOD.SettingCriticalRangeHint": "クリティカルに必要な6の数。デフォルトは2個（6が2個以上）です。",
+  "ARIANRHOD.SettingCriticalDefault": "デフォルト（6が2個以上）",
+  "ARIANRHOD.SettingCriticalEasy": "緩和（6が1個以上）",
+  "ARIANRHOD.SettingFateEnabled": "フェイト使用",
+  "ARIANRHOD.SettingFateEnabledHint": "判定時にフェイトダイスの使用を許可します。",
+  "ARIANRHOD.SettingAutoDamageCalc": "自動ダメージ計算",
+  "ARIANRHOD.SettingAutoDamageCalcHint": "対象トークンの防御力を自動的にダメージから差し引きます。",
+  "ARIANRHOD.SettingAutoIncapacitation": "HP0で自動戦闘不能",
+  "ARIANRHOD.SettingAutoIncapacitationHint": "HPが0になると自動的に戦闘不能の通知を表示します。",
+  "ARIANRHOD.SettingInitiativeVariant": "イニシアチブ方式",
+  "ARIANRHOD.SettingInitiativeVariantHint": "イニシアチブ（行動順序）の決定方法です。",
+  "ARIANRHOD.SettingInitiativeStatic": "固定（行動値使用）",
+  "ARIANRHOD.SettingInitiativeRoll": "ロール（2D6＋行動値）",
+
+  "ARIANRHOD.ExportCharacter": "キャラクターエクスポート (JSON)",
+  "ARIANRHOD.ImportCharacter": "キャラクターインポート (JSON)",
+  "ARIANRHOD.ExportSuccess": "{name}のデータをエクスポートしました",
+  "ARIANRHOD.ImportSuccess": "キャラクターをインポートしました: {name}",
+  "ARIANRHOD.ImportFailed": "キャラクターのインポートに失敗しました",
+  "ARIANRHOD.ImportInvalidFormat": "無効なファイル形式です",
+  "ARIANRHOD.ImportWrongSystem": "このファイルはアリアンロッド2Eシステム用ではありません",
+  "ARIANRHOD.ImportInvalidType": "サポートされていないアクタータイプです",
+  "ARIANRHOD.ImportVersionMismatch": "バージョン不一致の警告: ファイル v{imported}、現在 v{current}"
 }

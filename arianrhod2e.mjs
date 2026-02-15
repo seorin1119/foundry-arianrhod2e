@@ -17,7 +17,9 @@ import { WeaponData, ArmorData, AccessoryData, SkillData, ItemData, TrapData } f
 import { ArianrhodCombat } from "./module/documents/combat.mjs";
 import { rollCheck, rollCheckDialog, rollFSCheck, calculateFSProgress } from "./module/dice.mjs";
 import { getStatusEffects } from "./module/helpers/status-effects.mjs";
+import { registerTokenHUD } from "./module/helpers/token-hud.mjs";
 import { populateAllPacks, resetPack } from "./module/helpers/compendium-populator.mjs";
+import { onHotbarDrop, rollSkillMacro, rollAttackMacro, rollItemMacro, rollAbilityCheckMacro } from "./module/helpers/macros.mjs";
 
 /* -------------------------------------------- */
 /*  Init Hook                                   */
@@ -36,6 +38,12 @@ Hooks.once("init", () => {
     calculateFSProgress,
     populateAllPacks,
     resetPack,
+    macros: {
+      rollSkillMacro,
+      rollAttackMacro,
+      rollItemMacro,
+      rollAbilityCheckMacro,
+    },
   };
 
   // Add system config to global CONFIG
@@ -126,11 +134,71 @@ Hooks.once("init", () => {
     type: Boolean,
     default: false
   });
+
+  // ---- System Settings (House Rules) ----
+
+  game.settings.register("arianrhod2e", "criticalRange", {
+    name: "ARIANRHOD.SettingCriticalRange",
+    hint: "ARIANRHOD.SettingCriticalRangeHint",
+    scope: "world",
+    config: true,
+    type: Number,
+    default: 2,
+    choices: {
+      2: "ARIANRHOD.SettingCriticalDefault",
+      1: "ARIANRHOD.SettingCriticalEasy",
+    },
+  });
+
+  game.settings.register("arianrhod2e", "fateEnabled", {
+    name: "ARIANRHOD.SettingFateEnabled",
+    hint: "ARIANRHOD.SettingFateEnabledHint",
+    scope: "world",
+    config: true,
+    type: Boolean,
+    default: true,
+  });
+
+  game.settings.register("arianrhod2e", "autoDamageCalc", {
+    name: "ARIANRHOD.SettingAutoDamageCalc",
+    hint: "ARIANRHOD.SettingAutoDamageCalcHint",
+    scope: "world",
+    config: true,
+    type: Boolean,
+    default: true,
+  });
+
+  game.settings.register("arianrhod2e", "autoIncapacitation", {
+    name: "ARIANRHOD.SettingAutoIncapacitation",
+    hint: "ARIANRHOD.SettingAutoIncapacitationHint",
+    scope: "world",
+    config: true,
+    type: Boolean,
+    default: true,
+  });
+
+  game.settings.register("arianrhod2e", "initiativeVariant", {
+    name: "ARIANRHOD.SettingInitiativeVariant",
+    hint: "ARIANRHOD.SettingInitiativeVariantHint",
+    scope: "world",
+    config: true,
+    type: String,
+    default: "static",
+    choices: {
+      static: "ARIANRHOD.SettingInitiativeStatic",
+      roll: "ARIANRHOD.SettingInitiativeRoll",
+    },
+  });
+
+  // Register Token HUD enhancements
+  registerTokenHUD();
 });
 
 /* -------------------------------------------- */
-/*  Ready Hook                                  */
+/*  Hotbar Macros                               */
 /* -------------------------------------------- */
+
+Hooks.on("hotbarDrop", (bar, data, slot) => onHotbarDrop(bar, data, slot));
 
 /* -------------------------------------------- */
 /*  Chat Card Button Handlers                  */
@@ -172,6 +240,15 @@ Hooks.on("renderChatMessage", (message, html) => {
 
 Hooks.once("ready", async () => {
   console.log("Arianrhod 2E | システム準備完了");
+
+  // Apply initiative variant setting
+  const initVariant = game.settings.get("arianrhod2e", "initiativeVariant");
+  if (initVariant === "roll") {
+    CONFIG.Combat.initiative = {
+      formula: "2d6 + @combat.initiative",
+      decimals: 0,
+    };
+  }
 
   // Run system migrations if needed
   const currentVersion = game.settings.get("arianrhod2e", "systemMigrationVersion");

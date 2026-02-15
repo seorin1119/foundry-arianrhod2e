@@ -3,6 +3,7 @@ import { SkillSelectionDialog } from "../apps/skill-selection-dialog.mjs";
 import { EnemySkillSelectionDialog } from "../apps/enemy-skill-selection-dialog.mjs";
 import { EquipmentSelectionDialog } from "../apps/equipment-selection-dialog.mjs";
 import { activateSkill } from "../helpers/skill-activation.mjs";
+import { exportCharacter, importCharacter } from "../helpers/character-io.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -53,6 +54,8 @@ export class ArianrhodActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
       setFate: ArianrhodActorSheet.#onSetFate,
       adjustResource: ArianrhodActorSheet.#onAdjustResource,
       rollRelation: ArianrhodActorSheet.#onRollRelation,
+      exportCharacter: ArianrhodActorSheet.#onExportCharacter,
+      importCharacter: ArianrhodActorSheet.#onImportCharacter,
     },
   };
 
@@ -693,5 +696,15 @@ export class ArianrhodActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
       label: `${label} ${checkLabel}`,
       actor: this.actor,
     });
+  }
+
+  static #onExportCharacter(event, target) {
+    event.preventDefault();
+    exportCharacter(this.actor);
+  }
+
+  static async #onImportCharacter(event, target) {
+    event.preventDefault();
+    await importCharacter();
   }
 }

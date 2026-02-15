@@ -528,5 +528,36 @@
   "ARIANRHOD.GuildLevelDown": "Decrease Guild Level",
   "ARIANRHOD.GuildMaxLevel": "Guild level cannot exceed 5",
   "ARIANRHOD.GuildMinLevel": "Guild level cannot go below 1",
-  "ARIANRHOD.EditImage": "Change Image"
+  "ARIANRHOD.EditImage": "Change Image",
+
+  "ARIANRHOD.MacroSkillNotFound": "Skill not found: {name}",
+  "ARIANRHOD.MacroWeaponNotFound": "Weapon not found: {name}",
+  "ARIANRHOD.MacroWeaponNotEquipped": "Weapon not equipped: {name}",
+  "ARIANRHOD.MacroItemNotFound": "Item not found: {name}",
+  "ARIANRHOD.MacroNoActor": "No actor selected for macro execution",
+
+  "ARIANRHOD.SettingCriticalRange": "Critical Range",
+  "ARIANRHOD.SettingCriticalRangeHint": "Number of 6s required for a critical hit. Default is 2 (two or more 6s).",
+  "ARIANRHOD.SettingCriticalDefault": "Default (2+ sixes)",
+  "ARIANRHOD.SettingCriticalEasy": "Relaxed (1+ sixes)",
+  "ARIANRHOD.SettingFateEnabled": "Enable Fate",
+  "ARIANRHOD.SettingFateEnabledHint": "Allow spending fate dice on checks.",
+  "ARIANRHOD.SettingAutoDamageCalc": "Auto Damage Calculation",
+  "ARIANRHOD.SettingAutoDamageCalcHint": "Automatically subtract target defense from damage rolls.",
+  "ARIANRHOD.SettingAutoIncapacitation": "Auto Incapacitation at HP 0",
+  "ARIANRHOD.SettingAutoIncapacitationHint": "Automatically show incapacitation notification when HP reaches 0.",
+  "ARIANRHOD.SettingInitiativeVariant": "Initiative Variant",
+  "ARIANRHOD.SettingInitiativeVariantHint": "How initiative (action order) is determined.",
+  "ARIANRHOD.SettingInitiativeStatic": "Static (use action value)",
+  "ARIANRHOD.SettingInitiativeRoll": "Roll (2D6 + action value)",
+
+  "ARIANRHOD.ExportCharacter": "Export Character (JSON)",
+  "ARIANRHOD.ImportCharacter": "Import Character (JSON)",
+  "ARIANRHOD.ExportSuccess": "Exported {name} data",
+  "ARIANRHOD.ImportSuccess": "Imported character: {name}",
+  "ARIANRHOD.ImportFailed": "Character import failed",
+  "ARIANRHOD.ImportInvalidFormat": "Invalid file format",
+  "ARIANRHOD.ImportWrongSystem": "This file is not for the Arianrhod 2E system",
+  "ARIANRHOD.ImportInvalidType": "Unsupported actor type",
+  "ARIANRHOD.ImportVersionMismatch": "Version mismatch warning: file v{imported}, current v{current}"
 }

@@ -1,0 +1,40 @@
+{{!-- Damage Roll Chat Card --}}
+<div class="ar-combat-card ar-damage-card">
+  <header class="ar-card-header">
+    <img class="ar-card-icon" src="{{weaponImg}}" alt="{{weaponName}}" width="32" height="32" />
+    <div class="ar-card-title">
+      <h3>{{localize "ARIANRHOD.DamageRoll"}}</h3>
+      <span class="ar-card-subtitle">{{weaponName}} {{{elementBadge}}}</span>
+    </div>
+  </header>
+  {{#if isCritical}}
+  <div class="ar-card-badge ar-badge-critical">
+    <i class="fas fa-star"></i> {{localize "ARIANRHOD.CriticalHit"}}
+  </div>
+  {{/if}}
+  <div class="ar-card-row">
+    <span class="ar-card-label">{{localize "ARIANRHOD.DamageTotal"}}</span>
+    <span class="ar-card-value">{{rawDamage}}</span>
+  </div>
+  {{#if hasTarget}}
+  <div class="ar-card-row ar-card-defense">
+    <span class="ar-card-label">vs {{defenseLabel}} ({{targetName}}) {{{elementNote}}}</span>
+    <span class="ar-card-value">-{{defense}}</span>
+  </div>
+  <div class="ar-card-row ar-card-final">
+    <span class="ar-card-label">{{localize "ARIANRHOD.FinalDamage"}}</span>
+    <span class="ar-card-value ar-final-damage">{{finalDamage}}</span>
+  </div>
+  <div class="ar-card-actions">
+    <button type="button" class="ar-chat-btn ar-apply-btn"
+            data-target-id="{{targetId}}"
+            data-damage="{{finalDamage}}">
+      <i class="fas fa-heart-crack"></i> {{localize "ARIANRHOD.ApplyDamage"}} ({{finalDamage}})
+    </button>
+  </div>
+  {{else}}
+  <div class="ar-card-row ar-card-hint">
+    <span class="ar-card-label ar-hint">{{localize "ARIANRHOD.SelectTargetHint"}}</span>
+  </div>
+  {{/if}}
+</div>
