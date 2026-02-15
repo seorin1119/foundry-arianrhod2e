@@ -31,7 +31,7 @@
             <select name="system.connections.{{idx}}.relation">
               <option value="">— {{localize "ARIANRHOD.ConnectionRelation"}} —</option>
               {{#each @root.connectionRelations as |label key|}}
-              <option value="{{key}}" {{#if (eq key ../conn.relation)}}selected{{/if}}>{{localize label}}</option>
+              <option value="{{key}}" {{#if (eq key conn.relation)}}selected{{/if}}>{{localize label}}</option>
               {{/each}}
             </select>
             <a class="conn-roll-relation" data-action="rollRelation" data-index="{{idx}}" title="{{localize 'ARIANRHOD.RollRelation'}}">
