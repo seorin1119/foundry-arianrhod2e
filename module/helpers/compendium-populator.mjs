@@ -253,11 +253,24 @@ export async function populateAllPacks() {
       continue;
     }
 
+    // Unlock the pack if locked
+    const wasLocked = pack.locked;
+    if (wasLocked) {
+      await pack.configure({ locked: false });
+    }
+
     // Build and create items
-    const itemData = builder();
-    ui.notifications.info(`Populating ${label} compendium with ${itemData.length} items...`);
-    await Item.create(itemData, { pack: key });
-    ui.notifications.info(`${label} compendium populated successfully (${itemData.length} items).`);
+    try {
+      const itemData = builder();
+      ui.notifications.info(`Populating ${label} compendium with ${itemData.length} items...`);
+      await Item.create(itemData, { pack: key });
+      ui.notifications.info(`${label} compendium populated successfully (${itemData.length} items).`);
+    } finally {
+      // Re-lock if it was locked before
+      if (wasLocked) {
+        await pack.configure({ locked: true });
+      }
+    }
   }
 
   ui.notifications.info('All compendium packs population complete.');
@@ -280,8 +293,20 @@ export async function resetPack(packName) {
     return;
   }
 
-  ui.notifications.info(`Clearing ${index.size} items from "${packName}"...`);
-  const ids = index.map(e => e._id);
-  await Item.deleteDocuments(ids, { pack: packName });
-  ui.notifications.info(`Pack "${packName}" cleared successfully.`);
+  // Unlock the pack if locked
+  const wasLocked = pack.locked;
+  if (wasLocked) {
+    await pack.configure({ locked: false });
+  }
+
+  try {
+    ui.notifications.info(`Clearing ${index.size} items from "${packName}"...`);
+    const ids = index.map(e => e._id);
+    await Item.deleteDocuments(ids, { pack: packName });
+    ui.notifications.info(`Pack "${packName}" cleared successfully.`);
+  } finally {
+    if (wasLocked) {
+      await pack.configure({ locked: true });
+    }
+  }
 }
