@@ -16,6 +16,7 @@ import { WeaponData, ArmorData, AccessoryData, SkillData, ItemData, TrapData } f
 import { ArianrhodCombat } from "./module/documents/combat.mjs";
 import { rollCheck, rollCheckDialog, rollFSCheck, calculateFSProgress } from "./module/dice.mjs";
 import { getStatusEffects } from "./module/helpers/status-effects.mjs";
+import { populateAllPacks, resetPack } from "./module/helpers/compendium-populator.mjs";
 
 /* -------------------------------------------- */
 /*  Init Hook                                   */
@@ -32,6 +33,8 @@ Hooks.once("init", () => {
     rollCheckDialog,
     rollFSCheck,
     calculateFSProgress,
+    populateAllPacks,
+    resetPack,
   };
 
   // Add system config to global CONFIG
@@ -102,6 +105,15 @@ Hooks.once("init", () => {
     type: String,
     default: "0.0.0"
   });
+
+  // Register compendium population setting (GM only)
+  game.settings.register("arianrhod2e", "compendiumsPopulated", {
+    name: "Compendiums Populated",
+    scope: "world",
+    config: false,
+    type: Boolean,
+    default: false
+  });
 });
 
 /* -------------------------------------------- */
@@ -162,6 +174,17 @@ Hooks.once("ready", async () => {
     await game.settings.set("arianrhod2e", "systemMigrationVersion", NEEDS_MIGRATION_VERSION);
     console.log("Arianrhod 2E | Migration complete");
     ui.notifications.info("Arianrhod 2E: Migration complete!", { permanent: false });
+  }
+
+  // Auto-populate compendium packs on first load (GM only)
+  if (game.user.isGM && !game.settings.get("arianrhod2e", "compendiumsPopulated")) {
+    console.log("Arianrhod 2E | Populating compendium packs...");
+    try {
+      await populateAllPacks();
+      await game.settings.set("arianrhod2e", "compendiumsPopulated", true);
+    } catch (err) {
+      console.error("Arianrhod 2E | Failed to populate compendiums:", err);
+    }
   }
 });
 

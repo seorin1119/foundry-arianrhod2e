@@ -43,7 +43,7 @@
         <span class="item-controls"></span>
       </li>
       {{#each weapons as |item|}}
-      <li class="item flexrow{{#if item.system.equipped}} equipped{{/if}}" data-item-id="{{item._id}}">
+      <li class="item flexrow{{#if item.system.equipped}} equipped{{/if}}" data-item-id="{{item._id}}" draggable="true">
         <span class="item-name clickable" data-action="postItem">
           <img src="{{item.img}}" width="24" height="24" />
           {{item.name}}
@@ -85,7 +85,7 @@
         <span class="item-controls"></span>
       </li>
       {{#each armors as |item|}}
-      <li class="item flexrow{{#if item.system.equipped}} equipped{{/if}}" data-item-id="{{item._id}}">
+      <li class="item flexrow{{#if item.system.equipped}} equipped{{/if}}" data-item-id="{{item._id}}" draggable="true">
         <span class="item-name clickable" data-action="postItem">
           <img src="{{item.img}}" width="24" height="24" />
           {{item.name}}
@@ -124,7 +124,7 @@
         <span class="item-controls"></span>
       </li>
       {{#each accessories as |item|}}
-      <li class="item flexrow{{#if item.system.equipped}} equipped{{/if}}" data-item-id="{{item._id}}">
+      <li class="item flexrow{{#if item.system.equipped}} equipped{{/if}}" data-item-id="{{item._id}}" draggable="true">
         <span class="item-name clickable" data-action="postItem">
           <img src="{{item.img}}" width="24" height="24" />
           {{item.name}}
@@ -161,7 +161,7 @@
         <span class="item-controls"></span>
       </li>
       {{#each items as |item|}}
-      <li class="item flexrow" data-item-id="{{item._id}}">
+      <li class="item flexrow" data-item-id="{{item._id}}" draggable="true">
         <span class="item-name clickable" data-action="postItem">
           <img src="{{item.img}}" width="24" height="24" />
           {{item.name}}

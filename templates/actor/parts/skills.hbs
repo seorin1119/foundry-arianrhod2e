@@ -50,7 +50,7 @@
         <span class="item-controls"></span>
       </li>
       {{#each skills as |item|}}
-      <li class="item flexrow" data-item-id="{{item._id}}" title="{{item.system.effect}}">
+      <li class="item flexrow" data-item-id="{{item._id}}" title="{{item.system.effect}}" draggable="true">
         <span class="item-name">
           {{#unless (eq item.system.timing "passive")}}
           <a class="skill-activate-btn" data-action="activateSkill" title="{{localize 'ARIANRHOD.SkillActivate'}}">

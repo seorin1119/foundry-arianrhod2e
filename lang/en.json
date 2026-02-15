@@ -500,5 +500,16 @@
   "ARIANRHOD.Brightness3": "Morning/Evening (Dungeon Default)",
   "ARIANRHOD.Brightness4": "Midday (Outdoor Default)",
   "ARIANRHOD.DarknessPenalty": "Darkness Penalty (-1D)",
-  "ARIANRHOD.DarknessMovement": "Darkness Movement Limit (5m)"
+  "ARIANRHOD.DarknessMovement": "Darkness Movement Limit (5m)",
+
+  "ARIANRHOD.EnemySkillSelection": "Enemy Skill Selection",
+  "ARIANRHOD.SearchEnemySkills": "Search enemy skills...",
+  "ARIANRHOD.EnemySkills": "Enemy Skills",
+  "ARIANRHOD.SLLimit": "SL Limit",
+
+  "ARIANRHOD.CompendiumPopulating": "Populating compendium packs...",
+  "ARIANRHOD.CompendiumComplete": "Compendium packs created",
+  "ARIANRHOD.CompendiumSkills": "Skills",
+  "ARIANRHOD.CompendiumEquipment": "Equipment",
+  "ARIANRHOD.CompendiumEnemySkills": "Enemy Skills"
 }

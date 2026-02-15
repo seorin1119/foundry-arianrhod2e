@@ -1,5 +1,6 @@
 import { rollCheckDialog, rollLifePath } from "../dice.mjs";
 import { SkillSelectionDialog } from "../apps/skill-selection-dialog.mjs";
+import { EnemySkillSelectionDialog } from "../apps/enemy-skill-selection-dialog.mjs";
 import { EquipmentSelectionDialog } from "../apps/equipment-selection-dialog.mjs";
 import { activateSkill } from "../helpers/skill-activation.mjs";
 
@@ -21,6 +22,9 @@ export class ArianrhodActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
     form: {
       submitOnChange: true,
     },
+    dragDrop: [
+      { dragSelector: ".item[data-item-id]", dropSelector: null }
+    ],
     actions: {
       rollAbility: ArianrhodActorSheet.#onRollAbility,
       rollLifePath: ArianrhodActorSheet.#onRollLifePath,
@@ -416,10 +420,15 @@ export class ArianrhodActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
     event.preventDefault();
     const type = target.dataset.type;
 
-    // For skills, open the skill selection dialog
+    // For skills, open the appropriate skill selection dialog
     if (type === "skill") {
-      const dialog = new SkillSelectionDialog(this.actor);
-      dialog.render(true);
+      if (this.actor.type === "enemy") {
+        const dialog = new EnemySkillSelectionDialog(this.actor);
+        dialog.render(true);
+      } else {
+        const dialog = new SkillSelectionDialog(this.actor);
+        dialog.render(true);
+      }
       return;
     }
 

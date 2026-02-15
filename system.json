@@ -2,7 +2,7 @@
   "id": "arianrhod2e",
   "title": "Arianrhod RPG 2E",
   "description": "アリアンロッドRPG 2E - A JRPG-style fantasy TRPG system by F.E.A.R. for Foundry Virtual Tabletop.",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "compatibility": {
     "minimum": "13",
     "verified": "13"
@@ -14,6 +14,29 @@
   ],
   "esmodules": ["arianrhod2e.mjs"],
   "styles": ["styles/arianrhod2e.css"],
+  "packs": [
+    {
+      "name": "skills",
+      "label": "Skills / スキル",
+      "path": "packs/skills",
+      "type": "Item",
+      "system": "arianrhod2e"
+    },
+    {
+      "name": "equipment",
+      "label": "Equipment / 装備",
+      "path": "packs/equipment",
+      "type": "Item",
+      "system": "arianrhod2e"
+    },
+    {
+      "name": "enemy-skills",
+      "label": "Enemy Skills / エネミースキル",
+      "path": "packs/enemy-skills",
+      "type": "Item",
+      "system": "arianrhod2e"
+    }
+  ],
   "languages": [
     {
       "lang": "ko",

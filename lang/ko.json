@@ -501,5 +501,16 @@
   "ARIANRHOD.Brightness3": "아침/저녁 (던전 기본)",
   "ARIANRHOD.Brightness4": "한낮 (야외 기본)",
   "ARIANRHOD.DarknessPenalty": "어둠 패널티 (-1D)",
-  "ARIANRHOD.DarknessMovement": "어둠 이동 제한 (5m)"
+  "ARIANRHOD.DarknessMovement": "어둠 이동 제한 (5m)",
+
+  "ARIANRHOD.EnemySkillSelection": "에너미 스킬 선택",
+  "ARIANRHOD.SearchEnemySkills": "에너미 스킬 검색...",
+  "ARIANRHOD.EnemySkills": "에너미 스킬",
+  "ARIANRHOD.SLLimit": "SL 상한",
+
+  "ARIANRHOD.CompendiumPopulating": "컴펜디움 팩을 채우는 중...",
+  "ARIANRHOD.CompendiumComplete": "컴펜디움 팩 생성 완료",
+  "ARIANRHOD.CompendiumSkills": "스킬",
+  "ARIANRHOD.CompendiumEquipment": "장비",
+  "ARIANRHOD.CompendiumEnemySkills": "에너미 스킬"
 }

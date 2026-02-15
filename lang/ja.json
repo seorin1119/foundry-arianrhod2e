@@ -500,5 +500,16 @@
   "ARIANRHOD.Brightness3": "朝夕（ダンジョン標準）",
   "ARIANRHOD.Brightness4": "真昼（屋外標準）",
   "ARIANRHOD.DarknessPenalty": "暗闇ペナルティ（-1D）",
-  "ARIANRHOD.DarknessMovement": "暗闇移動制限（5m）"
+  "ARIANRHOD.DarknessMovement": "暗闇移動制限（5m）",
+
+  "ARIANRHOD.EnemySkillSelection": "エネミースキル選択",
+  "ARIANRHOD.SearchEnemySkills": "エネミースキル検索...",
+  "ARIANRHOD.EnemySkills": "エネミースキル",
+  "ARIANRHOD.SLLimit": "SL上限",
+
+  "ARIANRHOD.CompendiumPopulating": "コンペンディウムパックを作成中...",
+  "ARIANRHOD.CompendiumComplete": "コンペンディウムパック作成完了",
+  "ARIANRHOD.CompendiumSkills": "スキル",
+  "ARIANRHOD.CompendiumEquipment": "装備",
+  "ARIANRHOD.CompendiumEnemySkills": "エネミースキル"
 }

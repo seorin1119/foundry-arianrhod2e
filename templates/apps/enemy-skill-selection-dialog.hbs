@@ -1,0 +1,67 @@
+{{!-- Enemy Skill Selection Dialog Template --}}
+<form class="skill-selection-form">
+
+  {{!-- Search --}}
+  <section class="skill-dialog-filters">
+    <div class="skill-dialog-filter-row">
+      <div class="skill-dialog-filter-field" style="flex: 1">
+        <label><i class="fas fa-search"></i> {{localize "ARIANRHOD.Search"}}:</label>
+        <input type="text" class="search-input" value="{{searchQuery}}"
+               placeholder="{{localize 'ARIANRHOD.SearchEnemySkills'}}" />
+      </div>
+    </div>
+  </section>
+
+  {{!-- Skills List --}}
+  <section class="skill-dialog-list">
+    {{#if skills}}
+      <table class="skill-dialog-table">
+        <thead>
+          <tr>
+            <th class="col-name">{{localize "ARIANRHOD.SkillName"}}</th>
+            <th class="col-timing">{{localize "ARIANRHOD.Timing"}}</th>
+            <th class="col-cost">{{localize "ARIANRHOD.Cost"}}</th>
+            <th class="col-range">{{localize "ARIANRHOD.Range"}}</th>
+            <th class="col-target">{{localize "ARIANRHOD.Target"}}</th>
+            <th class="col-sl">{{localize "ARIANRHOD.SLLimit"}}</th>
+            <th class="col-desc">{{localize "ARIANRHOD.Effect"}}</th>
+            <th class="col-action"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each skills as |skill|}}
+            <tr class="{{#if skill.acquired}}acquired{{/if}}">
+              <td class="col-name">
+                <strong>{{skill.displayName}}</strong>
+                {{#if skill.displayNameSub}}
+                  <br><span class="skill-name-sub">{{skill.displayNameSub}}</span>
+                {{/if}}
+              </td>
+              <td class="col-timing">{{skill.timingLabel}}</td>
+              <td class="col-cost">{{skill.cost}}</td>
+              <td class="col-range">{{skill.range}}</td>
+              <td class="col-target">{{skill.target}}</td>
+              <td class="col-sl">{{skill.slLimitLabel}}</td>
+              <td class="col-desc">{{skill.displayEffect}}</td>
+              <td class="col-action">
+                {{#if skill.acquired}}
+                  <span class="skill-acquired-badge"><i class="fas fa-check"></i> {{localize "ARIANRHOD.Acquired"}}</span>
+                {{else}}
+                  <button type="button" class="skill-select-btn" data-action="selectSkill" data-skill-id="{{skill.id}}">
+                    <i class="fas fa-plus-circle"></i> {{localize "ARIANRHOD.Select"}}
+                  </button>
+                {{/if}}
+              </td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    {{else}}
+      <div class="skill-dialog-empty">
+        <i class="fas fa-book-skull"></i>
+        <p>{{localize "ARIANRHOD.NoSkillsAvailable"}}</p>
+      </div>
+    {{/if}}
+  </section>
+
+</form>
