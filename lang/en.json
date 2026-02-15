@@ -1,4 +1,14 @@
 {
+  "TYPES.Actor.character": "Character",
+  "TYPES.Actor.enemy": "Enemy",
+  "TYPES.Actor.guild": "Guild",
+  "TYPES.Item.weapon": "Weapon",
+  "TYPES.Item.armor": "Armor",
+  "TYPES.Item.accessory": "Accessory",
+  "TYPES.Item.skill": "Skill",
+  "TYPES.Item.item": "Item",
+  "TYPES.Item.trap": "Trap",
+
   "ARIANRHOD.SystemName": "Arianrhod RPG 2E",
 
   "ARIANRHOD.CharacterName": "Character Name",

@@ -1,4 +1,14 @@
 {
+  "TYPES.Actor.character": "キャラクター",
+  "TYPES.Actor.enemy": "エネミー",
+  "TYPES.Actor.guild": "ギルド",
+  "TYPES.Item.weapon": "武器",
+  "TYPES.Item.armor": "防具",
+  "TYPES.Item.accessory": "装飾品",
+  "TYPES.Item.skill": "スキル",
+  "TYPES.Item.item": "アイテム",
+  "TYPES.Item.trap": "トラップ",
+
   "ARIANRHOD.SystemName": "アリアンロッドRPG 2E",
 
   "ARIANRHOD.CharacterName": "キャラクター名",

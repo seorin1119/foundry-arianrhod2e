@@ -1,4 +1,14 @@
 {
+  "TYPES.Actor.character": "캐릭터",
+  "TYPES.Actor.enemy": "에너미",
+  "TYPES.Actor.guild": "길드",
+  "TYPES.Item.weapon": "무기",
+  "TYPES.Item.armor": "방어구",
+  "TYPES.Item.accessory": "장신구",
+  "TYPES.Item.skill": "스킬",
+  "TYPES.Item.item": "아이템",
+  "TYPES.Item.trap": "함정",
+
   "ARIANRHOD.SystemName": "아리안로드 RPG 2E",
 
   "ARIANRHOD.CharacterName": "캐릭터 이름",
