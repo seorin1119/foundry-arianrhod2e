@@ -206,6 +206,48 @@ export class CharacterData extends foundry.abstract.TypeDataModel {
 }
 
 /**
+ * Data model for Arianrhod RPG 2E Guild actors.
+ * Guilds are parties of adventurers with shared supports and resources.
+ * Based on Arianrhod 2E Rulebook pp.189-196.
+ * @extends {foundry.abstract.TypeDataModel}
+ */
+export class GuildData extends foundry.abstract.TypeDataModel {
+  static defineSchema() {
+    return {
+      description: new HTMLField(),
+      guildLevel: new NumberField({ required: true, integer: true, min: 1, max: 5, initial: 1 }),
+      gold: new NumberField({ required: true, integer: true, min: 0, initial: 0 }),
+      master: new StringField({ initial: "" }),
+      members: new ArrayField(new SchemaField({
+        name: new StringField({ initial: "" }),
+        actorId: new StringField({ initial: "" }),
+        role: new StringField({ initial: "" }),
+      })),
+      supports: new ArrayField(new SchemaField({
+        supportId: new StringField({ initial: "" }),
+      })),
+    };
+  }
+
+  /** @override */
+  prepareDerivedData() {
+    // Max support slots = guild level + 2 (Rulebook p.189)
+    this.maxSupports = this.guildLevel + 2;
+    this.remainingSlots = this.maxSupports - this.supports.length;
+
+    // Resolve support data from library for template use
+    const library = CONFIG.ARIANRHOD?.guildSupports ?? [];
+    this.resolvedSupports = this.supports.map(s => {
+      const data = library.find(gs => gs.id === s.supportId);
+      return data ? { ...s, ...data } : s;
+    });
+
+    // Available supports based on guild level
+    this.availableSupports = library.filter(gs => gs.level <= this.guildLevel);
+  }
+}
+
+/**
  * Data model for Arianrhod RPG 2E Enemy actors.
  * @extends {foundry.abstract.TypeDataModel}
  */

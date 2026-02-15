@@ -511,5 +511,22 @@
   "ARIANRHOD.CompendiumComplete": "コンペンディウムパック作成完了",
   "ARIANRHOD.CompendiumSkills": "スキル",
   "ARIANRHOD.CompendiumEquipment": "装備",
-  "ARIANRHOD.CompendiumEnemySkills": "エネミースキル"
+  "ARIANRHOD.CompendiumEnemySkills": "エネミースキル",
+
+  "ARIANRHOD.SheetGuild": "アリアンロッド ギルドシート",
+  "ARIANRHOD.GuildName": "ギルド名",
+  "ARIANRHOD.GuildGold": "ギルド資金",
+  "ARIANRHOD.GuildSupports": "ギルドサポート",
+  "ARIANRHOD.GuildMemberRole": "役割",
+  "ARIANRHOD.AddGuildSupport": "ギルドサポート追加",
+  "ARIANRHOD.RemoveGuildSupport": "ギルドサポート削除",
+  "ARIANRHOD.GuildSupportSlotsFull": "ギルドサポートのスロットが満杯です",
+  "ARIANRHOD.GuildSupportAlreadyAcquired": "このサポートは既に取得済みです（重複不可）",
+  "ARIANRHOD.NoGuildMembers": "ギルドメンバーがいません。+ボタンで追加してください。",
+  "ARIANRHOD.NoGuildSupports": "取得済みのギルドサポートがありません。+ボタンで追加してください。",
+  "ARIANRHOD.GuildLevelUp": "ギルドレベルを上げる",
+  "ARIANRHOD.GuildLevelDown": "ギルドレベルを下げる",
+  "ARIANRHOD.GuildMaxLevel": "ギルドレベルは最大5です",
+  "ARIANRHOD.GuildMinLevel": "ギルドレベルは最小1です",
+  "ARIANRHOD.EditImage": "画像を変更"
 }

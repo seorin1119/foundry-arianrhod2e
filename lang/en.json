@@ -511,5 +511,22 @@
   "ARIANRHOD.CompendiumComplete": "Compendium packs created",
   "ARIANRHOD.CompendiumSkills": "Skills",
   "ARIANRHOD.CompendiumEquipment": "Equipment",
-  "ARIANRHOD.CompendiumEnemySkills": "Enemy Skills"
+  "ARIANRHOD.CompendiumEnemySkills": "Enemy Skills",
+
+  "ARIANRHOD.SheetGuild": "Arianrhod Guild Sheet",
+  "ARIANRHOD.GuildName": "Guild Name",
+  "ARIANRHOD.GuildGold": "Guild Treasury",
+  "ARIANRHOD.GuildSupports": "Guild Supports",
+  "ARIANRHOD.GuildMemberRole": "Role",
+  "ARIANRHOD.AddGuildSupport": "Add Guild Support",
+  "ARIANRHOD.RemoveGuildSupport": "Remove Guild Support",
+  "ARIANRHOD.GuildSupportSlotsFull": "Guild support slots are full",
+  "ARIANRHOD.GuildSupportAlreadyAcquired": "This support is already acquired (no duplicates allowed)",
+  "ARIANRHOD.NoGuildMembers": "No guild members. Click + to add.",
+  "ARIANRHOD.NoGuildSupports": "No guild supports acquired. Click + to add.",
+  "ARIANRHOD.GuildLevelUp": "Increase Guild Level",
+  "ARIANRHOD.GuildLevelDown": "Decrease Guild Level",
+  "ARIANRHOD.GuildMaxLevel": "Guild level cannot exceed 5",
+  "ARIANRHOD.GuildMinLevel": "Guild level cannot go below 1",
+  "ARIANRHOD.EditImage": "Change Image"
 }

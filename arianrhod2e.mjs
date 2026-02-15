@@ -11,7 +11,8 @@ import { ArianrhodActor } from "./module/documents/actor.mjs";
 import { ArianrhodItem } from "./module/documents/item.mjs";
 import { ArianrhodActorSheet } from "./module/sheets/actor-sheet.mjs";
 import { ArianrhodItemSheet } from "./module/sheets/item-sheet.mjs";
-import { CharacterData, EnemyData } from "./module/data/actor-data.mjs";
+import { CharacterData, EnemyData, GuildData } from "./module/data/actor-data.mjs";
+import { ArianrhodGuildSheet } from "./module/sheets/guild-sheet.mjs";
 import { WeaponData, ArmorData, AccessoryData, SkillData, ItemData, TrapData } from "./module/data/item-data.mjs";
 import { ArianrhodCombat } from "./module/documents/combat.mjs";
 import { rollCheck, rollCheckDialog, rollFSCheck, calculateFSProgress } from "./module/dice.mjs";
@@ -59,6 +60,7 @@ Hooks.once("init", () => {
   Object.assign(CONFIG.Actor.dataModels, {
     character: CharacterData,
     enemy: EnemyData,
+    guild: GuildData,
   });
 
   // Register DataModel classes for Item types
@@ -81,12 +83,22 @@ Hooks.once("init", () => {
       bar: ["combat.hp", "combat.mp"],
       value: ["level", "exp"],
     },
+    guild: {
+      bar: [],
+      value: ["guildLevel", "gold"],
+    },
   };
 
   // Register sheet application classes (v13 pattern)
   DocumentSheetConfig.registerSheet(Actor, "arianrhod2e", ArianrhodActorSheet, {
     makeDefault: true,
     label: "ARIANRHOD.SheetCharacter",
+  });
+
+  DocumentSheetConfig.registerSheet(Actor, "arianrhod2e", ArianrhodGuildSheet, {
+    types: ["guild"],
+    makeDefault: true,
+    label: "ARIANRHOD.SheetGuild",
   });
 
   DocumentSheetConfig.registerSheet(Item, "arianrhod2e", ArianrhodItemSheet, {

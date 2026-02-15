@@ -512,5 +512,22 @@
   "ARIANRHOD.CompendiumComplete": "컴펜디움 팩 생성 완료",
   "ARIANRHOD.CompendiumSkills": "스킬",
   "ARIANRHOD.CompendiumEquipment": "장비",
-  "ARIANRHOD.CompendiumEnemySkills": "에너미 스킬"
+  "ARIANRHOD.CompendiumEnemySkills": "에너미 스킬",
+
+  "ARIANRHOD.SheetGuild": "아리안로드 길드 시트",
+  "ARIANRHOD.GuildName": "길드 이름",
+  "ARIANRHOD.GuildGold": "길드 자금",
+  "ARIANRHOD.GuildSupports": "길드 서포트",
+  "ARIANRHOD.GuildMemberRole": "역할",
+  "ARIANRHOD.AddGuildSupport": "길드 서포트 추가",
+  "ARIANRHOD.RemoveGuildSupport": "길드 서포트 제거",
+  "ARIANRHOD.GuildSupportSlotsFull": "길드 서포트 슬롯이 가득 찼습니다",
+  "ARIANRHOD.GuildSupportAlreadyAcquired": "이 서포트는 이미 취득했습니다 (중복 불가)",
+  "ARIANRHOD.NoGuildMembers": "길드 멤버가 없습니다. + 버튼으로 추가하세요.",
+  "ARIANRHOD.NoGuildSupports": "취득한 길드 서포트가 없습니다. + 버튼으로 추가하세요.",
+  "ARIANRHOD.GuildLevelUp": "길드 레벨 올리기",
+  "ARIANRHOD.GuildLevelDown": "길드 레벨 내리기",
+  "ARIANRHOD.GuildMaxLevel": "길드 레벨은 5가 최대입니다",
+  "ARIANRHOD.GuildMinLevel": "길드 레벨은 1이 최소입니다",
+  "ARIANRHOD.EditImage": "이미지 변경"
 }

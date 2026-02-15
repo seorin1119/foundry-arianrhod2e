@@ -1,0 +1,96 @@
+{{!-- Guild Sheet --}}
+<section class="guild-sheet">
+
+  {{!-- Guild Header --}}
+  <header class="guild-header">
+    <div class="guild-img">
+      <img src="{{actor.img}}" data-action="editImage" title="{{localize 'ARIANRHOD.EditImage'}}" />
+    </div>
+    <div class="guild-info">
+      <input name="name" type="text" value="{{actor.name}}" placeholder="{{localize 'ARIANRHOD.GuildName'}}" />
+      <div class="guild-level-row">
+        <label>{{localize "ARIANRHOD.GuildLevel"}}:</label>
+        <button type="button" data-action="levelDown" {{#unless (gt system.guildLevel 1)}}disabled{{/unless}}>-</button>
+        <span class="guild-level-value">{{system.guildLevel}}</span>
+        <button type="button" data-action="levelUp" {{#if (eq system.guildLevel 5)}}disabled{{/if}}>+</button>
+      </div>
+      <div class="guild-gold-row">
+        <label>{{localize "ARIANRHOD.GuildGold"}}:</label>
+        <input name="system.gold" type="number" value="{{system.gold}}" min="0" />
+        <span>G</span>
+      </div>
+      <div class="guild-master-row">
+        <label>{{localize "ARIANRHOD.GuildMaster"}}:</label>
+        <input name="system.master" type="text" value="{{system.master}}" />
+      </div>
+    </div>
+  </header>
+
+  {{!-- Guild Members --}}
+  <section class="guild-section">
+    <div class="section-header">
+      <h3><i class="fas fa-users"></i> {{localize "ARIANRHOD.GuildMembers"}}</h3>
+      <a data-action="addMember"><i class="fas fa-plus"></i></a>
+    </div>
+    {{#if system.members.length}}
+    <ol class="member-list">
+      {{#each system.members as |member idx|}}
+      <li class="member-row">
+        <input name="system.members.{{idx}}.name" type="text" value="{{member.name}}" placeholder="{{localize 'ARIANRHOD.Name'}}" />
+        <input name="system.members.{{idx}}.role" type="text" value="{{member.role}}" placeholder="{{localize 'ARIANRHOD.GuildMemberRole'}}" />
+        <a data-action="removeMember" data-index="{{idx}}"><i class="fas fa-trash"></i></a>
+      </li>
+      {{/each}}
+    </ol>
+    {{else}}
+    <p class="empty-msg">{{localize "ARIANRHOD.NoGuildMembers"}}</p>
+    {{/if}}
+  </section>
+
+  {{!-- Guild Supports --}}
+  <section class="guild-section">
+    <div class="section-header">
+      <h3><i class="fas fa-shield-heart"></i> {{localize "ARIANRHOD.GuildSupports"}} ({{resolvedSupports.length}}/{{maxSupports}})</h3>
+      {{#if (gt remainingSlots 0)}}
+      <a data-action="addSupport"><i class="fas fa-plus"></i></a>
+      {{/if}}
+    </div>
+    {{#if resolvedSupports.length}}
+    <ol class="support-list">
+      <li class="support-header">
+        <span class="support-name">{{localize "ARIANRHOD.Name"}}</span>
+        <span class="support-level">Lv</span>
+        <span class="support-timing">{{localize "ARIANRHOD.Timing"}}</span>
+        <span class="support-effect">{{localize "ARIANRHOD.Effect"}}</span>
+        <span class="support-controls"></span>
+      </li>
+      {{#each resolvedSupports as |support|}}
+      <li class="support-row">
+        <span class="support-name">{{support.name}}</span>
+        <span class="support-level">{{support.level}}</span>
+        <span class="support-timing">
+          <span class="timing-badge timing-{{support.timing}}">{{support.timingLabel}}</span>
+        </span>
+        <span class="support-effect" title="{{support.effect}}">{{support.effect}}</span>
+        <span class="support-controls">
+          <a data-action="removeSupport" data-index="{{support.index}}"><i class="fas fa-trash"></i></a>
+        </span>
+      </li>
+      {{/each}}
+    </ol>
+    {{else}}
+    <p class="empty-msg">{{localize "ARIANRHOD.NoGuildSupports"}}</p>
+    {{/if}}
+  </section>
+
+  {{!-- Guild Description --}}
+  <section class="guild-section">
+    <div class="section-header">
+      <h3><i class="fas fa-scroll"></i> {{localize "ARIANRHOD.Description"}}</h3>
+    </div>
+    <div class="editor">
+      {{editor enrichedDescription target="system.description" button=true editable=editable}}
+    </div>
+  </section>
+
+</section>

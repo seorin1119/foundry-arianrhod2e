@@ -3070,6 +3070,309 @@
   text-shadow: 0 0 3px rgba(255, 255, 255, 0.8);
 }
 
+/* ======================================== */
+/*  Guild Sheet                            */
+/* ======================================== */
+
+.arianrhod2e.guild .guild-sheet {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.arianrhod2e.guild .guild-header {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding-bottom: 12px;
+  border-bottom: 3px double var(--ar-accent-gold);
+}
+
+.arianrhod2e.guild .guild-img {
+  flex: 0 0 80px;
+}
+
+.arianrhod2e.guild .guild-img img {
+  width: 80px;
+  height: 80px;
+  border: 3px solid var(--ar-accent-gold);
+  border-radius: 8px;
+  object-fit: cover;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s;
+}
+
+.arianrhod2e.guild .guild-img img:hover {
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4);
+  transform: scale(1.03);
+}
+
+.arianrhod2e.guild .guild-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.arianrhod2e.guild .guild-info > input[name="name"] {
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 1.4em;
+  font-weight: 700;
+  color: var(--ar-leather);
+  border: none;
+  border-bottom: 2px solid var(--ar-accent-gold);
+  background: transparent;
+  padding: 2px 4px;
+}
+
+.arianrhod2e.guild .guild-level-row,
+.arianrhod2e.guild .guild-gold-row,
+.arianrhod2e.guild .guild-master-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.arianrhod2e.guild .guild-level-row label,
+.arianrhod2e.guild .guild-gold-row label,
+.arianrhod2e.guild .guild-master-row label {
+  font-weight: 700;
+  font-size: 0.85em;
+  color: var(--ar-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  min-width: 80px;
+}
+
+.arianrhod2e.guild .guild-level-value {
+  font-size: 1.2em;
+  font-weight: 700;
+  color: var(--ar-accent-gold);
+  min-width: 24px;
+  text-align: center;
+}
+
+.arianrhod2e.guild .guild-level-row button {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  font-size: 0.9em;
+  line-height: 24px;
+  border: 1px solid var(--ar-border-light);
+  border-radius: 4px;
+  background: var(--ar-bg);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.arianrhod2e.guild .guild-level-row button:hover:not(:disabled) {
+  background: var(--ar-accent);
+  color: var(--ar-parchment);
+  border-color: var(--ar-accent);
+}
+
+.arianrhod2e.guild .guild-level-row button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.arianrhod2e.guild .guild-gold-row input {
+  width: 100px;
+  text-align: right;
+}
+
+.arianrhod2e.guild .guild-master-row input {
+  flex: 1;
+}
+
+/* Guild Sections */
+.arianrhod2e.guild .guild-section {
+  border: 1px solid var(--ar-border-light);
+  border-radius: 8px;
+  background: var(--ar-washi);
+  overflow: hidden;
+}
+
+.arianrhod2e.guild .section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: linear-gradient(135deg, var(--ar-bg-dark), var(--ar-bg));
+  border-bottom: 1px solid var(--ar-border-light);
+}
+
+.arianrhod2e.guild .section-header h3 {
+  margin: 0;
+  font-size: 0.95em;
+  color: var(--ar-accent-gold);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.arianrhod2e.guild .section-header h3 i {
+  margin-right: 6px;
+}
+
+.arianrhod2e.guild .section-header a {
+  color: var(--ar-accent);
+  cursor: pointer;
+  transition: color 0.2s;
+  padding: 2px 6px;
+}
+
+.arianrhod2e.guild .section-header a:hover {
+  color: var(--ar-accent-gold);
+}
+
+/* Member List */
+.arianrhod2e.guild .member-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.arianrhod2e.guild .member-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--ar-border-light);
+  transition: background 0.15s;
+}
+
+.arianrhod2e.guild .member-row:last-child {
+  border-bottom: none;
+}
+
+.arianrhod2e.guild .member-row:hover {
+  background: var(--ar-bg-dark);
+}
+
+.arianrhod2e.guild .member-row input[type="text"] {
+  flex: 1;
+  border: 1px solid transparent;
+  background: transparent;
+  padding: 3px 6px;
+  border-radius: 3px;
+}
+
+.arianrhod2e.guild .member-row input[type="text"]:focus {
+  background: white;
+  border-color: var(--ar-border-light);
+}
+
+.arianrhod2e.guild .member-row a {
+  color: var(--ar-text-light);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.arianrhod2e.guild .member-row:hover a {
+  opacity: 1;
+}
+
+.arianrhod2e.guild .member-row a:hover {
+  color: var(--ar-fumble);
+}
+
+/* Support List */
+.arianrhod2e.guild .support-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.arianrhod2e.guild .support-header {
+  display: flex;
+  align-items: center;
+  padding: 6px 12px;
+  background: var(--ar-bg-dark);
+  border-bottom: 2px solid var(--ar-border);
+  font-weight: 700;
+  font-size: 0.8em;
+  color: var(--ar-text-light);
+  text-transform: uppercase;
+}
+
+.arianrhod2e.guild .support-row {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--ar-border-light);
+  transition: background 0.15s;
+}
+
+.arianrhod2e.guild .support-row:last-child {
+  border-bottom: none;
+}
+
+.arianrhod2e.guild .support-row:hover {
+  background: var(--ar-bg-dark);
+}
+
+.arianrhod2e.guild .support-name {
+  flex: 0 0 120px;
+  font-weight: 600;
+}
+
+.arianrhod2e.guild .support-level {
+  flex: 0 0 30px;
+  text-align: center;
+  font-weight: 700;
+  color: var(--ar-accent-gold);
+}
+
+.arianrhod2e.guild .support-timing {
+  flex: 0 0 70px;
+  text-align: center;
+}
+
+.arianrhod2e.guild .support-effect {
+  flex: 1;
+  font-size: 0.88em;
+  color: var(--ar-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.arianrhod2e.guild .support-controls {
+  flex: 0 0 30px;
+  text-align: center;
+}
+
+.arianrhod2e.guild .support-controls a {
+  color: var(--ar-text-light);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.arianrhod2e.guild .support-row:hover .support-controls a {
+  opacity: 1;
+}
+
+.arianrhod2e.guild .support-controls a:hover {
+  color: var(--ar-fumble);
+}
+
+/* Empty Messages */
+.arianrhod2e.guild .empty-msg {
+  text-align: center;
+  color: var(--ar-text-light);
+  padding: 20px;
+  font-style: italic;
+}
+
+/* Editor */
+.arianrhod2e.guild .guild-section .editor {
+  min-height: 120px;
+  padding: 8px 12px;
+}
+
 } /* end @layer arianrhod */
 
 /* ======================================== */
