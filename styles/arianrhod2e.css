@@ -3985,6 +3985,181 @@
   border-color: var(--ar-leather, #654321);
 }
 
+/* ======================================== */
+/*  Action Economy Tracker (Token HUD)     */
+/* ======================================== */
+
+.ar-action-tracker {
+  display: flex;
+  gap: 4px;
+  padding: 4px 0;
+  border-top: 1px solid var(--ar-border-light, #b8a896);
+  margin-top: 4px;
+}
+
+.ar-action-tracker .ar-action-pip {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px 5px;
+  border-radius: 3px;
+  font-size: 0.7em;
+  font-weight: 600;
+  border: 1px solid var(--ar-border-light, #b8a896);
+  background: var(--ar-bg, #f4ede4);
+  color: var(--ar-text, #2a1f13);
+}
+
+.ar-action-tracker .ar-action-pip.used {
+  background: var(--ar-bg-darker, #d4c9ba);
+  color: var(--ar-text-light, #6b5d4f);
+  opacity: 0.5;
+  text-decoration: line-through;
+}
+
+.ar-action-tracker .ar-action-pip.available {
+  background: var(--ar-accent-gold, #d4af37);
+  color: var(--ar-primary, #3a2f1f);
+  border-color: var(--ar-accent, #8b6f47);
+}
+
+/* ======================================== */
+/*  Movement Buttons                        */
+/* ======================================== */
+
+.ar-hud-move-btns {
+  display: flex;
+  gap: 3px;
+  padding: 3px 0;
+}
+
+.ar-hud-move-btns button {
+  flex: 1;
+  padding: 2px 4px;
+  font-size: 0.65em;
+  border: 1px solid var(--ar-border-light, #b8a896);
+  border-radius: 3px;
+  background: var(--ar-bg, #f4ede4);
+  color: var(--ar-text, #2a1f13);
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.ar-hud-move-btns button:hover:not(:disabled) {
+  background: var(--ar-accent, #8b6f47);
+  color: var(--ar-parchment, #fef6e4);
+}
+
+.ar-hud-move-btns button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ======================================== */
+/*  Engagement Badge                        */
+/* ======================================== */
+
+.ar-engage-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 0.7em;
+  font-weight: 600;
+  margin-top: 3px;
+}
+
+.ar-engage-badge.engaged {
+  background: #c0392b;
+  color: #fff;
+  border: 1px solid #962d22;
+}
+
+.ar-engage-badge.free {
+  background: #27ae60;
+  color: #fff;
+  border: 1px solid #1e8449;
+}
+
+/* ======================================== */
+/*  Cleanup Card                            */
+/* ======================================== */
+
+.ar-cleanup-card {
+  background: var(--ar-bg, #f4ede4);
+  border: 1px solid var(--ar-border, #8b7355);
+  border-radius: 6px;
+  padding: 8px;
+  margin: 4px 0;
+}
+
+.ar-cleanup-card h3 {
+  margin: 0 0 6px 0;
+  font-size: 0.9em;
+  color: var(--ar-accent, #8b6f47);
+  border-bottom: 1px solid var(--ar-border-light, #b8a896);
+  padding-bottom: 4px;
+}
+
+.ar-cleanup-card .status-msg {
+  padding: 2px 0;
+  font-size: 0.85em;
+}
+
+/* ======================================== */
+/*  Movement Message                        */
+/* ======================================== */
+
+.ar-move-msg {
+  padding: 4px 8px;
+  background: var(--ar-bg, #f4ede4);
+  border: 1px solid var(--ar-border-light, #b8a896);
+  border-radius: 4px;
+  font-size: 0.85em;
+}
+
+.ar-move-msg i {
+  margin-right: 4px;
+  color: var(--ar-accent, #8b6f47);
+}
+
+/* ======================================== */
+/*  Skill Effect Applied Badge              */
+/* ======================================== */
+
+.ar-effect-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-size: 0.75em;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.ar-effect-badge.buff {
+  background: #27ae60;
+  color: #fff;
+}
+
+.ar-effect-badge.debuff {
+  background: #c0392b;
+  color: #fff;
+}
+
+.ar-effect-badge.heal {
+  background: #2980b9;
+  color: #fff;
+}
+
+.ar-effect-badge.status-apply {
+  background: #8e44ad;
+  color: #fff;
+}
+
 } /* end @layer arianrhod */
 
 /* ======================================== */

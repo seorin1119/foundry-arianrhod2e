@@ -1,4 +1,5 @@
 import { rollCheckDialog, analyzeRoll } from "../dice.mjs";
+import { validateAttackEngagement } from "../helpers/engagement.mjs";
 
 const ATTACK_CARD_TEMPLATE = "systems/arianrhod2e/templates/chat/attack-card.hbs";
 const DAMAGE_CARD_TEMPLATE = "systems/arianrhod2e/templates/chat/damage-card.hbs";
@@ -50,6 +51,21 @@ export class ArianrhodActor extends Actor {
     if (equippedWeapons.length > 1) {
       weapon = await this._selectWeapon(equippedWeapons);
       if (!weapon) return null;
+    }
+
+    // Engagement check for melee attacks
+    if (game.combat?.started) {
+      const targets = game.user.targets;
+      const targetToken = targets.size > 0 ? targets.first() : null;
+      const targetActor = targetToken?.actor;
+      if (targetActor) {
+        const isRanged = (weapon.system.range ?? 0) > 0;
+        const engCheck = validateAttackEngagement(game.combat, this, targetActor, isRanged);
+        if (!engCheck.allowed) {
+          ui.notifications.warn(game.i18n.localize(engCheck.reason));
+          return null;
+        }
+      }
     }
 
     const accuracy = this.system.combat?.accuracy ?? 0;
@@ -244,6 +260,12 @@ export class ArianrhodActor extends Actor {
     const newHp = Math.max(0, hp.value - amount);
     await this.update({ "system.combat.hp.value": newHp });
 
+    // Remove sleep on damage (removedOnDamage flag)
+    if (this.hasStatusEffect?.("sleep")) {
+      await this.toggleStatusEffect("sleep");
+      ui.notifications.info(game.i18n.format("ARIANRHOD.SleepBrokenByDamage", { name: this.name }));
+    }
+
     // Notify incapacitation
     const autoIncapacitation = game.settings?.get("arianrhod2e", "autoIncapacitation") ?? true;
     if (newHp === 0 && autoIncapacitation) {
@@ -283,6 +305,18 @@ export class ArianrhodActor extends Actor {
 
   getStatusEffects() {
     return this.effects.filter(e => e.statuses.size > 0);
+  }
+
+  /* -------------------------------------------- */
+  /*  Incapacitation                              */
+  /* -------------------------------------------- */
+
+  /**
+   * Check if this actor is incapacitated (HP=0).
+   * @returns {boolean}
+   */
+  isIncapacitated() {
+    return (this.system.combat?.hp?.value ?? 1) <= 0;
   }
 
   /* -------------------------------------------- */

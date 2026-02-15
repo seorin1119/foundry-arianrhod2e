@@ -1,8 +1,10 @@
 /**
  * Arianrhod 2E Token HUD Enhancements.
- * Adds HP/MP quick adjustment panel below the Token HUD.
- * Status effects are already handled via CONFIG.statusEffects (13 conditions).
+ * Adds HP/MP quick adjustment, action tracker, movement buttons, and engagement status.
  */
+import { getActionState, getActionSummary } from "./action-economy.mjs";
+import { getMovementOptions, executeMovement } from "./movement.mjs";
+import { isEngaged, getEngagedWith } from "./engagement.mjs";
 
 /**
  * Register the Token HUD render hook.
@@ -25,7 +27,7 @@ function _onRenderTokenHUD(hud, html) {
 }
 
 /**
- * Build and inject the HP/MP quick-adjust panel.
+ * Build and inject the HP/MP quick-adjust panel with action tracker.
  * @param {HTMLElement} html - The Token HUD element
  * @param {Actor} actor - The token's actor
  */
@@ -83,6 +85,65 @@ function _injectResourcePanel(html, actor) {
       </button>
     </div>`;
 
+  // Action Tracker (only in combat)
+  const actionEconomyEnabled = game.settings?.get("arianrhod2e", "actionEconomyEnabled") ?? true;
+  if (actionEconomyEnabled && game.combat?.started) {
+    const combatant = game.combat.combatants.find(c => c.actor?.id === actor.id);
+    if (combatant) {
+      const state = getActionState(combatant);
+      const summary = getActionSummary(state);
+      inner += `
+    <div class="ar-action-tracker">
+      <span class="ar-action-pip ${summary.majorAvailable ? 'available' : 'used'}" title="${game.i18n.localize("ARIANRHOD.ActionMajor")}">
+        <i class="fas fa-sword"></i> M
+      </span>
+      <span class="ar-action-pip ${summary.minorAvailable ? 'available' : 'used'}" title="${game.i18n.localize("ARIANRHOD.ActionMinor")}">
+        <i class="fas fa-hand"></i> m
+      </span>
+      <span class="ar-action-pip ${summary.moveAvailable ? 'available' : 'used'}" title="${game.i18n.localize("ARIANRHOD.ActionMove")}">
+        <i class="fas fa-person-running"></i> Mv
+      </span>
+      <span class="ar-action-pip ${summary.reactionAvailable ? 'available' : 'used'}" title="${game.i18n.localize("ARIANRHOD.ActionReaction")}">
+        <i class="fas fa-shield"></i> R
+      </span>
+    </div>`;
+
+      // Movement buttons (only for current combatant)
+      if (game.combat.combatant?.id === combatant.id) {
+        const moveOptions = getMovementOptions(combatant);
+        if (moveOptions.length > 0) {
+          inner += `<div class="ar-hud-move-btns">`;
+          for (const opt of moveOptions) {
+            inner += `<button type="button" data-move-type="${opt.type}" ${!opt.available ? 'disabled' : ''} title="${opt.distance}">
+              ${opt.label}
+            </button>`;
+          }
+          inner += `</div>`;
+        }
+      }
+
+      // Engagement badge
+      const engagementEnabled = game.settings?.get("arianrhod2e", "engagementEnabled") ?? true;
+      if (engagementEnabled) {
+        const engaged = isEngaged(game.combat, combatant.id);
+        if (engaged) {
+          const engagedWith = getEngagedWith(game.combat, combatant.id);
+          const names = engagedWith.map(id => {
+            const c = game.combat.combatants.get(id);
+            return c?.actor?.name ?? "?";
+          }).join(", ");
+          inner += `<div class="ar-engage-badge engaged" title="${names}">
+            <i class="fas fa-link"></i> ${game.i18n.localize("ARIANRHOD.Engaged")} (${engagedWith.length})
+          </div>`;
+        } else {
+          inner += `<div class="ar-engage-badge free">
+            <i class="fas fa-link-slash"></i> ${game.i18n.localize("ARIANRHOD.NotEngaged")}
+          </div>`;
+        }
+      }
+    }
+  }
+
   panel.innerHTML = inner;
 
   // --- Event Listeners ---
@@ -113,6 +174,19 @@ function _injectResourcePanel(html, actor) {
     e.preventDefault();
     e.stopPropagation();
     await actor.rollEvasion();
+  });
+
+  // Movement buttons
+  panel.querySelectorAll(".ar-hud-move-btns button").forEach(btn => {
+    btn.addEventListener("click", async (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const moveType = btn.dataset.moveType;
+      const combatant = game.combat?.combatants.find(c => c.actor?.id === actor.id);
+      if (combatant && moveType) {
+        await executeMovement(combatant, moveType);
+      }
+    });
   });
 
   // Append panel to the HUD element

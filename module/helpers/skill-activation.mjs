@@ -3,6 +3,9 @@
  * Handles cost parsing, MP/HP deduction, and chat card creation.
  */
 
+import { getTimingAction, ACTION_TYPES, canPerformAction, consumeAction, getActionState, setActionState } from "./action-economy.mjs";
+import { applySkillEffect, hasStructuredEffect } from "./effect-processor.mjs";
+
 const SKILL_CARD_TEMPLATE = "systems/arianrhod2e/templates/chat/skill-card.hbs";
 
 /**
@@ -61,6 +64,26 @@ export async function activateSkill(actor, item) {
     }
   }
 
+  // Action economy check
+  const actionEconomyEnabled = game.settings?.get("arianrhod2e", "actionEconomyEnabled") ?? true;
+  if (actionEconomyEnabled && game.combat?.started) {
+    const actionType = getTimingAction(item.system.timing);
+    if (actionType) {
+      const combatant = game.combat.combatants.find(c => c.actor?.id === actor.id);
+      if (combatant) {
+        const state = getActionState(combatant);
+        const check = canPerformAction(state, actionType, actor);
+        if (!check.allowed) {
+          const reason = check.reason ? game.i18n.localize(check.reason) : "";
+          ui.notifications.warn(reason || game.i18n.localize("ARIANRHOD.ActionBlocked"));
+          return false;
+        }
+        const newState = consumeAction(state, actionType);
+        await setActionState(combatant, newState);
+      }
+    }
+  }
+
   // Deduct resources
   const updates = {};
   if (cost.mp > 0) {
@@ -111,6 +134,21 @@ export async function activateSkill(actor, item) {
     speaker: ChatMessage.getSpeaker({ actor }),
     content,
   });
+
+  // Auto-apply structured effect
+  if (hasStructuredEffect(item)) {
+    const targets = [...(game.user.targets ?? [])].map(t => t.actor).filter(Boolean);
+    await applySkillEffect(actor, item, targets);
+  }
+
+  // Break hidden on major/minor action
+  const skillActionType = getTimingAction(item.system.timing);
+  if (skillActionType === ACTION_TYPES.MAJOR || skillActionType === ACTION_TYPES.MINOR) {
+    if (actor.hasStatusEffect?.("hidden")) {
+      await actor.toggleStatusEffect("hidden");
+      ui.notifications.info(game.i18n.format("ARIANRHOD.HiddenBroken", { name: actor.name }));
+    }
+  }
 
   return true;
 }

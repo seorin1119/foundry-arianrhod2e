@@ -20,6 +20,8 @@ import { getStatusEffects } from "./module/helpers/status-effects.mjs";
 import { registerTokenHUD } from "./module/helpers/token-hud.mjs";
 import { populateAllPacks, resetPack } from "./module/helpers/compendium-populator.mjs";
 import { onHotbarDrop, rollSkillMacro, rollAttackMacro, rollItemMacro, rollAbilityCheckMacro } from "./module/helpers/macros.mjs";
+import { getMovementOptions, executeMovement } from "./module/helpers/movement.mjs";
+import { createEngagement, removeFromEngagement, getEngagements } from "./module/helpers/engagement.mjs";
 
 /* -------------------------------------------- */
 /*  Init Hook                                   */
@@ -43,6 +45,13 @@ Hooks.once("init", () => {
       rollAttackMacro,
       rollItemMacro,
       rollAbilityCheckMacro,
+    },
+    combat: {
+      getMovementOptions,
+      executeMovement,
+      createEngagement,
+      removeFromEngagement,
+      getEngagements,
     },
   };
 
@@ -188,6 +197,24 @@ Hooks.once("init", () => {
       static: "ARIANRHOD.SettingInitiativeStatic",
       roll: "ARIANRHOD.SettingInitiativeRoll",
     },
+  });
+
+  game.settings.register("arianrhod2e", "actionEconomyEnabled", {
+    name: "ARIANRHOD.SettingActionEconomy",
+    hint: "ARIANRHOD.SettingActionEconomyHint",
+    scope: "world",
+    config: true,
+    type: Boolean,
+    default: true,
+  });
+
+  game.settings.register("arianrhod2e", "engagementEnabled", {
+    name: "ARIANRHOD.SettingEngagement",
+    hint: "ARIANRHOD.SettingEngagementHint",
+    scope: "world",
+    config: true,
+    type: Boolean,
+    default: true,
   });
 
   // Register Token HUD enhancements

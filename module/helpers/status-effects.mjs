@@ -24,7 +24,7 @@ export function getStatusEffects() {
       icon: "icons/svg/unconscious.svg",
       changes: [],
       flags: {
-        arianrhod2e: { statusType: "stun", cannotAct: true }
+        arianrhod2e: { statusType: "stun", reactionPenalty: true }
       }
     },
     {
@@ -169,6 +169,58 @@ export function getStatusEffects() {
           darknessPenalty: true,
           movementLimit: 5,
         }
+      }
+    },
+
+    // ===== 7대 배드 스테이터스 (Seven Bad Statuses) =====
+    // 격노(rage): -2D when attacking non-designated targets
+    {
+      id: "rage",
+      name: "ARIANRHOD.StatusRage",
+      icon: "icons/svg/combat.svg",
+      changes: [],
+      flags: {
+        arianrhod2e: { statusType: "rage", nonTargetPenalty: true }
+      }
+    },
+    // 방심(offguard): -1D on major action checks
+    {
+      id: "offguard",
+      name: "ARIANRHOD.StatusOffguard",
+      icon: "icons/svg/hazard.svg",
+      changes: [],
+      flags: {
+        arianrhod2e: { statusType: "offguard", majorPenalty: true }
+      }
+    },
+    // 위압(intimidation): Cannot use major actions at all
+    {
+      id: "intimidation",
+      name: "ARIANRHOD.StatusIntimidation",
+      icon: "icons/svg/terror.svg",
+      changes: [],
+      flags: {
+        arianrhod2e: { statusType: "intimidation", cannotMajor: true }
+      }
+    },
+    // 넉백(knockback)(n): -5*n to initiative value
+    {
+      id: "knockback",
+      name: "ARIANRHOD.StatusKnockback",
+      icon: "icons/svg/thrust.svg",
+      changes: [],
+      flags: {
+        arianrhod2e: { statusType: "knockback", initiativePenalty: true }
+      }
+    },
+    // 슬립(slip): Cannot move
+    {
+      id: "slip",
+      name: "ARIANRHOD.StatusSlip",
+      icon: "icons/svg/net.svg",
+      changes: [],
+      flags: {
+        arianrhod2e: { statusType: "slip", cannotMove: true }
       }
     }
   ];

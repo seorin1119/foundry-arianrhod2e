@@ -87,6 +87,18 @@ export class SkillData extends foundry.abstract.TypeDataModel {
       cost: new StringField({ initial: "" }),
       element: new StringField({ initial: "none" }),
       effect: new StringField({ initial: "" }),
+
+      // Structured effect data for auto-application
+      structuredEffect: new SchemaField({
+        type: new StringField({ initial: "" }),            // buff, debuff, heal, damage, status, removeStatus, ""
+        stat: new StringField({ initial: "" }),             // accuracy, evasion, physDef, magDef, attack, initiative, movement
+        value: new NumberField({ integer: true, initial: 0 }),
+        resource: new StringField({ initial: "hp" }),       // hp or mp (for heal)
+        statusId: new StringField({ initial: "" }),         // status effect id (for status type)
+        statusValue: new NumberField({ integer: true, initial: 0 }), // magnitude for poison(n), knockback(n)
+        element: new StringField({ initial: "none" }),
+        duration: new StringField({ initial: "instant" }),  // instant, round, 3rounds, scene, combat
+      }, { required: false }),
     };
   }
 }
