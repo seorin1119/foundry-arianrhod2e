@@ -205,8 +205,15 @@ Hooks.on("hotbarDrop", (bar, data, slot) => onHotbarDrop(bar, data, slot));
 /* -------------------------------------------- */
 
 Hooks.on("renderChatMessage", (message, html) => {
+  // In Foundry v13, html may be a jQuery object, HTMLElement, or HTMLCollection
+  const el = html instanceof HTMLElement ? html
+    : html?.jquery ? html[0]
+    : html?.[0] instanceof HTMLElement ? html[0]
+    : null;
+  if (!el?.querySelectorAll) return;
+
   // "Roll Damage" button on attack cards
-  html.querySelectorAll(".ar-damage-btn").forEach(btn => {
+  el.querySelectorAll(".ar-damage-btn").forEach(btn => {
     btn.addEventListener("click", async (event) => {
       event.preventDefault();
       const actorId = btn.dataset.actorId;
@@ -219,7 +226,7 @@ Hooks.on("renderChatMessage", (message, html) => {
   });
 
   // "Apply Damage" button on damage cards
-  html.querySelectorAll(".ar-apply-btn").forEach(btn => {
+  el.querySelectorAll(".ar-apply-btn").forEach(btn => {
     btn.addEventListener("click", async (event) => {
       event.preventDefault();
       const targetId = btn.dataset.targetId;
