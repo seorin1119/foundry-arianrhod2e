@@ -11,6 +11,23 @@ const DAMAGE_CARD_TEMPLATE = "systems/arianrhod2e/templates/chat/damage-card.hbs
 export class ArianrhodActor extends Actor {
 
   /* -------------------------------------------- */
+  /*  Document Lifecycle                          */
+  /* -------------------------------------------- */
+
+  /** @override */
+  async _preCreate(data, options, user) {
+    const allowed = await super._preCreate(data, options, user);
+    if (allowed === false) return false;
+
+    // Intercept enemy creation to show the library dialog
+    if (data.type === "enemy" && !data.flags?.arianrhod2e?.fromLibrary) {
+      const { EnemyCreationDialog } = await import("../apps/enemy-creation-dialog.mjs");
+      new EnemyCreationDialog(data).render(true);
+      return false; // Cancel the default creation
+    }
+  }
+
+  /* -------------------------------------------- */
   /*  Ability Checks                              */
   /* -------------------------------------------- */
 

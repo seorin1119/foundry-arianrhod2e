@@ -4160,6 +4160,283 @@
   color: #fff;
 }
 
+/* ======================================== */
+/*  Enemy Creation Dialog                  */
+/* ======================================== */
+
+.arianrhod2e.enemy-creation {
+  background: var(--ar-bg);
+}
+
+.enemy-creation-form {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 8px;
+  padding: 8px;
+}
+
+.enemy-dialog-filters {
+  flex: 0 0 auto;
+}
+
+.enemy-dialog-filter-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.enemy-dialog-filter-field {
+  flex: 0 0 auto;
+}
+
+.enemy-dialog-filter-field.search-field {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.enemy-dialog-filter-field.search-field label {
+  color: var(--ar-text-light);
+}
+
+.enemy-search-input {
+  flex: 1;
+  padding: 4px 8px;
+  border: 1px solid var(--ar-border-light);
+  border-radius: 4px;
+  background: var(--ar-parchment);
+}
+
+.enemy-dialog-filter-field select {
+  padding: 4px 6px;
+  border: 1px solid var(--ar-border-light);
+  border-radius: 4px;
+  background: var(--ar-parchment);
+  font-size: 0.85em;
+}
+
+.enemy-dialog-content {
+  flex: 1;
+  display: flex;
+  gap: 8px;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.enemy-dialog-list {
+  flex: 1;
+  overflow-y: auto;
+  border: 1px solid var(--ar-border-light);
+  border-radius: 6px;
+  background: var(--ar-parchment);
+}
+
+.enemy-list-item {
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--ar-bg-dark);
+  cursor: pointer;
+  transition: background 0.15s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.enemy-list-item:hover {
+  background: var(--ar-bg-dark);
+}
+
+.enemy-list-item.selected {
+  background: var(--ar-accent);
+  color: white;
+}
+
+.enemy-list-item.selected .enemy-list-info {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.enemy-list-item.partial {
+  opacity: 0.7;
+  font-style: italic;
+}
+
+.enemy-list-name {
+  font-weight: bold;
+  font-size: 0.9em;
+}
+
+.enemy-list-info {
+  display: flex;
+  gap: 6px;
+  font-size: 0.75em;
+  color: var(--ar-text-light);
+}
+
+.enemy-list-level {
+  font-weight: bold;
+}
+
+.enemy-dialog-preview {
+  flex: 0 0 260px;
+  overflow-y: auto;
+  border: 1px solid var(--ar-border-light);
+  border-radius: 6px;
+  background: var(--ar-parchment);
+  padding: 10px;
+}
+
+.enemy-preview-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.enemy-preview-name {
+  margin: 0;
+  font-size: 1.1em;
+  color: var(--ar-primary);
+  border-bottom: 2px solid var(--ar-accent);
+  padding-bottom: 4px;
+}
+
+.enemy-preview-subtitle {
+  font-size: 0.8em;
+  color: var(--ar-text-light);
+}
+
+.enemy-preview-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.enemy-stat-row {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.enemy-stat-row .stat-label {
+  font-size: 0.75em;
+  font-weight: bold;
+  color: var(--ar-accent);
+  min-width: 40px;
+}
+
+.enemy-stat-row .stat-value {
+  font-size: 0.85em;
+  min-width: 40px;
+}
+
+.enemy-stat-row .stat-value.hp {
+  color: var(--ar-hp);
+  font-weight: bold;
+}
+
+.enemy-stat-row .stat-value.mp {
+  color: var(--ar-mp);
+  font-weight: bold;
+}
+
+.enemy-preview-skills,
+.enemy-preview-drops {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-top: 4px;
+  border-top: 1px solid var(--ar-bg-dark);
+}
+
+.enemy-preview-skills .stat-label,
+.enemy-preview-drops .stat-label {
+  font-size: 0.75em;
+  font-weight: bold;
+  color: var(--ar-accent);
+}
+
+.enemy-preview-skills .stat-value,
+.enemy-preview-drops .stat-value {
+  font-size: 0.8em;
+}
+
+.drop-text {
+  font-size: 0.75em !important;
+  line-height: 1.4;
+  color: var(--ar-text-light);
+}
+
+.enemy-preview-partial,
+.enemy-preview-empty {
+  text-align: center;
+  padding: 30px 10px;
+  color: var(--ar-text-light);
+}
+
+.enemy-preview-partial i,
+.enemy-preview-empty i {
+  font-size: 2em;
+  margin-bottom: 8px;
+  display: block;
+  color: var(--ar-border-light);
+}
+
+.enemy-dialog-empty {
+  text-align: center;
+  padding: 30px;
+  color: var(--ar-text-light);
+}
+
+.enemy-dialog-empty i {
+  font-size: 2em;
+  margin-bottom: 8px;
+  display: block;
+  color: var(--ar-border-light);
+}
+
+.enemy-dialog-actions {
+  flex: 0 0 auto;
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  padding-top: 6px;
+  border-top: 1px solid var(--ar-border-light);
+}
+
+.enemy-dialog-actions button {
+  padding: 6px 16px;
+  border-radius: 4px;
+  font-size: 0.9em;
+  cursor: pointer;
+  border: 1px solid var(--ar-border);
+}
+
+.create-library-btn {
+  background: var(--ar-accent);
+  color: white;
+  border-color: var(--ar-accent) !important;
+}
+
+.create-library-btn:hover:not(:disabled) {
+  background: var(--ar-accent-light);
+}
+
+.create-library-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.create-custom-btn {
+  background: var(--ar-bg-dark);
+  color: var(--ar-text);
+}
+
+.create-custom-btn:hover {
+  background: var(--ar-bg-darker);
+}
+
 } /* end @layer arianrhod */
 
 /* ======================================== */

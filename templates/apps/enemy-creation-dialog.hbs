@@ -1,0 +1,149 @@
+{{!-- Enemy Creation Dialog Template --}}
+<form class="enemy-creation-form">
+
+  {{!-- Filters --}}
+  <section class="enemy-dialog-filters">
+    <div class="enemy-dialog-filter-row">
+      <div class="enemy-dialog-filter-field search-field">
+        <label><i class="fas fa-search"></i></label>
+        <input type="text" class="enemy-search-input" value="{{searchQuery}}"
+               placeholder="{{localize 'ARIANRHOD.SearchEnemy'}}" />
+      </div>
+      <div class="enemy-dialog-filter-field">
+        <select class="enemy-filter-category">
+          <option value="all">{{localize "ARIANRHOD.EnemyAllCategories"}}</option>
+          <option value="mob" {{#if (eq filterCategory "mob")}}selected{{/if}}>{{localize "ARIANRHOD.EnemyCategoryMob"}}</option>
+          <option value="solo" {{#if (eq filterCategory "solo")}}selected{{/if}}>{{localize "ARIANRHOD.EnemyCategorySolo"}}</option>
+        </select>
+      </div>
+      <div class="enemy-dialog-filter-field">
+        <select class="enemy-filter-type">
+          <option value="all">{{localize "ARIANRHOD.EnemyAllTypes"}}</option>
+          {{#each types as |t|}}
+            <option value="{{t.value}}" {{#if (eq t.value ../filterType)}}selected{{/if}}>{{t.label}}</option>
+          {{/each}}
+        </select>
+      </div>
+      <div class="enemy-dialog-filter-field">
+        <select class="enemy-filter-level">
+          <option value="all">{{localize "ARIANRHOD.EnemyAllLevels"}}</option>
+          {{#each levels as |l|}}
+            <option value="{{l.value}}" {{#if (eq l.value ../filterLevel)}}selected{{/if}}>{{l.label}}</option>
+          {{/each}}
+        </select>
+      </div>
+    </div>
+  </section>
+
+  {{!-- Two-panel content --}}
+  <section class="enemy-dialog-content">
+
+    {{!-- Left: Enemy list --}}
+    <div class="enemy-dialog-list">
+      {{#if hasEnemies}}
+        {{#each enemies as |enemy|}}
+          <div class="enemy-list-item {{#if enemy.selected}}selected{{/if}} {{#if enemy.partial}}partial{{/if}}"
+               data-action="selectEnemy" data-enemy-id="{{enemy.id}}">
+            <div class="enemy-list-name">{{enemy.displayName}}</div>
+            <div class="enemy-list-info">
+              <span class="enemy-list-level">Lv.{{enemy.level}}</span>
+              <span class="enemy-list-type">{{enemy.typeLabel}}</span>
+              <span class="enemy-list-category">{{enemy.categoryLabel}}</span>
+            </div>
+          </div>
+        {{/each}}
+      {{else}}
+        <div class="enemy-dialog-empty">
+          <i class="fas fa-spider"></i>
+          <p>{{localize "ARIANRHOD.NoEnemiesFound"}}</p>
+        </div>
+      {{/if}}
+    </div>
+
+    {{!-- Right: Preview --}}
+    <div class="enemy-dialog-preview">
+      {{#if selectedEnemy}}
+        <div class="enemy-preview-card">
+          <h3 class="enemy-preview-name">{{selectedEnemy.displayName}}</h3>
+          <div class="enemy-preview-subtitle">
+            Lv.{{selectedEnemy.level}} {{selectedEnemy.typeLabel}}
+            {{#if selectedEnemy.elementLabel}} / {{selectedEnemy.elementLabel}}{{/if}}
+            — {{selectedEnemy.categoryLabel}}
+          </div>
+
+          {{#unless selectedEnemy.partial}}
+            <div class="enemy-preview-stats">
+              <div class="enemy-stat-row">
+                <span class="stat-label">HP</span>
+                <span class="stat-value hp">{{selectedEnemy.hp}}</span>
+                <span class="stat-label">MP</span>
+                <span class="stat-value mp">{{selectedEnemy.mp}}</span>
+              </div>
+              <div class="enemy-stat-row">
+                <span class="stat-label">{{localize "ARIANRHOD.Attack"}}</span>
+                <span class="stat-value">{{selectedEnemy.combat.attack}}({{selectedEnemy.combat.attackDice}}D)</span>
+                <span class="stat-label">{{localize "ARIANRHOD.PhysDef"}}</span>
+                <span class="stat-value">{{selectedEnemy.combat.physDef}}</span>
+              </div>
+              <div class="enemy-stat-row">
+                <span class="stat-label">{{localize "ARIANRHOD.Accuracy"}}</span>
+                <span class="stat-value">{{selectedEnemy.combat.accuracy}}({{selectedEnemy.combat.accuracyDice}}D)</span>
+                <span class="stat-label">{{localize "ARIANRHOD.MagDef"}}</span>
+                <span class="stat-value">{{selectedEnemy.combat.magDef}}</span>
+              </div>
+              <div class="enemy-stat-row">
+                <span class="stat-label">{{localize "ARIANRHOD.Evasion"}}</span>
+                <span class="stat-value">{{selectedEnemy.combat.evasion}}({{selectedEnemy.combat.evasionDice}}D)</span>
+              </div>
+              <div class="enemy-stat-row">
+                <span class="stat-label">{{localize "ARIANRHOD.Initiative"}}</span>
+                <span class="stat-value">{{selectedEnemy.combat.initiative}}</span>
+                <span class="stat-label">{{localize "ARIANRHOD.Movement"}}</span>
+                <span class="stat-value">{{selectedEnemy.combat.movement}}</span>
+              </div>
+              {{#if selectedEnemy.skills.length}}
+                <div class="enemy-preview-skills">
+                  <span class="stat-label">{{localize "ARIANRHOD.EnemySkills"}}</span>
+                  <span class="stat-value">{{#each selectedEnemy.skills}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}</span>
+                </div>
+              {{/if}}
+              {{#if selectedEnemy.drops}}
+                <div class="enemy-preview-drops">
+                  <span class="stat-label">{{localize "ARIANRHOD.Drops"}}</span>
+                  <span class="stat-value drop-text">{{selectedEnemy.drops}}</span>
+                </div>
+              {{/if}}
+              <div class="enemy-stat-row">
+                <span class="stat-label">EXP</span>
+                <span class="stat-value">{{selectedEnemy.exp}}</span>
+              </div>
+            </div>
+          {{else}}
+            <div class="enemy-preview-partial">
+              <i class="fas fa-question-circle"></i>
+              <p>{{localize "ARIANRHOD.EnemyPartialData"}}</p>
+            </div>
+          {{/unless}}
+        </div>
+      {{else}}
+        <div class="enemy-preview-empty">
+          <i class="fas fa-hand-pointer"></i>
+          <p>{{localize "ARIANRHOD.EnemySelectToPreview"}}</p>
+        </div>
+      {{/if}}
+    </div>
+
+  </section>
+
+  {{!-- Action buttons --}}
+  <section class="enemy-dialog-actions">
+    <button type="button" class="create-library-btn" data-action="createFromLibrary"
+            {{#unless canCreateFromLibrary}}disabled{{/unless}}>
+      <i class="fas fa-book-open"></i> {{localize "ARIANRHOD.CreateFromLibrary"}}
+    </button>
+    <button type="button" class="create-custom-btn" data-action="createCustom">
+      <i class="fas fa-plus"></i> {{localize "ARIANRHOD.CreateCustom"}}
+    </button>
+  </section>
+
+</form>
