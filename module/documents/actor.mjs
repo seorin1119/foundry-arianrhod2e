@@ -258,7 +258,12 @@ export class ArianrhodActor extends Actor {
     if (amount <= 0) return;
     const hp = this.system.combat.hp;
     const newHp = Math.max(0, hp.value - amount);
-    await this.update({ "system.combat.hp.value": newHp });
+    try {
+      await this.update({ "system.combat.hp.value": newHp });
+    } catch (err) {
+      // Foundry v13 may throw RenderFlags error when canvas is not initialized
+      if (!err.message?.includes("OBJECTS")) throw err;
+    }
 
     // Remove sleep on damage (removedOnDamage flag)
     if (this.hasStatusEffect?.("sleep")) {
@@ -280,7 +285,12 @@ export class ArianrhodActor extends Actor {
   async toggleStatusEffect(statusId) {
     const existing = this.effects.find(e => e.statuses.has(statusId));
     if (existing) {
-      await existing.delete();
+      try {
+        await existing.delete();
+      } catch (err) {
+        // Foundry v13 may throw RenderFlags error when canvas is not initialized
+        if (!err.message?.includes("OBJECTS")) throw err;
+      }
       return undefined;
     }
 
@@ -295,8 +305,15 @@ export class ArianrhodActor extends Actor {
       flags: statusDef.flags ?? {}
     };
 
-    const created = await this.createEmbeddedDocuments("ActiveEffect", [effectData]);
-    return created[0];
+    try {
+      const created = await this.createEmbeddedDocuments("ActiveEffect", [effectData]);
+      return created[0];
+    } catch (err) {
+      // Foundry v13 may throw RenderFlags error when canvas is not initialized
+      if (!err.message?.includes("OBJECTS")) throw err;
+      // Effect was likely created successfully on the server; refetch
+      return this.effects.find(e => e.statuses.has(statusId));
+    }
   }
 
   hasStatusEffect(statusId) {

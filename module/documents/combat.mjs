@@ -42,8 +42,9 @@ export class ArianrhodCombat extends Combat {
    * @override
    */
   async startCombat() {
-    await super.startCombat();
+    // Initialize state before starting so _onStartTurn has clean state
     await initializeCombat(this);
+    await super.startCombat();
     return this;
   }
 

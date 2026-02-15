@@ -111,7 +111,11 @@ export async function processCleanup(combat) {
       const poisonDmg = poisonN * 5;
       const currentHP = actor.system.combat.hp.value;
       const newHP = Math.max(0, currentHP - poisonDmg);
-      await actor.update({ "system.combat.hp.value": newHP });
+      try {
+        await actor.update({ "system.combat.hp.value": newHP });
+      } catch (err) {
+        if (!err.message?.includes("OBJECTS")) throw err;
+      }
       messages.push(
         `<div class="arianrhod status-msg"><img src="icons/svg/poison.svg" width="16" height="16"/> ${actor.name}: ${game.i18n.localize("ARIANRHOD.PoisonDamage")} (-${poisonDmg} HP)</div>`
       );
@@ -123,7 +127,11 @@ export async function processCleanup(combat) {
       const effect = actor.effects.find(e => e.statuses.has(statusId));
       if (effect) {
         const statusLabel = game.i18n.localize(`ARIANRHOD.Status${statusId.charAt(0).toUpperCase() + statusId.slice(1)}`);
-        await effect.delete();
+        try {
+          await effect.delete();
+        } catch (err) {
+          if (!err.message?.includes("OBJECTS") && !err.message?.includes("does not exist")) throw err;
+        }
         messages.push(
           `<div class="arianrhod status-msg"><i class="fas fa-check-circle"></i> ${actor.name}: ${statusLabel} ${game.i18n.localize("ARIANRHOD.StatusRecovered")}</div>`
         );
@@ -133,7 +141,11 @@ export async function processCleanup(combat) {
     // 3. Recover incapacitated: HP=0 → HP=1
     const hp = actor.system?.combat?.hp;
     if (hp && hp.value === 0) {
-      await actor.update({ "system.combat.hp.value": 1 });
+      try {
+        await actor.update({ "system.combat.hp.value": 1 });
+      } catch (err) {
+        if (!err.message?.includes("OBJECTS")) throw err;
+      }
       messages.push(
         `<div class="arianrhod status-msg"><i class="fas fa-heart-pulse"></i> ${actor.name}: ${game.i18n.localize("ARIANRHOD.IncapacitatedRecovery")}</div>`
       );

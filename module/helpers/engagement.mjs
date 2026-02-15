@@ -8,12 +8,14 @@
  */
 
 /**
- * Get all engagements from combat.
+ * Get all engagements from combat (deep clone to prevent mutation of flag data).
  * @param {Combat} combat
  * @returns {object[]} Array of engagement objects
  */
 export function getEngagements(combat) {
-  return combat?.getFlag("arianrhod2e", "engagements") ?? [];
+  const raw = combat?.getFlag("arianrhod2e", "engagements");
+  if (!raw) return [];
+  return foundry.utils.deepClone(raw);
 }
 
 /**
