@@ -201,6 +201,11 @@ export function getEngagementSummary(combat) {
 export function validateAttackEngagement(combat, attacker, target, isRanged = false) {
   if (!combat?.started) return { allowed: true };
 
+  // Block targeting hidden characters (rulebook p.238-239)
+  if (target.hasStatusEffect?.("hidden")) {
+    return { allowed: false, reason: "ARIANRHOD.CannotTargetHidden" };
+  }
+
   // Check if engagement system is enabled in settings
   const enabled = game.settings?.get("arianrhod2e", "engagementEnabled") ?? true;
   if (!enabled) return { allowed: true };
@@ -225,4 +230,17 @@ export function validateAttackEngagement(combat, attacker, target, isRanged = fa
     return { allowed: false, reason: "ARIANRHOD.AttackNotEngaged" };
   }
   return { allowed: true };
+}
+
+/**
+ * Check if a flying combatant is immune to blockade by non-flying opponents.
+ * Flying characters cannot be blocked by non-flying enemies (rulebook p.238).
+ * @param {Combat} combat
+ * @param {string} combatantId - The moving combatant
+ * @returns {boolean} true if immune to blockade
+ */
+export function isFlightBlockadeImmune(combat, combatantId) {
+  const combatant = combat?.combatants?.get(combatantId);
+  if (!combatant?.actor) return false;
+  return combatant.actor.hasStatusEffect?.("flight") ?? false;
 }

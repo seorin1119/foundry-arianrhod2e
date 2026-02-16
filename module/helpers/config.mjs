@@ -114,39 +114,49 @@ ARIANRHOD.races = {
 ARIANRHOD.raceData = {
   huulin: {
     // Player chooses 3 abilities for +1 each (special case, handled manually)
-    abilityMods: {}
+    abilityMods: {},
+    passiveEffects: [], // 《만능》: manual ability selection
   },
   eldanaan: {
     // 《지의 축복》: +3 INT (most common choice)
-    abilityMods: { int: 3 }
+    abilityMods: { int: 3 },
+    passiveEffects: [{ type: "darkvision" }], // 《다크비전》: darkness penalty immune
   },
   neverf: {
     // 《재의 축복》: +3 DEX
-    abilityMods: { dex: 3 }
+    abilityMods: { dex: 3 },
+    passiveEffects: [{ type: "lightProtection", element: "light", reduction: 5 }], // 《빛의 보호》: light damage -5
   },
   filbol: {
     // 《럭키》: +3 LUK
-    abilityMods: { luk: 3 }
+    abilityMods: { luk: 3 },
+    passiveEffects: [{ type: "halfSize" }], // 《하프》: small equipment only
   },
   varna: {
     // 《민의 축복》: +3 AGI
-    abilityMods: { agi: 3 }
+    abilityMods: { agi: 3 },
+    passiveEffects: [{ type: "flightCapable" }], // 《비행 능력》: can gain flight status
   },
   duan: {
     // 《근의 축복》: +3 STR
-    abilityMods: { str: 3 }
+    abilityMods: { str: 3 },
+    passiveEffects: [],
   },
   exmachina: {
-    // Data incomplete in reference, no modifiers for now
-    abilityMods: {}
+    abilityMods: {},
+    passiveEffects: [],
   },
   dragonet: {
-    // Data incomplete in reference, no modifiers for now
-    abilityMods: {}
+    abilityMods: {},
+    passiveEffects: [],
   },
   arsian: {
-    // No direct stat modifiers mentioned in reference
-    abilityMods: {}
+    abilityMods: {},
+    passiveEffects: [],
+  },
+  dominion: {
+    abilityMods: {},
+    passiveEffects: [{ type: "darkvision" }], // 《다크비전》
   },
 };
 
@@ -534,6 +544,30 @@ ARIANRHOD.brightnessLevels = {
   2: "ARIANRHOD.Brightness2",
   3: "ARIANRHOD.Brightness3",
   4: "ARIANRHOD.Brightness4",
+};
+
+/**
+ * Object presets for dungeon objects (Rulebook p.361-364)
+ */
+ARIANRHOD.objectPresets = {
+  door: { nameKey: "ARIANRHOD.ObjectTypeDoor", hp: 20, physDef: 5, magDef: 5 },
+  bridge: { nameKey: "ARIANRHOD.ObjectTypeBridge", hp: 40, physDef: 5, magDef: 5 },
+  barricade: { nameKey: "ARIANRHOD.ObjectTypeBarricade", hp: 30, physDef: 10, magDef: 10 },
+  chest: { nameKey: "ARIANRHOD.ObjectTypeChest", hp: 20, physDef: 10, magDef: 10 },
+  fountain: { nameKey: "ARIANRHOD.ObjectTypeFountain", hp: 0, physDef: 0, magDef: 0, uses: 3, specialEffect: "HP [2D] recovery" },
+  generic: { nameKey: "ARIANRHOD.ObjectTypeGeneric", hp: 10, physDef: 5, magDef: 5 },
+};
+
+/**
+ * Object type options
+ */
+ARIANRHOD.objectTypes = {
+  door: "ARIANRHOD.ObjectTypeDoor",
+  bridge: "ARIANRHOD.ObjectTypeBridge",
+  barricade: "ARIANRHOD.ObjectTypeBarricade",
+  chest: "ARIANRHOD.ObjectTypeChest",
+  fountain: "ARIANRHOD.ObjectTypeFountain",
+  generic: "ARIANRHOD.ObjectTypeGeneric",
 };
 
 ARIANRHOD.classRestrictions = {

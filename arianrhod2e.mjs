@@ -11,14 +11,16 @@ import { ArianrhodActor } from "./module/documents/actor.mjs";
 import { ArianrhodItem } from "./module/documents/item.mjs";
 import { ArianrhodActorSheet } from "./module/sheets/actor-sheet.mjs";
 import { ArianrhodItemSheet } from "./module/sheets/item-sheet.mjs";
-import { CharacterData, EnemyData, GuildData } from "./module/data/actor-data.mjs";
+import { CharacterData, EnemyData, GuildData, ObjectData } from "./module/data/actor-data.mjs";
 import { ArianrhodGuildSheet } from "./module/sheets/guild-sheet.mjs";
+import { ArianrhodObjectSheet } from "./module/sheets/object-sheet.mjs";
 import { WeaponData, ArmorData, AccessoryData, SkillData, ItemData, TrapData } from "./module/data/item-data.mjs";
 import { ArianrhodCombat } from "./module/documents/combat.mjs";
 import { rollCheck, rollCheckDialog, rollFSCheck, calculateFSProgress } from "./module/dice.mjs";
 import { getStatusEffects } from "./module/helpers/status-effects.mjs";
 import { registerTokenHUD } from "./module/helpers/token-hud.mjs";
 import { registerCombatDock } from "./module/apps/combat-tracker-dock.mjs";
+import { registerSkillPanel } from "./module/apps/combat-skill-panel.mjs";
 import { populateAllPacks, resetPack, needsRepopulation } from "./module/helpers/compendium-populator.mjs";
 import { onHotbarDrop, rollSkillMacro, rollAttackMacro, rollItemMacro, rollAbilityCheckMacro } from "./module/helpers/macros.mjs";
 import { getMovementOptions, executeMovement } from "./module/helpers/movement.mjs";
@@ -63,6 +65,18 @@ Hooks.once("init", () => {
       const { SessionEndDialog } = await import("./module/apps/session-end-dialog.mjs");
       new SessionEndDialog().render(true);
     },
+    async openSituationCheck() {
+      if (!game.user.isGM) {
+        ui.notifications.warn("GM only");
+        return;
+      }
+      const { SituationCheckDialog } = await import("./module/apps/situation-check-dialog.mjs");
+      new SituationCheckDialog().render(true);
+    },
+    async openRuleGuide() {
+      const { RuleGuideDialog } = await import("./module/apps/rule-guide.mjs");
+      new RuleGuideDialog().render(true);
+    },
   };
 
   // Add system config to global CONFIG
@@ -88,6 +102,7 @@ Hooks.once("init", () => {
     character: CharacterData,
     enemy: EnemyData,
     guild: GuildData,
+    object: ObjectData,
   });
 
   // Register DataModel classes for Item types
@@ -114,6 +129,10 @@ Hooks.once("init", () => {
       bar: [],
       value: ["guildLevel", "gold"],
     },
+    object: {
+      bar: ["hp"],
+      value: [],
+    },
   };
 
   // Register sheet application classes (v13 pattern)
@@ -126,6 +145,12 @@ Hooks.once("init", () => {
     types: ["guild"],
     makeDefault: true,
     label: "ARIANRHOD.SheetGuild",
+  });
+
+  DocumentSheetConfig.registerSheet(Actor, "arianrhod2e", ArianrhodObjectSheet, {
+    types: ["object"],
+    makeDefault: true,
+    label: "ARIANRHOD.SheetObject",
   });
 
   DocumentSheetConfig.registerSheet(Item, "arianrhod2e", ArianrhodItemSheet, {
@@ -239,7 +264,8 @@ Hooks.once("init", () => {
   // Register Token HUD enhancements
   registerTokenHUD();
 
-  // Register Combat Tracker Dock
+  // Register Combat Tracker Dock + Skill Panel
+  registerSkillPanel();
   registerCombatDock();
 });
 
@@ -248,18 +274,36 @@ Hooks.once("init", () => {
 /* -------------------------------------------- */
 
 Hooks.on("getSceneControlButtons", (controls) => {
-  if (!game.user?.isGM) return;
-
-  // Foundry v13: controls may be an object keyed by name, not an array
+  // Foundry v13: controls is an object keyed by plural name (e.g. "tokens", not "token")
   let tokenControls;
   if (typeof controls?.find === "function") {
-    tokenControls = controls.find(c => c.name === "token");
+    tokenControls = controls.find(c => c.name === "token" || c.name === "tokens");
+  } else if (controls?.tokens) {
+    tokenControls = controls.tokens;
   } else if (controls?.token) {
     tokenControls = controls.token;
   }
   if (!tokenControls) return;
 
-  const tool = {
+  // Rule Guide — available to ALL users
+  const ruleGuideTool = {
+    name: "ruleGuide",
+    title: "ARIANRHOD.RuleGuide",
+    icon: "fas fa-book-open",
+    button: true,
+    onClick: () => game.arianrhod2e.openRuleGuide(),
+  };
+
+  if (Array.isArray(tokenControls.tools)) {
+    tokenControls.tools.push(ruleGuideTool);
+  } else if (tokenControls.tools && typeof tokenControls.tools === "object") {
+    tokenControls.tools.ruleGuide = ruleGuideTool;
+  }
+
+  // GM-only tools below
+  if (!game.user?.isGM) return;
+
+  const sessionEndTool = {
     name: "sessionEnd",
     title: "ARIANRHOD.SessionEnd",
     icon: "fas fa-flag-checkered",
@@ -267,10 +311,19 @@ Hooks.on("getSceneControlButtons", (controls) => {
     onClick: () => game.arianrhod2e.openSessionEnd(),
   };
 
+  const situationCheckTool = {
+    name: "situationCheck",
+    title: "ARIANRHOD.SituationCheck",
+    icon: "fas fa-magnifying-glass",
+    button: true,
+    onClick: () => game.arianrhod2e.openSituationCheck(),
+  };
+
   if (Array.isArray(tokenControls.tools)) {
-    tokenControls.tools.push(tool);
+    tokenControls.tools.push(situationCheckTool, sessionEndTool);
   } else if (tokenControls.tools && typeof tokenControls.tools === "object") {
-    tokenControls.tools.sessionEnd = tool;
+    tokenControls.tools.situationCheck = situationCheckTool;
+    tokenControls.tools.sessionEnd = sessionEndTool;
   }
 });
 
@@ -398,7 +451,13 @@ Hooks.on("renderChatMessage", (message, html) => {
       const engagedIds = getEngagedWith(game.combat, targetCombatant.id);
       const coverers = engagedIds
         .map(id => game.combat.combatants.get(id))
-        .filter(c => c?.actor && c.actor.id !== targetActor.id && c.actor.type === targetActor.type)
+        .filter(c => {
+          if (!c?.actor || c.actor.id === targetActor.id) return false;
+          if (c.actor.type !== targetActor.type) return false;
+          // Mob enemies cannot cover (rulebook p.226)
+          if (c.actor.type === "enemy" && c.actor.system.tags?.includes("mob")) return false;
+          return true;
+        })
         .map(c => c.actor);
 
       if (coverers.length === 0) {
@@ -433,11 +492,27 @@ Hooks.on("renderChatMessage", (message, html) => {
       if (!covererActor) return;
 
       // Recalculate damage with coverer's defense
-      const covererPhysDef = covererActor.system.combat?.physDef ?? 0;
-      const covererDamage = Math.max(0, rawDamage - covererPhysDef);
+      // Use magDef for magical damage, physDef for physical (rulebook p.226)
+      const covererDamageType = btn.dataset.damageType || "physical";
+      const covererDef = covererDamageType === "magical"
+        ? (covererActor.system.combat?.magDef ?? 0)
+        : (covererActor.system.combat?.physDef ?? 0);
+      const covererDamage = Math.max(0, rawDamage - covererDef);
 
       // Apply damage to coverer
       await covererActor.applyDamage(covererDamage);
+
+      // Coverer becomes action complete (rulebook p.226)
+      const { getActionState, setActionState } = await import("./module/helpers/action-economy.mjs");
+      const covererCombatant = game.combat.combatants.find(c => c.actor?.id === covererActor.id);
+      if (covererCombatant) {
+        const state = getActionState(covererCombatant);
+        state.major = true;
+        state.minor = true;
+        state.move = true;
+        await setActionState(covererCombatant, state);
+        ui.notifications.info(game.i18n.format("ARIANRHOD.CoverActionComplete", { name: covererActor.name }));
+      }
 
       // Post cover notification
       await ChatMessage.create({

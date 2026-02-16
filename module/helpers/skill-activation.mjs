@@ -150,5 +150,20 @@ export async function activateSkill(actor, item) {
     }
   }
 
+  // Block entering hidden state while engaged with enemies (rulebook p.239)
+  if (item.system.effectId === "hidden" || item.name?.includes("隠密") || item.name?.includes("은밀")) {
+    if (game.combat?.started) {
+      const { isEngaged, getOpponents } = await import("./engagement.mjs");
+      const combatant = game.combat.combatants.find(c => c.actor?.id === actor.id);
+      if (combatant) {
+        const opponents = getOpponents(game.combat, combatant.id);
+        if (opponents.length > 0) {
+          ui.notifications.warn(game.i18n.localize("ARIANRHOD.HiddenCannotEngaged"));
+          return false;
+        }
+      }
+    }
+  }
+
   return true;
 }

@@ -148,6 +148,14 @@ export class CharacterData extends foundry.abstract.TypeDataModel {
     const raceFateMax = this.race === "huulin" ? 6 : 5;
     this.fate.max = raceFateMax;
 
+    // Apply race passive effects
+    const passives = raceData?.passiveEffects ?? [];
+    this.racePassives = passives;
+    this.hasDarkvision = passives.some(p => p.type === "darkvision");
+    this.lightProtection = passives.find(p => p.type === "lightProtection") ?? null;
+    this.isHalfSize = passives.some(p => p.type === "halfSize");
+    this.isFlightCapable = passives.some(p => p.type === "flightCapable");
+
     // === Equipment stat auto-calculation ===
     const items = this.parent?.items;
     const equippedWeapons = items?.filter(i => i.type === "weapon" && i.system.equipped) ?? [];
@@ -291,6 +299,7 @@ export class EnemyData extends foundry.abstract.TypeDataModel {
       tags: new StringField({ initial: "" }),
       attackPattern: new StringField({ initial: "" }),
       exp: new NumberField({ required: true, integer: true, min: 0, initial: 0 }),
+      identifyDC: new NumberField({ required: true, integer: true, min: 0, initial: 10 }),
       dead: new BooleanField({ initial: false }),
     };
   }
@@ -302,5 +311,39 @@ export class EnemyData extends foundry.abstract.TypeDataModel {
     }
     this.combat.hp.value = Math.min(this.combat.hp.value, this.combat.hp.max);
     this.combat.mp.value = Math.min(this.combat.mp.value, this.combat.mp.max);
+  }
+}
+
+/**
+ * Data model for Arianrhod RPG 2E Object actors (p.361-364).
+ * Objects include doors, bridges, barricades, treasure chests, etc.
+ * @extends {foundry.abstract.TypeDataModel}
+ */
+export class ObjectData extends foundry.abstract.TypeDataModel {
+  static defineSchema() {
+    return {
+      description: new HTMLField(),
+      objectType: new StringField({ initial: "generic" }),
+      hp: new SchemaField({
+        value: new NumberField({ required: true, integer: true, min: 0, initial: 10 }),
+        max: new NumberField({ required: true, integer: true, min: 0, initial: 10 }),
+      }),
+      physDef: new NumberField({ required: true, integer: true, initial: 5 }),
+      magDef: new NumberField({ required: true, integer: true, initial: 5 }),
+      destroyed: new BooleanField({ initial: false }),
+      uses: new SchemaField({
+        value: new NumberField({ required: true, integer: true, min: 0, initial: 0 }),
+        max: new NumberField({ required: true, integer: true, min: 0, initial: 0 }),
+      }),
+      specialEffect: new StringField({ initial: "" }),
+    };
+  }
+
+  /** @override */
+  prepareDerivedData() {
+    this.hp.value = Math.min(this.hp.value, this.hp.max);
+    if (this.hp.value <= 0 && this.hp.max > 0) {
+      this.destroyed = true;
+    }
   }
 }

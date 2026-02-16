@@ -3,6 +3,8 @@
  * Shows all combatants in initiative order with End Turn controls.
  */
 
+import { getSkillPanel } from "./combat-skill-panel.mjs";
+
 /** @type {CombatTrackerDock|null} */
 let _instance = null;
 
@@ -37,6 +39,7 @@ class CombatTrackerDock {
       this.#el.remove();
       this.#el = null;
     }
+    getSkillPanel()?.hide();
   }
 
   /**
@@ -58,6 +61,8 @@ class CombatTrackerDock {
     html += `<div class="ar-dock-round">${game.i18n.localize("ARIANRHOD.DockRound")} <span>${round}</span></div>`;
     if (phase) html += `<span class="ar-dock-phase-badge">${phase}</span>`;
     html += `<div class="ar-dock-controls">`;
+    const skillPanelActive = getSkillPanel()?.isVisible ? " active" : "";
+    html += `<button class="ar-dock-skills${skillPanelActive}" title="${game.i18n.localize("ARIANRHOD.SkillPanel")}"><i class="fas fa-bolt"></i></button>`;
     if (isGM) html += `<button class="ar-dock-prev" title="${game.i18n.localize("ARIANRHOD.DockPrevTurn")}"><i class="fas fa-backward-step"></i></button>`;
     html += `<button class="ar-dock-end-turn" ${canEnd ? "" : "disabled"}><i class="fas fa-forward-step"></i> ${game.i18n.localize("ARIANRHOD.DockEndTurn")}</button>`;
     html += `<button class="ar-dock-collapse" title="${this.#collapsed ? game.i18n.localize("ARIANRHOD.DockExpand") : game.i18n.localize("ARIANRHOD.DockCollapse")}">`;
@@ -77,8 +82,16 @@ class CombatTrackerDock {
       const isDefeated = c.isDefeated;
       const hp = c.actor?.system?.combat?.hp;
       const hpPct = hp && hp.max > 0 ? Math.round((hp.value / hp.max) * 100) : 100;
-      const name = isGM || !c.hidden ? (c.actor?.name ?? c.name ?? game.i18n.localize("ARIANRHOD.DockUnknown")) : game.i18n.localize("ARIANRHOD.DockUnknown");
-      const img = c.actor?.img || c.img || "icons/svg/mystery-man.svg";
+
+      // Unidentified enemies show "???" to non-GM players
+      let enemyUnidentified = false;
+      if (isEnemy && !isGM) {
+        const identified = c.actor?.getFlag("arianrhod2e", "identified");
+        if (!identified) enemyUnidentified = true;
+      }
+      const name = enemyUnidentified ? game.i18n.localize("ARIANRHOD.DockUnknown")
+        : (isGM || !c.hidden ? (c.actor?.name ?? c.name ?? game.i18n.localize("ARIANRHOD.DockUnknown")) : game.i18n.localize("ARIANRHOD.DockUnknown"));
+      const img = enemyUnidentified ? "icons/svg/mystery-man.svg" : (c.actor?.img || c.img || "icons/svg/mystery-man.svg");
       const init = c.initiative ?? "—";
 
       let cardClass = "ar-dock-card";
@@ -105,6 +118,9 @@ class CombatTrackerDock {
     this.#el.innerHTML = html;
     this.#bindEvents(combat);
     if (!this.#collapsed) this.#scrollToActive();
+
+    // Refresh skill panel if visible
+    if (getSkillPanel()?.isVisible) getSkillPanel().refresh(combat);
   }
 
   /* ---------------------------------------- */
@@ -117,6 +133,14 @@ class CombatTrackerDock {
    */
   #bindEvents(combat) {
     if (!this.#el) return;
+
+    // Skill Panel toggle
+    this.#el.querySelector(".ar-dock-skills")?.addEventListener("click", (e) => {
+      e.preventDefault();
+      getSkillPanel()?.toggle(combat);
+      // Update button active state
+      e.currentTarget.classList.toggle("active", getSkillPanel()?.isVisible);
+    });
 
     // End Turn
     this.#el.querySelector(".ar-dock-end-turn")?.addEventListener("click", (e) => {

@@ -5,6 +5,7 @@
 import { getActionState, getActionSummary } from "./action-economy.mjs";
 import { getMovementOptions, executeMovement } from "./movement.mjs";
 import { isEngaged, getEngagedWith, createEngagement } from "./engagement.mjs";
+import { isIdentified, rollEnemyIdentify } from "./enemy-identify.mjs";
 
 /**
  * Register the Token HUD render hook and combat turn indicator.
@@ -313,6 +314,31 @@ function _injectResourcePanel(html, actor, token) {
     }
   }
 
+  // Identify button for enemy tokens (visible to players)
+  if (actor.type === "enemy") {
+    const identified = isIdentified(actor);
+    if (identified) {
+      inner += `<div class="ar-hud-identify identified">
+        <i class="fas fa-eye"></i> ${game.i18n.localize("ARIANRHOD.Identified")}
+      </div>`;
+    } else {
+      inner += `<div class="ar-hud-actions">
+        <button type="button" class="ar-hud-action ar-identify-btn" data-action="identify-enemy">
+          <i class="fas fa-magnifying-glass"></i> ${game.i18n.localize("ARIANRHOD.IdentifyEnemy")}
+        </button>
+      </div>`;
+    }
+  }
+
+  // Discover hidden button for hidden enemy tokens
+  if (actor.hasStatusEffect?.("hidden") && actor.type !== game.user.character?.type) {
+    inner += `<div class="ar-hud-actions">
+      <button type="button" class="ar-hud-action ar-discover-btn" data-action="discover-hidden">
+        <i class="fas fa-eye"></i> ${game.i18n.localize("ARIANRHOD.DiscoverHidden")}
+      </button>
+    </div>`;
+  }
+
   panel.innerHTML = inner;
 
   // --- Event Listeners ---
@@ -403,6 +429,40 @@ function _injectResourcePanel(html, actor, token) {
     e.preventDefault();
     e.stopPropagation();
     await _joinCombat(token);
+  });
+
+  // Identify enemy button
+  panel.querySelector("[data-action='identify-enemy']")?.addEventListener("click", async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    // Use selected token's actor (the one trying to identify) or first owned character
+    const speaker = ChatMessage.getSpeaker();
+    const identifyingActor = game.actors.get(speaker.actor) ?? game.user.character;
+    if (!identifyingActor || identifyingActor.type !== "character") {
+      ui.notifications.warn(game.i18n.localize("ARIANRHOD.NoActorSelected"));
+      return;
+    }
+    await rollEnemyIdentify(identifyingActor, actor);
+  });
+
+  // Discover hidden button
+  panel.querySelector("[data-action='discover-hidden']")?.addEventListener("click", async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const speaker = ChatMessage.getSpeaker();
+    const discoverer = game.actors.get(speaker.actor) ?? game.user.character;
+    if (!discoverer) {
+      ui.notifications.warn(game.i18n.localize("ARIANRHOD.NoActorSelected"));
+      return;
+    }
+    const { rollCheckDialog } = await import("../dice.mjs");
+    const senBonus = discoverer.system.abilities?.sen?.bonus ?? 0;
+    await rollCheckDialog({
+      title: `${game.i18n.localize("ARIANRHOD.DiscoverHidden")} — ${discoverer.name}`,
+      modifier: senBonus,
+      label: game.i18n.localize("ARIANRHOD.DiscoverHidden"),
+      actor: discoverer,
+    });
   });
 
   // Movement buttons

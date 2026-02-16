@@ -267,6 +267,7 @@ export class EnemyCreationDialog extends foundry.applications.api.HandlebarsAppl
           magAttack: 0,
         },
         tags: enemy.category,
+        identifyDC: enemy.identifyDC ?? (8 + enemy.level * 2),
       },
       flags: {
         arianrhod2e: {

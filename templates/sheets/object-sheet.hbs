@@ -1,0 +1,70 @@
+{{!-- Object Actor Sheet --}}
+<div class="object-sheet-body" style="position:relative;">
+  {{#if isDestroyed}}
+  <div class="destroyed-overlay">{{localize "ARIANRHOD.ObjectDestroyed"}}</div>
+  {{/if}}
+
+  <header class="object-header">
+    <img src="{{actor.img}}" data-action="editImage" title="{{actor.name}}" width="64" height="64" />
+    <div class="header-fields">
+      <h1 class="charname">
+        <input name="name" type="text" value="{{actor.name}}" placeholder="{{localize 'ARIANRHOD.Name'}}" />
+      </h1>
+      <div class="field" style="display:flex;gap:8px;align-items:center;">
+        <label>{{localize "ARIANRHOD.ObjectType"}}</label>
+        <select name="system.objectType" style="flex:1;">
+          {{#each config.objectTypes as |label key|}}
+          <option value="{{key}}" {{#if (eq key ../system.objectType)}}selected{{/if}}>
+            {{localize label}}
+          </option>
+          {{/each}}
+        </select>
+      </div>
+    </div>
+  </header>
+
+  {{!-- HP Bar --}}
+  {{#if system.hp.max}}
+  <div class="object-hp-bar">
+    <div class="object-hp-fill" style="width:{{hpPercent}}%"></div>
+    <span class="object-hp-text">HP {{system.hp.value}} / {{system.hp.max}}</span>
+  </div>
+  {{/if}}
+
+  {{!-- Stats --}}
+  <div class="object-stats">
+    <div class="stat-box">
+      <label>HP</label>
+      <input type="number" name="system.hp.value" value="{{system.hp.value}}" data-dtype="Number" />
+      <span>/</span>
+      <input type="number" name="system.hp.max" value="{{system.hp.max}}" data-dtype="Number" />
+    </div>
+    <div class="stat-box">
+      <label>{{localize "ARIANRHOD.PhysDef"}}</label>
+      <input type="number" name="system.physDef" value="{{system.physDef}}" data-dtype="Number" />
+    </div>
+    <div class="stat-box">
+      <label>{{localize "ARIANRHOD.MagDef"}}</label>
+      <input type="number" name="system.magDef" value="{{system.magDef}}" data-dtype="Number" />
+    </div>
+    {{#if hasUses}}
+    <div class="stat-box">
+      <label>{{localize "ARIANRHOD.ObjectUses"}}</label>
+      <input type="number" name="system.uses.value" value="{{system.uses.value}}" data-dtype="Number" />
+      <span>/</span>
+      <input type="number" name="system.uses.max" value="{{system.uses.max}}" data-dtype="Number" />
+    </div>
+    {{/if}}
+  </div>
+
+  {{!-- Special Effect --}}
+  <div style="padding:8px;">
+    <label style="font-weight:600;">{{localize "ARIANRHOD.ObjectSpecialEffect"}}</label>
+    <input type="text" name="system.specialEffect" value="{{system.specialEffect}}" placeholder="..." />
+  </div>
+
+  {{!-- Description --}}
+  <div style="padding:8px;">
+    {{editor enrichedDescription target="system.description" button=true editable=editable}}
+  </div>
+</div>

@@ -1,0 +1,22 @@
+{{!-- Rule Guide Dialog --}}
+<div class="ar-guide">
+  <nav class="ar-guide-tabs">
+    {{#each tabs}}
+    <button type="button" class="ar-guide-tab-btn {{#if this.active}}active{{/if}}"
+            data-tab="{{this.id}}" data-action="switchTab">
+      <i class="{{this.icon}}"></i> {{this.label}}
+    </button>
+    {{/each}}
+  </nav>
+
+  {{#each tabContents}}
+  <div class="ar-guide-panel" data-tab="{{this.id}}" {{#unless this.active}}style="display:none;"{{/unless}}>
+    {{#each this.sections}}
+    <details class="ar-guide-section" {{#if @first}}open{{/if}}>
+      <summary><i class="{{this.icon}}"></i> {{this.title}}</summary>
+      <div class="ar-guide-body">{{{this.content}}}</div>
+    </details>
+    {{/each}}
+  </div>
+  {{/each}}
+</div>

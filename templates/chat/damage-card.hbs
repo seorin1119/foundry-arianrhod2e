@@ -28,21 +28,23 @@
     <span class="ar-card-value">-{{defense}}</span>
   </div>
   {{/unless}}
-  <div class="ar-card-row ar-card-final">
+  <div class="ar-card-row ar-card-final {{#if elementAffinityType}}ar-element-{{elementAffinityType}}{{/if}}">
     <span class="ar-card-label">{{localize "ARIANRHOD.FinalDamage"}}</span>
     <span class="ar-card-value ar-final-damage">{{finalDamage}}</span>
   </div>
   <div class="ar-card-actions">
     <button type="button" class="ar-chat-btn ar-apply-btn"
             data-target-id="{{targetId}}"
-            data-damage="{{finalDamage}}">
+            data-damage="{{finalDamage}}"
+            data-damage-type="{{damageType}}">
       <i class="fas fa-heart-crack"></i> {{localize "ARIANRHOD.ApplyDamage"}} ({{finalDamage}})
     </button>
     {{#if canCover}}
     <button type="button" class="ar-chat-btn ar-cover-btn"
             data-target-id="{{targetId}}"
             data-damage="{{finalDamage}}"
-            data-raw-damage="{{rawDamage}}">
+            data-raw-damage="{{rawDamage}}"
+            data-damage-type="{{damageType}}">
       <i class="fas fa-shield-heart"></i> {{localize "ARIANRHOD.Cover"}}
     </button>
     {{/if}}

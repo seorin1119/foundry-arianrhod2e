@@ -29,6 +29,40 @@ export class ArianrhodActor extends Actor {
       }
     }
 
+    // Intercept object creation to show preset selection
+    if (data.type === "object" && !data.flags?.arianrhod2e?.fromPreset) {
+      const presets = CONFIG.ARIANRHOD.objectPresets ?? {};
+      const options = Object.entries(presets).map(([key, p]) =>
+        `<option value="${key}">${game.i18n.localize(p.nameKey)}</option>`
+      ).join("");
+      const result = await foundry.applications.api.DialogV2.prompt({
+        window: { title: game.i18n.localize("ARIANRHOD.ObjectSelectPreset") },
+        content: `<form><div class="form-group"><label>${game.i18n.localize("ARIANRHOD.ObjectType")}</label><select name="preset">${options}</select></div></form>`,
+        ok: {
+          label: game.i18n.localize("ARIANRHOD.Confirm"),
+          callback: (event, button) => button.form.querySelector('[name="preset"]').value,
+        },
+        rejectClose: false,
+      });
+      if (!result) return false;
+      const preset = presets[result];
+      if (preset) {
+        this.updateSource({
+          name: game.i18n.localize(preset.nameKey),
+          "system.objectType": result,
+          "system.hp.value": preset.hp,
+          "system.hp.max": preset.hp,
+          "system.physDef": preset.physDef,
+          "system.magDef": preset.magDef,
+          "system.uses.max": preset.uses ?? 0,
+          "system.uses.value": preset.uses ?? 0,
+          "system.specialEffect": preset.specialEffect ?? "",
+          "flags.arianrhod2e.fromPreset": true,
+        });
+      }
+      return; // Allow creation with updated data
+    }
+
     // Intercept enemy creation to show the library dialog
     if (data.type === "enemy" && !data.flags?.arianrhod2e?.fromLibrary) {
       const { EnemyCreationDialog } = await import("../apps/enemy-creation-dialog.mjs");
@@ -349,16 +383,34 @@ export class ArianrhodActor extends Actor {
     }
 
     const rawDamage = roll.total;
-    const finalDamage = targetActor ? Math.max(0, rawDamage - defense) : rawDamage;
+
+    // Apply race passive damage reduction (e.g. Neverf light protection: light element -5)
+    let raceReduction = 0;
+    if (targetActor && isMagical) {
+      const lightProt = targetActor.system.lightProtection;
+      if (lightProt && weaponElement === lightProt.element) {
+        raceReduction = lightProt.reduction ?? 0;
+      }
+    }
+
+    const finalDamage = targetActor ? Math.max(0, rawDamage - defense - raceReduction) : rawDamage;
 
     // Build element badge HTML
     const elementBadge = weaponElement !== "none"
       ? `<span class="ar-element-badge element-${weaponElement}">${game.i18n.localize(CONFIG.ARIANRHOD.elements[weaponElement])}</span>`
       : "";
 
+    // Determine element affinity type for CSS styling
+    let elementAffinityType = ""; // "weak", "reinforced", or ""
+    if (isMagical && targetActor && targetElement !== "none") {
+      const opposites = CONFIG.ARIANRHOD.elementOpposites;
+      if (weaponElement === targetElement) elementAffinityType = "reinforced";
+      else if (opposites[weaponElement] === targetElement) elementAffinityType = "weak";
+    }
+
     // Build element note HTML
     const elementNoteHtml = elementNote
-      ? `<span class="ar-element-note">${elementNote}</span>`
+      ? `<span class="ar-element-note ar-element-${elementAffinityType}">${elementNote}</span>`
       : "";
 
     // Check if cover is possible: target is in an engagement with allies (rulebook p.226)
@@ -388,10 +440,12 @@ export class ArianrhodActor extends Actor {
       defenseLabel,
       targetName: targetActor?.name ?? "",
       elementNote: elementNoteHtml,
+      elementAffinityType,
       defense,
       finalDamage,
       targetId: targetActor?.id ?? "",
       canCover,
+      damageType: isMagical ? "magical" : isPenetration ? "penetration" : "physical",
     });
 
     await roll.toMessage({
