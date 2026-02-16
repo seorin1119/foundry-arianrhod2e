@@ -40,23 +40,39 @@
             data-attack-total="{{../total}}"
             data-is-critical="{{../isCritical}}"
             data-is-fumble="{{../isFumble}}"
-            data-six-count="{{../sixCount}}">
+            data-six-count="{{../sixCount}}"
+            data-skill-bonus-dice="{{../skillBonusDice}}"
+            data-skill-bonus-flat="{{../skillBonusFlat}}"
+            data-skill-damage-type="{{../skillDamageType}}"
+            data-skill-name="{{../skillName}}"
+            data-skip-damage="{{../skipDamage}}">
       <i class="fas fa-shield-halved"></i> {{localize "ARIANRHOD.EvasionRoll"}} ({{this.name}})
     </button>
     {{/each}}
+    {{#unless skipDamage}}
     <button type="button" class="ar-chat-btn ar-damage-btn"
             data-actor-id="{{actorId}}"
             data-weapon-id="{{weaponId}}"
             data-critical="{{isCritical}}"
-            data-six-count="{{sixCount}}">
+            data-six-count="{{sixCount}}"
+            data-skill-bonus-dice="{{skillBonusDice}}"
+            data-skill-bonus-flat="{{skillBonusFlat}}"
+            data-skill-damage-type="{{skillDamageType}}">
       <i class="fas fa-burst"></i> {{localize "ARIANRHOD.RollDamage"}}
+      {{#if skillName}}<span class="ar-skill-badge">{{skillName}}</span>{{/if}}
     </button>
+    {{/unless}}
     {{#if canReroll}}
     <button type="button" class="ar-chat-btn ar-reroll-btn"
             data-actor-id="{{actorId}}"
             data-weapon-id="{{weaponId}}"
             data-formula="{{formula}}"
-            data-base-dice="{{baseDice}}">
+            data-base-dice="{{baseDice}}"
+            data-skill-bonus-dice="{{skillBonusDice}}"
+            data-skill-bonus-flat="{{skillBonusFlat}}"
+            data-skill-damage-type="{{skillDamageType}}"
+            data-skill-name="{{skillName}}"
+            data-skip-damage="{{skipDamage}}">
       <i class="fas fa-rotate"></i> {{localize "ARIANRHOD.FateRerollBtn"}} ({{localize "ARIANRHOD.Fate"}} 1)
     </button>
     {{/if}}

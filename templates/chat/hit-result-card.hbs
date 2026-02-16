@@ -20,15 +20,21 @@
     <i class="fas fa-bullseye"></i> {{localize "ARIANRHOD.Hit"}}!
     {{#if attackCritical}}({{localize "ARIANRHOD.Critical"}}){{/if}}
   </div>
+  {{#unless skipDamage}}
   <div class="ar-card-actions">
     <button type="button" class="ar-chat-btn ar-damage-btn"
             data-actor-id="{{attackerId}}"
             data-weapon-id="{{weaponId}}"
             data-critical="{{attackCritical}}"
-            data-six-count="{{sixCount}}">
+            data-six-count="{{sixCount}}"
+            data-skill-bonus-dice="{{skillBonusDice}}"
+            data-skill-bonus-flat="{{skillBonusFlat}}"
+            data-skill-damage-type="{{skillDamageType}}">
       <i class="fas fa-burst"></i> {{localize "ARIANRHOD.RollDamage"}}
+      {{#if skillName}}<span class="ar-skill-badge">{{skillName}}</span>{{/if}}
     </button>
   </div>
+  {{/unless}}
   {{else}}
   <div class="ar-card-badge ar-badge-miss">
     <i class="fas fa-shield"></i> {{localize "ARIANRHOD.Miss"}}

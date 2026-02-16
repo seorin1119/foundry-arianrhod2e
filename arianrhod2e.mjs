@@ -77,6 +77,22 @@ Hooks.once("init", () => {
       const { RuleGuideDialog } = await import("./module/apps/rule-guide.mjs");
       new RuleGuideDialog().render(true);
     },
+    async openFSSetup() {
+      if (!game.user.isGM) {
+        ui.notifications.warn("GM only");
+        return;
+      }
+      const { FSSetupDialog } = await import("./module/apps/fs-setup-dialog.mjs");
+      new FSSetupDialog().render(true);
+    },
+    async openShop() {
+      if (!game.user.isGM) {
+        ui.notifications.warn("GM only");
+        return;
+      }
+      const { ItemShopDialog } = await import("./module/apps/item-shop-dialog.mjs");
+      new ItemShopDialog().render(true);
+    },
   };
 
   // Add system config to global CONFIG
@@ -261,6 +277,15 @@ Hooks.once("init", () => {
     default: true,
   });
 
+  // Register FS session persistence
+  game.settings.register("arianrhod2e", "fsSession", {
+    name: "FS Session Data",
+    scope: "world",
+    config: false,
+    type: Object,
+    default: {},
+  });
+
   // Register Token HUD enhancements
   registerTokenHUD();
 
@@ -319,10 +344,28 @@ Hooks.on("getSceneControlButtons", (controls) => {
     onClick: () => game.arianrhod2e.openSituationCheck(),
   };
 
+  const fsSetupTool = {
+    name: "fsSetup",
+    title: "ARIANRHOD.FSSetup",
+    icon: "fas fa-star",
+    button: true,
+    onClick: () => game.arianrhod2e.openFSSetup(),
+  };
+
+  const shopTool = {
+    name: "itemShop",
+    title: "ARIANRHOD.Shop",
+    icon: "fas fa-store",
+    button: true,
+    onClick: () => game.arianrhod2e.openShop(),
+  };
+
   if (Array.isArray(tokenControls.tools)) {
-    tokenControls.tools.push(situationCheckTool, sessionEndTool);
+    tokenControls.tools.push(situationCheckTool, fsSetupTool, shopTool, sessionEndTool);
   } else if (tokenControls.tools && typeof tokenControls.tools === "object") {
     tokenControls.tools.situationCheck = situationCheckTool;
+    tokenControls.tools.fsSetup = fsSetupTool;
+    tokenControls.tools.itemShop = shopTool;
     tokenControls.tools.sessionEnd = sessionEndTool;
   }
 });
@@ -353,9 +396,16 @@ Hooks.on("renderChatMessage", (message, html) => {
       const weaponId = btn.dataset.weaponId;
       const isCritical = btn.dataset.critical === "true";
       const sixCount = parseInt(btn.dataset.sixCount) || 0;
+      const skillBonusDice = parseInt(btn.dataset.skillBonusDice) || 0;
+      const skillBonusFlat = parseInt(btn.dataset.skillBonusFlat) || 0;
+      const skillDamageType = btn.dataset.skillDamageType || "";
       const actor = game.actors.get(actorId);
       if (!actor) return;
-      await actor.rollDamage(weaponId, isCritical, sixCount);
+      await actor.rollDamage(weaponId, isCritical, sixCount, {
+        damageType: skillDamageType || "auto",
+        skillBonusDice,
+        skillBonusFlat,
+      });
     });
   });
 
@@ -389,6 +439,13 @@ Hooks.on("renderChatMessage", (message, html) => {
       const weaponId = btn.dataset.weaponId;
       const weapon = weaponId ? actor.items.get(weaponId) : actor.items.find(i => i.type === "weapon" && i.system.equipped);
 
+      // Preserve skill bonus data through re-rolls
+      const rerollSkillBonusDice = parseInt(btn.dataset.skillBonusDice) || 0;
+      const rerollSkillBonusFlat = parseInt(btn.dataset.skillBonusFlat) || 0;
+      const rerollSkillDamageType = btn.dataset.skillDamageType || "";
+      const rerollSkillName = btn.dataset.skillName || "";
+      const rerollSkipDamage = btn.dataset.skipDamage === "true";
+
       const content = await renderTemplate("systems/arianrhod2e/templates/chat/attack-card.hbs", {
         weaponImg: weapon?.img || actor.img || "icons/svg/sword.svg",
         weaponName: weapon?.name || game.i18n.localize("ARIANRHOD.NaturalAttack"),
@@ -404,6 +461,11 @@ Hooks.on("renderChatMessage", (message, html) => {
         canReroll: false,
         formula,
         baseDice,
+        skillBonusDice: rerollSkillBonusDice,
+        skillBonusFlat: rerollSkillBonusFlat,
+        skillDamageType: rerollSkillDamageType,
+        skillName: rerollSkillName,
+        skipDamage: rerollSkipDamage,
       });
 
       await roll.toMessage({
@@ -530,6 +592,90 @@ Hooks.on("renderChatMessage", (message, html) => {
     });
   });
 
+  // "Collect Drop" button on drop cards
+  el.querySelectorAll(".ar-collect-btn").forEach(btn => {
+    btn.addEventListener("click", async (event) => {
+      event.preventDefault();
+      if (btn.disabled) return;
+
+      const itemName = btn.dataset.itemName;
+      const itemPrice = parseInt(btn.dataset.itemPrice) || 0;
+      const itemQty = parseInt(btn.dataset.itemQty) || 1;
+      const enemyName = btn.dataset.enemyName;
+
+      // Build target options: PCs + Guild (gold)
+      const pcs = game.actors.filter(a => a.type === "character" && a.hasPlayerOwner);
+      const guilds = game.actors.filter(a => a.type === "guild");
+      if (pcs.length === 0 && guilds.length === 0) return;
+
+      const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+      const pcOptions = pcs.map(a => `<option value="pc:${a.id}">${esc(a.name)}</option>`).join("");
+      const guildOptions = guilds.map(a =>
+        `<option value="guild:${a.id}">${esc(a.name)} (${game.i18n.localize("ARIANRHOD.AddToGuildGold")}: ${a.system.gold ?? 0}G)</option>`
+      ).join("");
+
+      const dialogContent = `<form>
+        <div class="form-group">
+          <label>${game.i18n.localize("ARIANRHOD.DropCollectTarget")}</label>
+          <select name="target">${pcOptions}${guildOptions}</select>
+        </div>
+      </form>`;
+
+      const result = await foundry.applications.api.DialogV2.prompt({
+        window: { title: `${game.i18n.localize("ARIANRHOD.DropCollect")} — ${esc(itemName)}` },
+        content: dialogContent,
+        ok: {
+          icon: "fas fa-hand-sparkles",
+          label: game.i18n.localize("ARIANRHOD.DropCollect"),
+          callback: (event, button) => button.form.querySelector('[name="target"]').value,
+        },
+        rejectClose: false,
+      });
+      if (!result) return;
+
+      const [targetType, targetId] = result.split(":");
+      let chatContent = "";
+
+      if (targetType === "pc") {
+        // Add item to PC inventory
+        const pc = game.actors.get(targetId);
+        if (!pc) return;
+        await pc.createEmbeddedDocuments("Item", [{
+          name: itemName,
+          type: "item",
+          system: {
+            itemType: "drop",
+            price: itemPrice,
+            quantity: itemQty,
+            description: `${game.i18n.localize("ARIANRHOD.DropItemRoll")}: ${enemyName}`,
+          },
+        }]);
+        chatContent = `<div class="ar-combat-card"><div class="ar-card-badge ar-badge-success"><i class="fas fa-hand-sparkles"></i> ${game.i18n.format("ARIANRHOD.DropCollectedMsg", { actor: pc.name, item: itemName, qty: itemQty })}</div></div>`;
+      } else if (targetType === "guild") {
+        // Add gold value to guild
+        const guild = game.actors.get(targetId);
+        if (!guild) return;
+        const goldGain = itemPrice * itemQty;
+        const currentGold = guild.system.gold ?? 0;
+        await guild.update({ "system.gold": currentGold + goldGain });
+        chatContent = `<div class="ar-combat-card"><div class="ar-card-badge ar-badge-success"><i class="fas fa-coins"></i> ${game.i18n.format("ARIANRHOD.DropGoldCollectedMsg", { gold: goldGain, item: itemName })}</div></div>`;
+      }
+
+      if (chatContent) {
+        await ChatMessage.create({ content: chatContent, speaker: ChatMessage.getSpeaker() });
+      }
+
+      // Disable button and update flag
+      btn.disabled = true;
+      btn.textContent = game.i18n.localize("ARIANRHOD.DropCollectedShort");
+
+      // Update the message flag to mark as collected
+      if (message?.id) {
+        await message.update({ "flags.arianrhod2e.dropResult.collected": true });
+      }
+    });
+  });
+
   // "Trap Detect" / "Trap Disarm" buttons on trap cards
   el.querySelectorAll(".ar-trap-detect-btn, .ar-trap-disarm-btn").forEach(btn => {
     btn.addEventListener("click", async (event) => {
@@ -578,6 +724,11 @@ Hooks.on("renderChatMessage", (message, html) => {
       const attackCritical = btn.dataset.isCritical === "true";
       const attackFumble = btn.dataset.isFumble === "true";
       const sixCount = parseInt(btn.dataset.sixCount) || 0;
+      const skillBonusDice = parseInt(btn.dataset.skillBonusDice) || 0;
+      const skillBonusFlat = parseInt(btn.dataset.skillBonusFlat) || 0;
+      const skillDamageType = btn.dataset.skillDamageType || "";
+      const skillName = btn.dataset.skillName || "";
+      const skipDamage = btn.dataset.skipDamage === "true";
 
       const targetActor = game.actors.get(targetId);
       const attackerActor = game.actors.get(attackerId);
@@ -702,6 +853,11 @@ Hooks.on("renderChatMessage", (message, html) => {
         weaponId,
         sixCount,
         evasionFateNotice,
+        skillBonusDice,
+        skillBonusFlat,
+        skillDamageType,
+        skillName,
+        skipDamage,
       });
 
       await evasionRoll.toMessage({

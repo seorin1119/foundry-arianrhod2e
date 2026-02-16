@@ -352,8 +352,14 @@ function _injectResourcePanel(html, actor, token) {
       const delta = parseInt(btn.dataset.delta);
       const current = actor.system.combat[res];
       const newVal = Math.max(0, Math.min(current.max, current.value + delta));
-      await actor.update({ [`system.combat.${res}.value`]: newVal });
-      _refreshDisplay(panel, res, newVal, current.max);
+      // Pass incapacitationRecovery flag so HP increase is not blocked for incapacitated actors
+      await actor.update(
+        { [`system.combat.${res}.value`]: newVal },
+        { arianrhod2e: { incapacitationRecovery: true } }
+      );
+      // Re-read actual value after update to avoid UI desync
+      const actualVal = actor.system.combat[res].value;
+      _refreshDisplay(panel, res, actualVal, actor.system.combat[res].max);
     });
   });
 

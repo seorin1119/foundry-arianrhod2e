@@ -3461,6 +3461,16 @@
   box-shadow: 0 2px 6px rgba(197, 48, 48, 0.4);
 }
 
+.ar-skill-badge {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 3px;
+  padding: 0 4px;
+  margin-left: 4px;
+  font-size: 0.8em;
+  font-weight: bold;
+}
+
 .ar-apply-btn {
   background: linear-gradient(180deg, #2563eb, #1d4ed8);
   color: white;
@@ -3470,6 +3480,46 @@
 .ar-apply-btn:hover {
   background: linear-gradient(180deg, #3b82f6, #2563eb);
   box-shadow: 0 2px 6px rgba(37, 99, 235, 0.4);
+}
+
+.ar-collect-btn {
+  background: rgba(34, 197, 94, 0.12);
+  color: #15803d;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.ar-collect-btn:hover {
+  background: rgba(34, 197, 94, 0.25);
+  box-shadow: 0 2px 6px rgba(34, 197, 94, 0.3);
+}
+
+.ar-collect-btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+  box-shadow: none;
+}
+
+.ar-badge-success {
+  background: rgba(34, 197, 94, 0.15);
+  color: #15803d;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.ar-drop-summary-card .ar-drop-summary-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 3px 6px;
+  border-radius: 3px;
+}
+.ar-drop-summary-card .ar-drop-summary-row:nth-child(even) {
+  background: rgba(0, 0, 0, 0.04);
+}
+.ar-drop-summary-card .ar-summary-total {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid var(--ar-border-light, #b8a896);
+  font-weight: bold;
+  text-align: right;
 }
 
 .ar-apply-btn:disabled {
@@ -3670,6 +3720,149 @@
   font-weight: 700;
   color: var(--ar-text, #2a1f13);
   text-shadow: 0 0 3px rgba(255, 255, 255, 0.8);
+}
+
+/* ======================================== */
+/*  FS Setup Dialog                        */
+/* ======================================== */
+
+.ar-fs-dialog {
+  padding: 8px;
+}
+
+.ar-fs-setup h3 {
+  color: var(--ar-fate, #d97706);
+  margin: 0 0 10px;
+  font-size: 1.1em;
+}
+
+.ar-fs-footer {
+  margin-top: 12px;
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.ar-fs-status-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  padding: 6px 10px;
+  background: var(--ar-bg-dark, #e8ddc9);
+  border-radius: 6px;
+  border: 1px solid var(--ar-border-light, #b8a896);
+}
+
+.ar-fs-round-label {
+  font-weight: 700;
+  color: var(--ar-fate, #d97706);
+}
+
+.ar-fs-dc-label {
+  font-weight: 700;
+  color: var(--ar-text, #2a1f13);
+  background: var(--ar-bg-darker, #d4c9b8);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+.ar-fs-progress-bar-large {
+  height: 24px;
+  margin: 8px 0;
+}
+
+.ar-fs-progress-bar-large .ar-fs-progress-text {
+  font-size: 0.85em;
+}
+
+.ar-fs-complete-badge {
+  text-align: center;
+  padding: 6px;
+  margin: 6px 0;
+  background: linear-gradient(135deg, var(--ar-fate, #d97706), var(--ar-accent-gold, #9e7c1a));
+  color: #fff;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 1em;
+}
+
+.ar-fs-pc-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 10px;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.ar-fs-pc-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 6px;
+  background: var(--ar-bg, #f5efe4);
+  border: 1px solid var(--ar-border-light, #b8a896);
+  border-radius: 4px;
+}
+
+.ar-fs-pc-img {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--ar-border, #8b7355);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.ar-fs-pc-name {
+  flex: 1;
+  font-weight: 600;
+  font-size: 0.9em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ar-fs-ability-select {
+  width: 70px;
+  font-size: 0.8em;
+  padding: 2px 4px;
+  border-radius: 3px;
+  border: 1px solid var(--ar-border-light, #b8a896);
+}
+
+.ar-fs-check-btn {
+  padding: 4px 10px;
+  border: 1px solid var(--ar-fate, #d97706);
+  background: var(--ar-bg, #f5efe4);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8em;
+  color: var(--ar-fate, #d97706);
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+
+.ar-fs-check-btn:hover:not(:disabled) {
+  background: var(--ar-fate, #d97706);
+  color: #fff;
+}
+
+.ar-fs-check-btn.ar-fs-checked {
+  background: var(--ar-equipped, #16a34a);
+  color: #fff;
+  border-color: var(--ar-equipped, #16a34a);
+  cursor: default;
+}
+
+.ar-fs-controls {
+  justify-content: space-between;
+  border-top: 1px solid var(--ar-border-light, #b8a896);
+  padding-top: 10px;
+  margin-top: 10px;
 }
 
 /* ======================================== */
@@ -3959,6 +4152,41 @@
 
 .arianrhod2e.guild .support-controls a:hover {
   color: var(--ar-fumble);
+}
+
+/* Support Activation */
+.arianrhod2e.guild .support-actions {
+  flex: 0 0 80px;
+  text-align: center;
+}
+
+.arianrhod2e.guild .support-activate-btn {
+  padding: 2px 8px;
+  font-size: 0.75em;
+  background: var(--ar-accent-gold);
+  color: var(--ar-parchment);
+  border: 1px solid var(--ar-accent-gold);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 600;
+}
+
+.arianrhod2e.guild .support-activate-btn:hover {
+  background: var(--ar-fate);
+  border-color: var(--ar-fate);
+}
+
+.arianrhod2e.guild .support-used-badge {
+  font-size: 0.75em;
+  color: var(--ar-equipped);
+  font-weight: 600;
+}
+
+.arianrhod2e.guild .section-header-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
 }
 
 /* Empty Messages */
@@ -5792,6 +6020,396 @@
   font-weight: bold;
   min-width: 80px;
   color: var(--ar-text-light);
+}
+
+/* ======================================== */
+/*  Item Shop Dialog                       */
+/* ======================================== */
+
+.ar-shop-dialog {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 0;
+}
+
+.ar-shop-header {
+  padding: 8px 12px;
+  background: var(--ar-bg-dark);
+  border-bottom: 1px solid var(--ar-border-light);
+}
+
+.ar-shop-buyer-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ar-shop-buyer-field {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ar-shop-buyer-field label {
+  white-space: nowrap;
+  font-weight: 600;
+  font-size: 0.9em;
+  color: var(--ar-text-light);
+}
+
+.ar-shop-buyer-field select {
+  flex: 1;
+  padding: 4px 8px;
+  border: 1px solid var(--ar-border-light);
+  border-radius: 4px;
+  background: var(--ar-parchment);
+  color: var(--ar-text);
+  font-size: 0.9em;
+}
+
+.ar-shop-gold-display {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: rgba(158, 124, 26, 0.1);
+  border: 1px solid var(--ar-accent-gold);
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 0.9em;
+  white-space: nowrap;
+}
+
+.ar-shop-gold-display i {
+  color: var(--ar-accent-gold);
+}
+
+.ar-shop-gold-value {
+  color: var(--ar-accent-gold);
+  font-size: 1.1em;
+}
+
+.ar-shop-guild-name {
+  color: var(--ar-text-light);
+  font-weight: normal;
+  font-size: 0.85em;
+}
+
+.ar-shop-no-guild {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: var(--ar-fumble);
+  color: var(--ar-fumble);
+}
+
+.ar-shop-discount-notice,
+.ar-shop-bonus-notice {
+  margin-top: 6px;
+  padding: 3px 8px;
+  background: rgba(22, 163, 74, 0.1);
+  border: 1px solid rgba(22, 163, 74, 0.3);
+  border-radius: 4px;
+  color: var(--ar-equipped);
+  font-size: 0.85em;
+  font-weight: 600;
+}
+
+/* Mode Toggle */
+.ar-shop-mode-bar {
+  display: flex;
+  gap: 0;
+  border-bottom: 2px solid var(--ar-accent);
+}
+
+.ar-shop-mode-btn {
+  flex: 1;
+  padding: 7px 12px;
+  text-align: center;
+  cursor: pointer;
+  color: var(--ar-text-light);
+  font-weight: 600;
+  font-size: 0.9em;
+  border: none;
+  border-bottom: 3px solid transparent;
+  background: var(--ar-bg-dark);
+  transition: all 0.15s;
+}
+
+.ar-shop-mode-btn:hover {
+  color: var(--ar-accent);
+  background: var(--ar-bg);
+}
+
+.ar-shop-mode-btn.active {
+  color: var(--ar-accent);
+  border-bottom-color: var(--ar-accent-gold);
+  background: var(--ar-bg);
+}
+
+.ar-shop-mode-btn i {
+  margin-right: 4px;
+}
+
+/* Category Tabs */
+.ar-shop-tabs {
+  display: flex;
+  gap: 0;
+  background: var(--ar-bg-dark);
+  border-bottom: 1px solid var(--ar-border-light);
+}
+
+.ar-shop-tab-btn {
+  flex: 1;
+  padding: 6px 8px;
+  text-align: center;
+  cursor: pointer;
+  color: var(--ar-text-light);
+  font-weight: 600;
+  font-size: 0.85em;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  transition: all 0.15s;
+}
+
+.ar-shop-tab-btn:hover {
+  color: var(--ar-accent);
+  background: var(--ar-bg);
+}
+
+.ar-shop-tab-btn.active {
+  color: var(--ar-accent);
+  border-bottom-color: var(--ar-accent-gold);
+  background: var(--ar-bg);
+}
+
+.ar-shop-tab-btn i {
+  margin-right: 3px;
+}
+
+/* Search Bar */
+.ar-shop-search-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: var(--ar-bg);
+  border-bottom: 1px solid var(--ar-border-light);
+}
+
+.ar-shop-search-bar i {
+  color: var(--ar-text-light);
+}
+
+.ar-shop-search {
+  flex: 1;
+  padding: 4px 8px;
+  border: 1px solid var(--ar-border-light);
+  border-radius: 4px;
+  background: var(--ar-parchment);
+  color: var(--ar-text);
+  font-size: 0.9em;
+}
+
+.ar-shop-search:focus {
+  border-color: var(--ar-accent);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(139, 111, 71, 0.2);
+}
+
+/* Item List */
+.ar-shop-list {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.ar-shop-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85em;
+}
+
+.ar-shop-table thead th {
+  position: sticky;
+  top: 0;
+  background: var(--ar-bg-dark);
+  color: var(--ar-text-light);
+  font-weight: 700;
+  font-size: 0.88em;
+  padding: 6px 8px;
+  text-align: center;
+  border-bottom: 2px solid var(--ar-border);
+  z-index: 1;
+}
+
+.ar-shop-table thead th.col-name {
+  text-align: left;
+}
+
+.ar-shop-table tbody tr {
+  border-bottom: 1px solid var(--ar-border-light);
+  transition: background 0.1s;
+}
+
+.ar-shop-table tbody tr:hover {
+  background: rgba(139, 111, 71, 0.08);
+}
+
+.ar-shop-table tbody tr.ar-shop-equipped {
+  background: rgba(22, 163, 74, 0.06);
+}
+
+.ar-shop-table td {
+  padding: 5px 8px;
+  vertical-align: middle;
+}
+
+.ar-shop-table td.col-name {
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ar-shop-table td.col-name img {
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.ar-shop-table td.col-name strong {
+  color: var(--ar-text);
+}
+
+.ar-shop-table td.col-cl,
+.ar-shop-table td.col-type,
+.ar-shop-table td.col-price,
+.ar-shop-table td.col-action {
+  text-align: center;
+}
+
+.ar-shop-table td.col-stats {
+  font-size: 0.88em;
+  color: var(--ar-text-light);
+}
+
+.ar-shop-name-sub {
+  display: block;
+  font-size: 0.82em;
+  color: var(--ar-text-light);
+  font-style: italic;
+}
+
+.ar-shop-effect {
+  font-size: 0.85em;
+  color: var(--ar-text-light);
+}
+
+.ar-shop-original-price {
+  text-decoration: line-through;
+  color: var(--ar-text-light);
+  font-size: 0.85em;
+  margin-right: 4px;
+}
+
+.ar-shop-discount-price {
+  color: var(--ar-equipped);
+  font-weight: bold;
+}
+
+.ar-shop-equipped-badge {
+  display: inline-block;
+  padding: 1px 5px;
+  background: rgba(22, 163, 74, 0.15);
+  color: var(--ar-equipped);
+  border-radius: 3px;
+  font-size: 0.75em;
+  font-weight: bold;
+  margin-left: 4px;
+}
+
+/* Buttons */
+.ar-shop-buy-btn,
+.ar-shop-sell-btn {
+  padding: 3px 10px;
+  background: linear-gradient(180deg, var(--ar-accent), var(--ar-leather));
+  color: var(--ar-parchment);
+  border: 1px solid var(--ar-leather);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.82em;
+  font-weight: bold;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.ar-shop-buy-btn:hover,
+.ar-shop-sell-btn:hover {
+  background: linear-gradient(180deg, var(--ar-accent-gold), var(--ar-accent));
+  color: var(--ar-primary);
+  border-color: var(--ar-accent-gold);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.ar-shop-buy-btn i,
+.ar-shop-sell-btn i {
+  margin-right: 3px;
+}
+
+.ar-shop-sell-btn {
+  background: linear-gradient(180deg, var(--ar-beni), #8b2020);
+  border-color: #8b2020;
+}
+
+.ar-shop-sell-btn:hover {
+  background: linear-gradient(180deg, #e05050, var(--ar-beni));
+  border-color: var(--ar-beni);
+  color: white;
+}
+
+/* Empty State */
+.ar-shop-empty {
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--ar-text-light);
+}
+
+.ar-shop-empty i {
+  font-size: 2.5em;
+  color: var(--ar-border-light);
+  margin-bottom: 12px;
+  display: block;
+}
+
+/* Chat card badges */
+.ar-badge-guild {
+  background: rgba(158, 124, 26, 0.15);
+  color: #7a5d0a;
+  border: 1px solid rgba(158, 124, 26, 0.3);
+}
+
+.ar-badge-sell {
+  background: rgba(197, 61, 67, 0.15);
+  color: #8b2020;
+  border: 1px solid rgba(197, 61, 67, 0.3);
+}
+
+.ar-shop-discount-badge {
+  padding: 1px 6px;
+  background: rgba(22, 163, 74, 0.15);
+  color: var(--ar-equipped);
+  border-radius: 10px;
+  font-size: 0.85em;
+  font-weight: bold;
+}
+
+.ar-shop-bonus-badge {
+  padding: 1px 6px;
+  background: rgba(158, 124, 26, 0.15);
+  color: #7a5d0a;
+  border-radius: 10px;
+  font-size: 0.85em;
+  font-weight: bold;
 }
 
 } /* end @layer arianrhod */

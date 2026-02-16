@@ -1,0 +1,185 @@
+{{!-- Item Shop Dialog (GM Tool) --}}
+<div class="ar-shop-dialog">
+  {{!-- Header: Buyer selector + Guild gold --}}
+  <div class="ar-shop-header">
+    <div class="ar-shop-buyer-row">
+      <div class="ar-shop-buyer-field">
+        <label><i class="fas fa-user"></i> {{localize "ARIANRHOD.SelectPC"}}</label>
+        <select name="buyer">
+          {{#each pcs as |pc|}}
+          <option value="{{pc.id}}">{{pc.name}} (Lv.{{pc.level}})</option>
+          {{/each}}
+        </select>
+      </div>
+      {{#if hasGuild}}
+      <div class="ar-shop-gold-display">
+        <i class="fas fa-coins"></i>
+        <span class="ar-shop-gold-value">{{guildGold}}G</span>
+        <span class="ar-shop-guild-name">{{guildName}}</span>
+      </div>
+      {{else}}
+      <div class="ar-shop-gold-display ar-shop-no-guild">
+        <i class="fas fa-exclamation-triangle"></i>
+        <span>{{localize "ARIANRHOD.NoGuild"}}</span>
+      </div>
+      {{/if}}
+    </div>
+    {{#if hasDiscount}}
+    <div class="ar-shop-discount-notice">
+      <i class="fas fa-tags"></i>
+      {{localize "ARIANRHOD.DiscountApplied" discount=discount}}
+    </div>
+    {{/if}}
+    {{#if hasSellBonus}}
+    <div class="ar-shop-bonus-notice">
+      <i class="fas fa-store"></i>
+      {{localize "ARIANRHOD.ShopSellBonusNotice"}}
+    </div>
+    {{/if}}
+  </div>
+
+  {{!-- Mode Toggle: Buy / Sell --}}
+  <div class="ar-shop-mode-bar">
+    <button type="button" class="ar-shop-mode-btn {{#if (eq mode "buy")}}active{{/if}}" data-mode="buy" data-action="switchMode">
+      <i class="fas fa-cart-shopping"></i> {{localize "ARIANRHOD.Buy"}}
+    </button>
+    <button type="button" class="ar-shop-mode-btn {{#if (eq mode "sell")}}active{{/if}}" data-mode="sell" data-action="switchMode">
+      <i class="fas fa-hand-holding-dollar"></i> {{localize "ARIANRHOD.Sell"}}
+    </button>
+  </div>
+
+  {{#if (eq mode "buy")}}
+  {{!-- Buy Mode --}}
+  {{!-- Category Tabs --}}
+  <nav class="ar-shop-tabs">
+    <button type="button" class="ar-shop-tab-btn {{#if (eq activeTab "weapon")}}active{{/if}}" data-tab="weapon" data-action="switchTab">
+      <i class="fas fa-sword"></i> {{localize "ARIANRHOD.Weapon"}}
+    </button>
+    <button type="button" class="ar-shop-tab-btn {{#if (eq activeTab "armor")}}active{{/if}}" data-tab="armor" data-action="switchTab">
+      <i class="fas fa-shield-halved"></i> {{localize "ARIANRHOD.Armor"}}
+    </button>
+    <button type="button" class="ar-shop-tab-btn {{#if (eq activeTab "accessory")}}active{{/if}}" data-tab="accessory" data-action="switchTab">
+      <i class="fas fa-ring"></i> {{localize "ARIANRHOD.Accessory"}}
+    </button>
+    <button type="button" class="ar-shop-tab-btn {{#if (eq activeTab "item")}}active{{/if}}" data-tab="item" data-action="switchTab">
+      <i class="fas fa-flask"></i> {{localize "ARIANRHOD.Item"}}
+    </button>
+  </nav>
+
+  {{!-- Search --}}
+  <div class="ar-shop-search-bar">
+    <i class="fas fa-search"></i>
+    <input type="text" class="ar-shop-search" placeholder="{{localize "ARIANRHOD.SearchItems"}}" value="{{searchTerm}}" />
+  </div>
+
+  {{!-- Item List --}}
+  <div class="ar-shop-list">
+    {{#if items.length}}
+    <table class="ar-shop-table">
+      <thead>
+        <tr>
+          <th class="col-name">{{localize "ARIANRHOD.Name"}}</th>
+          <th class="col-cl">CL</th>
+          <th class="col-stats">{{localize "ARIANRHOD.Stats"}}</th>
+          <th class="col-price">{{localize "ARIANRHOD.Price"}}</th>
+          <th class="col-action"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each items as |item|}}
+        <tr>
+          <td class="col-name">
+            <strong>{{item.displayName}}</strong>
+            {{#unless (eq item.displayName item.name)}}
+            <span class="ar-shop-name-sub">{{item.name}}</span>
+            {{/unless}}
+          </td>
+          <td class="col-cl">{{item.cl}}</td>
+          <td class="col-stats">
+            {{#if (eq item.itemType "weapon")}}
+            <span title="Accuracy">{{item.accuracy}}/</span><span title="Attack">{{item.attack}}</span>
+            {{#if (gt item.range 0)}} <span title="Range">R{{item.range}}</span>{{/if}}
+            {{else if (eq item.itemType "armor")}}
+            <span title="PhysDef">P{{item.physDef}}</span>
+            {{#if item.magDef}} <span title="MagDef">M{{item.magDef}}</span>{{/if}}
+            {{#if item.evasion}} <span title="Evasion">E{{item.evasion}}</span>{{/if}}
+            {{else if (eq item.itemType "accessory")}}
+            <span class="ar-shop-effect">{{item.effect}}</span>
+            {{else}}
+            <span class="ar-shop-effect">{{item.effect}}</span>
+            {{/if}}
+          </td>
+          <td class="col-price">
+            {{#if (gt ../discount 0)}}
+            <span class="ar-shop-original-price">{{item.price}}G</span>
+            <span class="ar-shop-discount-price">{{item.discountPrice}}G</span>
+            {{else}}
+            {{item.price}}G
+            {{/if}}
+          </td>
+          <td class="col-action">
+            {{#if (gt item.price 0)}}
+            <button type="button" class="ar-shop-buy-btn" data-action="buyItem" data-item-id="{{item.id}}" data-item-type="{{item.itemType}}">
+              <i class="fas fa-cart-plus"></i> {{localize "ARIANRHOD.Buy"}}
+            </button>
+            {{/if}}
+          </td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+    {{else}}
+    <div class="ar-shop-empty">
+      <i class="fas fa-store-slash"></i>
+      <p>{{localize "ARIANRHOD.NoItemsFound"}}</p>
+    </div>
+    {{/if}}
+  </div>
+
+  {{else}}
+  {{!-- Sell Mode --}}
+  {{!-- Search --}}
+  <div class="ar-shop-search-bar">
+    <i class="fas fa-search"></i>
+    <input type="text" class="ar-shop-search" placeholder="{{localize "ARIANRHOD.SearchItems"}}" value="{{searchTerm}}" />
+  </div>
+
+  <div class="ar-shop-list">
+    {{#if inventory.length}}
+    <table class="ar-shop-table">
+      <thead>
+        <tr>
+          <th class="col-name">{{localize "ARIANRHOD.Name"}}</th>
+          <th class="col-type">{{localize "ARIANRHOD.Type"}}</th>
+          <th class="col-price">{{localize "ARIANRHOD.SellPrice"}}</th>
+          <th class="col-action"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each inventory as |inv|}}
+        <tr class="{{#if inv.equipped}}ar-shop-equipped{{/if}}">
+          <td class="col-name">
+            <img src="{{inv.img}}" width="24" height="24" />
+            <strong>{{inv.name}}</strong>
+            {{#if inv.equipped}}<span class="ar-shop-equipped-badge">E</span>{{/if}}
+          </td>
+          <td class="col-type">{{inv.typeLabel}}</td>
+          <td class="col-price">{{inv.sellPrice}}G</td>
+          <td class="col-action">
+            <button type="button" class="ar-shop-sell-btn" data-action="sellItem" data-item-id="{{inv.id}}">
+              <i class="fas fa-hand-holding-dollar"></i> {{localize "ARIANRHOD.Sell"}}
+            </button>
+          </td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+    {{else}}
+    <div class="ar-shop-empty">
+      <i class="fas fa-box-open"></i>
+      <p>{{localize "ARIANRHOD.NoItemsToSell"}}</p>
+    </div>
+    {{/if}}
+  </div>
+  {{/if}}
+</div>

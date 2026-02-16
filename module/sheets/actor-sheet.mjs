@@ -669,7 +669,9 @@ export class ArianrhodActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
     const path = resource === "hp" ? "system.combat.hp" : "system.combat.mp";
     const current = resource === "hp" ? this.actor.system.combat.hp : this.actor.system.combat.mp;
     const newValue = Math.max(0, Math.min(current.value + delta, current.max));
-    await this.actor.update({ [`${path}.value`]: newValue });
+    // Pass incapacitationRecovery flag so HP increase is not blocked for incapacitated actors
+    const updateOpts = resource === "hp" ? { arianrhod2e: { incapacitationRecovery: true } } : {};
+    await this.actor.update({ [`${path}.value`]: newValue }, updateOpts);
   }
 
   static async #onSetFate(event, target) {

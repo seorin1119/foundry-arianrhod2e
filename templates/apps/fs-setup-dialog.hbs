@@ -1,0 +1,105 @@
+{{!-- FS Setup Dialog (GM Tool) --}}
+<div class="ar-fs-dialog">
+
+  {{!-- Setup Phase --}}
+  {{#if (eq phase "setup")}}
+  <div class="ar-fs-setup">
+    <h3><i class="fas fa-star"></i> {{localize "ARIANRHOD.FSSetup"}}</h3>
+
+    <div class="form-group">
+      <label>{{localize "ARIANRHOD.FSDifficulty"}}</label>
+      <input type="number" name="difficulty" value="{{defaultDC}}" min="1" />
+    </div>
+
+    <div class="form-group">
+      <label>{{localize "ARIANRHOD.FSCompletionTarget"}}</label>
+      <input type="number" name="completionTarget" value="{{defaultTarget}}" min="1" />
+    </div>
+
+    <div class="form-group">
+      <label>{{localize "ARIANRHOD.FSMaxRounds"}}</label>
+      <input type="number" name="maxRounds" value="{{defaultMaxRounds}}" min="1" />
+    </div>
+
+    <div class="form-group">
+      <label>{{localize "ARIANRHOD.FSSupportCheckDC"}}</label>
+      <input type="number" name="supportDC" value="{{defaultSupportDC}}" min="1" />
+    </div>
+
+    <footer class="ar-fs-footer">
+      <button type="button" data-action="startFS" class="ar-btn-primary">
+        <i class="fas fa-play"></i> {{localize "ARIANRHOD.FSStart"}}
+      </button>
+    </footer>
+  </div>
+  {{/if}}
+
+  {{!-- Progress Phase --}}
+  {{#if (eq phase "progress")}}
+  <div class="ar-fs-progress">
+    {{!-- Round and progress header --}}
+    <div class="ar-fs-status-header">
+      <span class="ar-fs-round-label">
+        <i class="fas fa-hourglass-half"></i>
+        {{localize "ARIANRHOD.FSRound" current=currentRound max=maxRounds}}
+      </span>
+      <span class="ar-fs-dc-label">DC {{difficulty}}</span>
+    </div>
+
+    {{!-- Progress bar --}}
+    <div class="ar-fs-progress-bar ar-fs-progress-bar-large">
+      <div class="ar-fs-progress-fill" style="width: {{progressPct}}%"></div>
+      <span class="ar-fs-progress-text">{{progress}} / {{completionTarget}}</span>
+    </div>
+
+    {{#if isComplete}}
+    <div class="ar-fs-complete-badge">
+      <i class="fas fa-trophy"></i> {{localize "ARIANRHOD.FSComplete"}}
+    </div>
+    {{/if}}
+
+    {{!-- PC List --}}
+    {{#if hasPCs}}
+    <div class="ar-fs-pc-list">
+      {{#each pcs as |pc|}}
+      <div class="ar-fs-pc-row" data-actor-id="{{pc.id}}">
+        <img src="{{pc.img}}" alt="{{pc.name}}" class="ar-fs-pc-img" />
+        <span class="ar-fs-pc-name">{{pc.name}}</span>
+        <select name="ability" class="ar-fs-ability-select">
+          {{#each ../abilities as |ab|}}
+          <option value="{{ab.key}}">{{ab.label}}</option>
+          {{/each}}
+        </select>
+        {{#if pc.checked}}
+        <button type="button" class="ar-fs-check-btn ar-fs-checked" disabled>
+          <i class="fas fa-check"></i>
+        </button>
+        {{else}}
+        <button type="button" class="ar-fs-check-btn" data-action="rollCheck" data-actor-id="{{pc.id}}">
+          <i class="fas fa-dice"></i> {{localize "ARIANRHOD.FSRollCheck"}}
+        </button>
+        {{/if}}
+      </div>
+      {{/each}}
+    </div>
+    {{else}}
+    <p class="no-pcs">{{localize "ARIANRHOD.NoPCsFound"}}</p>
+    {{/if}}
+
+    {{!-- Round controls --}}
+    <footer class="ar-fs-footer ar-fs-controls">
+      {{#unless isComplete}}
+      {{#unless isLastRound}}
+      <button type="button" data-action="nextRound" class="ar-btn-secondary">
+        <i class="fas fa-forward"></i> {{localize "ARIANRHOD.FSNextRound"}}
+      </button>
+      {{/unless}}
+      {{/unless}}
+      <button type="button" data-action="endFS" class="ar-btn-primary">
+        <i class="fas fa-flag-checkered"></i> {{localize "ARIANRHOD.FSEnd"}}
+      </button>
+    </footer>
+  </div>
+  {{/if}}
+
+</div>

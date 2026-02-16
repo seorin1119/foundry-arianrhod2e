@@ -9,6 +9,51 @@ import { applySkillEffect, hasStructuredEffect } from "./effect-processor.mjs";
 const SKILL_CARD_TEMPLATE = "systems/arianrhod2e/templates/chat/skill-card.hbs";
 
 /**
+ * Map of attack skills that auto-chain into weapon attacks after activation.
+ * All 18 weapon-attack skills (武器攻撃/白兵攻撃/射撃攻撃を行う) from the skill library.
+ *
+ * Fields:
+ *   bonusDicePerLevel  — extra damage dice per SL (e.g. bash +[SL]D)
+ *   bonusFlatPerLevel  — extra flat damage per SL (e.g. catch-rope +[SL×2])
+ *   hitBonusDice       — static extra hit dice (e.g. backstab +1D)
+ *   hitBonusDicePerLevel — extra hit dice per SL (e.g. rapid-strike +(SL)D, combined with hitBonusDice +1 = +(SL+1)D)
+ *   damageType         — override damage type ("penetration" to ignore defense)
+ *   skipDamage         — if true, skip damage roll (hit-only skills like armor-break)
+ */
+const ATTACK_SKILL_MAP = {
+  // Single-target: bonus damage
+  "bash":            { bonusDicePerLevel: 1 },                          // +[SL]D damage
+  "holy-smash":      { bonusDicePerLevel: 1 },                          // +[SL]D damage (impact weapon req.)
+  "backstab":        { bonusDicePerLevel: 1, hitBonusDice: 1 },         // +1D hit, +[SL]D damage (hidden req.)
+  "catch-rope":      { bonusFlatPerLevel: 2 },                          // +[SL×2] damage (whip req.)
+  "aerial-rave":     { bonusFlatPerLevel: 3, hitBonusDice: 1 },         // +1D hit, +[SL×3] damage (flight req.)
+  "ki-blast":        { bonusFlatPerLevel: 2 },                          // +[SL×2] damage, 〈無〉属性 magic dmg
+  "throw-down":      { bonusFlatPerLevel: 2 },                          // +[SL×2] damage, inflicts slip
+  "rapid-strike":    { hitBonusDice: 1, hitBonusDicePerLevel: 1 },      // +[(SL+1)D] hit
+
+  // Single-target: special effects
+  "piercing-strike": { damageType: "penetration" },                     // ignores all defense
+  "suppression":     {},                                                 // ranged, evasion debuff on hit
+  "sonic-boom":      {},                                                 // extended range melee
+  "cripple":         {},                                                 // evasion debuff on hit
+  "armor-break":     { skipDamage: true },                              // hit only, reduces physDef
+
+  // Multi-target: chain to single attack roll; multi-target handling is Phase 2
+  "wide-attack":        {},                                              // multi-target weapon attack
+  "sweep":              {},                                              // engagement AoE melee
+  "rapid-shot":         {},                                              // multi-target ranged (magigun)
+  "rapid-fire-ranger":  {},                                              // engagement AoE ranged
+  "flash-strike":       {},                                              // weapon attack, mob instant-kill
+};
+
+/**
+ * Map of after-damage skills that trigger special effects after the damage roll.
+ */
+const AFTER_DAMAGE_SKILL_MAP = {
+  "treasure-hunt": { triggersDropRoll: true },
+};
+
+/**
  * Parse a skill cost string into numeric MP and HP values.
  * @param {string} costString - The cost string (e.g. "3", "SL×2", "SLx3")
  * @param {number} skillLevel - The current skill level
@@ -165,5 +210,120 @@ export async function activateSkill(actor, item) {
     }
   }
 
+  // Auto-chain weapon attack for attack skills
+  const skillLibId = item.getFlag("arianrhod2e", "skillId")
+                  || item.getFlag("arianrhod2e", "libraryId");
+  const attackData = skillLibId ? ATTACK_SKILL_MAP[skillLibId] : null;
+  if (attackData) {
+    const sl = item.system.level ?? 1;
+    const skillBonus = {
+      skillName: item.name,
+      bonusDice: (attackData.bonusDicePerLevel ?? 0) * sl,
+      bonusFlat: (attackData.bonusFlatPerLevel ?? 0) * sl,
+      hitBonusDice: (attackData.hitBonusDice ?? 0) + (attackData.hitBonusDicePerLevel ?? 0) * sl,
+      damageType: attackData.damageType ?? "",
+      skipDamage: attackData.skipDamage ?? false,
+    };
+    await actor.rollAttack({ skillBonus });
+  }
+
+  // After-damage skill chaining (e.g., Treasure Hunt)
+  const afterDamageData = skillLibId ? AFTER_DAMAGE_SKILL_MAP[skillLibId] : null;
+  if (afterDamageData?.triggersDropRoll) {
+    await _handleTreasureHunt(actor, item);
+  }
+
   return true;
+}
+
+/**
+ * Handle Treasure Hunt skill: trigger drop roll on targeted enemy.
+ * Per rulebook: get one drop from the target enemy. If no drops set, gain [enemy level × 10]G.
+ * Limited to SL uses per scenario.
+ * @param {Actor} actor - The skill user
+ * @param {Item} item - The treasure hunt skill item
+ */
+async function _handleTreasureHunt(actor, item) {
+  const { findGuildForActor } = await import("./guild-support-effects.mjs");
+
+  const sl = item.system.level ?? 1;
+  const usedCount = actor.getFlag("arianrhod2e", "treasureHuntUsed") ?? 0;
+
+  if (usedCount >= sl) {
+    ui.notifications.warn(game.i18n.format("ARIANRHOD.SkillUsageLimitReached", { name: item.name, limit: sl }));
+    return;
+  }
+
+  // Find target enemy
+  const targets = [...(game.user.targets ?? [])].map(t => t.actor).filter(a => a?.type === "enemy");
+  let targetEnemy;
+
+  if (targets.length === 1) {
+    targetEnemy = targets[0];
+  } else if (targets.length > 1) {
+    // Multiple targets: let GM pick
+    const choices = targets.map(a => `<option value="${a.id}">${a.name}</option>`).join("");
+    const result = await foundry.applications.api.DialogV2.prompt({
+      window: { title: game.i18n.localize("ARIANRHOD.TreasureHuntTarget") },
+      content: `<form><div class="form-group"><label>${game.i18n.localize("ARIANRHOD.SelectTarget")}</label><select name="targetId">${choices}</select></div></form>`,
+      ok: {
+        label: game.i18n.localize("ARIANRHOD.Confirm"),
+        callback: (event, button) => button.form.querySelector('[name="targetId"]').value,
+      },
+      rejectClose: false,
+    });
+    if (!result) return;
+    targetEnemy = game.actors.get(result);
+  } else {
+    // No target selected: try to find from combat
+    if (game.combat?.started) {
+      const enemies = game.combat.combatants
+        .filter(c => c.actor?.type === "enemy" && c.actor.system?.combat?.hp?.value > 0)
+        .map(c => c.actor);
+      if (enemies.length === 1) {
+        targetEnemy = enemies[0];
+      } else if (enemies.length > 1) {
+        const choices = enemies.map(a => `<option value="${a.id}">${a.name} (HP: ${a.system.combat.hp.value})</option>`).join("");
+        const result = await foundry.applications.api.DialogV2.prompt({
+          window: { title: game.i18n.localize("ARIANRHOD.TreasureHuntTarget") },
+          content: `<form><div class="form-group"><label>${game.i18n.localize("ARIANRHOD.SelectTarget")}</label><select name="targetId">${choices}</select></div></form>`,
+          ok: {
+            label: game.i18n.localize("ARIANRHOD.Confirm"),
+            callback: (event, button) => button.form.querySelector('[name="targetId"]').value,
+          },
+          rejectClose: false,
+        });
+        if (!result) return;
+        targetEnemy = game.actors.get(result);
+      }
+    }
+  }
+
+  if (!targetEnemy) {
+    ui.notifications.warn(game.i18n.localize("ARIANRHOD.NoEnemyTarget"));
+    return;
+  }
+
+  // Increment usage counter
+  await actor.setFlag("arianrhod2e", "treasureHuntUsed", usedCount + 1);
+
+  // Check if enemy has drops
+  const dropsStr = targetEnemy.system.drops;
+  if (dropsStr) {
+    // Trigger drop roll on the enemy
+    await targetEnemy.rollDropItems({ skipDialog: true });
+  } else {
+    // No drops: gain [enemy level × 10]G to guild gold
+    const enemyLevel = targetEnemy.system.level ?? 1;
+    const goldGain = enemyLevel * 10;
+    const guild = findGuildForActor(actor);
+    if (guild) {
+      const currentGold = guild.system.gold ?? 0;
+      await guild.update({ "system.gold": currentGold + goldGain });
+    }
+    await ChatMessage.create({
+      speaker: ChatMessage.getSpeaker({ actor }),
+      content: `<div class="ar-combat-card"><div class="ar-card-badge ar-badge-guild"><i class="fas fa-coins"></i> ${game.i18n.format("ARIANRHOD.TreasureHuntGold", { name: targetEnemy.name, gold: goldGain })}</div></div>`,
+    });
+  }
 }

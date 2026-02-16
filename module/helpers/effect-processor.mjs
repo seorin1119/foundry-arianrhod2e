@@ -134,10 +134,13 @@ async function _applyHeal(actor, effect) {
   if (healAmount <= 0) return;
 
   const newVal = Math.min(current.max, current.value + healAmount);
-  await actor.update({ [`${path}.value`]: newVal });
+  // Pass incapacitationRecovery flag so healing is not blocked for incapacitated actors (HP=0)
+  const updateOpts = resource === "hp" ? { arianrhod2e: { incapacitationRecovery: true } } : {};
+  await actor.update({ [`${path}.value`]: newVal }, updateOpts);
 
+  const actualVal = actor.system.combat?.[resource]?.value ?? newVal;
   ui.notifications.info(
-    `${actor.name}: ${resource.toUpperCase()} +${healAmount} (${current.value} \u2192 ${newVal})`
+    `${actor.name}: ${resource.toUpperCase()} +${healAmount} (${current.value} \u2192 ${actualVal})`
   );
 }
 

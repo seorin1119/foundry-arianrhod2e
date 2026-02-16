@@ -46,6 +46,7 @@ export async function initializeCombat(combat) {
   await combat.setFlag("arianrhod2e", "phase", PHASES.SETUP);
   await combat.setFlag("arianrhod2e", "engagements", []);
   await combat.setFlag("arianrhod2e", "surprise", null); // null, "pcs", or "enemies"
+  await combat.setFlag("arianrhod2e", "combatStartTime", Date.now());
   // Initialize action states for all combatants
   for (const combatant of combat.combatants) {
     await setActionState(combatant, createActionState());
@@ -364,6 +365,13 @@ export async function processCombatEnd(combat) {
         `<div class="arianrhod status-msg"><i class="fas fa-heart-pulse"></i> ${actor.name}: ${game.i18n.localize("ARIANRHOD.IncapacitatedRecovery")}</div>`
       );
     }
+
+    // Reset scene-scoped skill flags (dropShotUsed)
+    if (actor.type === "character") {
+      if (actor.getFlag("arianrhod2e", "dropShotUsed")) {
+        await actor.unsetFlag("arianrhod2e", "dropShotUsed");
+      }
+    }
   }
 
   if (messages.length > 0) {
@@ -371,6 +379,57 @@ export async function processCombatEnd(combat) {
       content: `<div class="arianrhod ar-cleanup-card"><h3><i class="fas fa-flag-checkered"></i> ${game.i18n.localize("ARIANRHOD.CombatEnd")}</h3>${messages.join("")}</div>`,
     });
   }
+
+  // Drop summary card: collect all drop results from this combat
+  await _postDropSummary(combat);
+}
+
+/**
+ * Post a summary card of all drop items from the combat.
+ * @param {Combat} combat - The ending combat
+ */
+async function _postDropSummary(combat) {
+  const combatStart = combat.getFlag("arianrhod2e", "combatStartTime") ?? 0;
+  if (!combatStart) return;
+
+  const dropSummary = [];
+  for (const msg of game.messages) {
+    if (msg.timestamp < combatStart) continue;
+    const dropFlag = msg.getFlag("arianrhod2e", "dropResult");
+    if (dropFlag?.itemName) {
+      dropSummary.push(dropFlag);
+    }
+  }
+
+  if (dropSummary.length === 0) return;
+
+  let totalValue = 0;
+  const rows = dropSummary.map(d => {
+    const value = (d.price ?? 0) * (d.qty ?? 1);
+    totalValue += value;
+    const statusBadge = d.collected
+      ? `<span class="ar-card-badge ar-badge-success" style="font-size:0.8em;">${game.i18n.localize("ARIANRHOD.DropCollectedShort")}</span>`
+      : `<span class="ar-card-badge ar-badge-death" style="font-size:0.8em;">${game.i18n.localize("ARIANRHOD.DropUncollected")}</span>`;
+    const qtyStr = (d.qty ?? 1) > 1 ? ` ×${d.qty}` : "";
+    const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    return `<div class="ar-drop-summary-row">
+      <span>${esc(d.enemyName)}: ${esc(d.itemName)}${qtyStr}</span>
+      <span>${value > 0 ? value + "G" : ""} ${statusBadge}</span>
+    </div>`;
+  }).join("");
+
+  const content = `<div class="ar-combat-card ar-drop-summary-card">
+    <header class="ar-card-header">
+      <img class="ar-card-icon" src="icons/svg/chest.svg" width="32" height="32" />
+      <div class="ar-card-title">
+        <h3>${game.i18n.localize("ARIANRHOD.DropSummary")}</h3>
+      </div>
+    </header>
+    ${rows}
+    ${totalValue > 0 ? `<div class="ar-summary-total">${game.i18n.localize("ARIANRHOD.TotalValue")}: ${totalValue}G</div>` : ""}
+  </div>`;
+
+  await ChatMessage.create({ content });
 }
 
 /**

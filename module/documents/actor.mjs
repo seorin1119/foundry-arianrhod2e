@@ -2,6 +2,12 @@ import { rollCheckDialog, analyzeRoll } from "../dice.mjs";
 import { validateAttackEngagement } from "../helpers/engagement.mjs";
 import { isSurprised } from "../helpers/combat-manager.mjs";
 import { ACTOR_DEFAULT_ICONS } from "../helpers/icon-mapping.mjs";
+import { applyDamageReduction, getAttackDamageBonus, getAttackDamageBonusDice, getDropBonusDice } from "../helpers/guild-support-effects.mjs";
+
+/** Escape HTML special characters for safe interpolation into templates. */
+function _esc(str) {
+  return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
 
 const ATTACK_CARD_TEMPLATE = "systems/arianrhod2e/templates/chat/attack-card.hbs";
 const DAMAGE_CARD_TEMPLATE = "systems/arianrhod2e/templates/chat/damage-card.hbs";
@@ -213,6 +219,10 @@ export class ArianrhodActor extends Actor {
       baseDice -= 2;
       penalties.push(game.i18n.localize("ARIANRHOD.StatusRage") + " (-2D)");
     }
+    // Skill hit bonus dice (e.g. backstab +1D, aerial-rave +1D)
+    if (options.skillBonus?.hitBonusDice) {
+      baseDice += options.skillBonus.hitBonusDice;
+    }
     baseDice = Math.max(1, baseDice);
     const dicePenaltyNote = penalties.length > 0 ? penalties.join(", ") : "";
 
@@ -271,6 +281,11 @@ export class ArianrhodActor extends Actor {
       canReroll,
       formula,
       baseDice,
+      skillBonusDice: options.skillBonus?.bonusDice ?? 0,
+      skillBonusFlat: options.skillBonus?.bonusFlat ?? 0,
+      skillDamageType: options.skillBonus?.damageType ?? "",
+      skillName: options.skillBonus?.skillName ?? "",
+      skipDamage: options.skillBonus?.skipDamage ?? false,
     });
 
     await roll.toMessage({
@@ -291,7 +306,7 @@ export class ArianrhodActor extends Actor {
    * @param {string} weaponId - Weapon item ID
    * @param {boolean} isCritical - Whether the attack was a critical hit
    */
-  async rollDamage(weaponId, isCritical = false, sixCount = 0, { damageType = "auto" } = {}) {
+  async rollDamage(weaponId, isCritical = false, sixCount = 0, { damageType = "auto", skillBonusDice = 0, skillBonusFlat = 0 } = {}) {
     let weapon;
     // Magic attack virtual weapon
     if (weaponId === "__magic__") {
@@ -332,10 +347,23 @@ export class ArianrhodActor extends Actor {
     const weaponAttack = weapon.system.attack ?? 0;
     const weaponElement = weapon.system.element ?? "none";
 
-    // Build damage formula: 2d6 + weapon attack power
-    let formula = `2d6 + ${weaponAttack}`;
+    // Guild support damage bonuses
+    let guildDamageFlat = 0;
+    let guildDamageDice = 0;
+    if (this.type === "character") {
+      guildDamageFlat = getAttackDamageBonus(this);
+      guildDamageDice = getAttackDamageBonusDice(this);
+    }
+
+    // Build damage formula: 2d6 + weapon attack power + guild bonuses + skill bonuses
+    const totalAttack = weaponAttack + guildDamageFlat + skillBonusFlat;
+    let formula = `2d6 + ${totalAttack}`;
     // Critical: add dice equal to the number of 6s rolled on the attack (rulebook p.224)
     if (isCritical && sixCount > 0) formula += ` + ${sixCount}d6`;
+    // Guild training grounds bonus dice
+    if (guildDamageDice > 0) formula += ` + ${guildDamageDice}d6`;
+    // Skill bonus dice (e.g. bash +[SL]D)
+    if (skillBonusDice > 0) formula += ` + ${skillBonusDice}d6`;
 
     const roll = new Roll(formula);
     await roll.evaluate();
@@ -598,6 +626,13 @@ export class ArianrhodActor extends Actor {
   async applyDamage(amount, { coupDeGrace = false } = {}) {
     if (this.system.dead) return; // Already dead
     if (amount <= 0) return;
+
+    // Apply guild support damage reduction (blessing)
+    if (this.type === "character") {
+      amount = applyDamageReduction(this, amount);
+      if (amount <= 0) return;
+    }
+
     const hp = this.system.combat.hp;
     const newHp = Math.max(0, hp.value - amount);
     try {
@@ -659,8 +694,13 @@ export class ArianrhodActor extends Actor {
   /**
    * Roll drop items for a defeated enemy (rulebook p.238).
    * Parses the drops string and rolls 2D6 to determine the drop.
+   * @param {object} [options={}] - Options
+   * @param {number} [options.extraBonusDice=0] - Extra bonus dice (from skills like Drop Shot)
+   * @param {boolean} [options.skipDialog=false] - Skip the pre-roll dialog
    */
-  async rollDropItems() {
+  async rollDropItems({ extraBonusDice = 0, skipDialog = false } = {}) {
+    const { findGuildForActor } = await import("../helpers/guild-support-effects.mjs");
+
     const dropsStr = this.system.drops;
     if (!dropsStr) return;
 
@@ -676,44 +716,207 @@ export class ArianrhodActor extends Actor {
     }
     if (dropTable.length === 0) return;
 
-    // Roll 2D6
-    const roll = new Roll("2d6");
+    // Determine bonus dice from guild supports (marauder)
+    const speaker = ChatMessage.getSpeaker();
+    const rollerActor = game.actors.get(speaker.actor);
+    const marauderDice = (rollerActor?.type === "character") ? getDropBonusDice(rollerActor) : 0;
+
+    // Pre-roll dialog: fate dice, drop shot, etc.
+    let fateDice = 0;
+    let dropShotDice = 0;
+
+    if (!skipDialog && game.user.isGM) {
+      const fateEnabled = game.settings?.get("arianrhod2e", "fateEnabled") ?? true;
+      const maxFate = (fateEnabled && rollerActor?.type === "character")
+        ? Math.min(rollerActor.system.fate?.value ?? 0, rollerActor.system.abilities?.luk?.bonus ?? 0)
+        : 0;
+      const dropShotAvailable = _checkDropShotAvailable();
+
+      const dialogParts = [];
+      if (marauderDice > 0) {
+        dialogParts.push(`<div class="form-group"><label>${game.i18n.localize("ARIANRHOD.GuildSupportMarauder")}</label><span>+${marauderDice}D</span></div>`);
+      }
+      if (maxFate > 0) {
+        dialogParts.push(`<div class="form-group"><label>${game.i18n.localize("ARIANRHOD.FateDice")} (${game.i18n.localize("ARIANRHOD.Max")}: ${maxFate})</label><input type="number" name="fateDice" value="0" min="0" max="${maxFate}" /></div>`);
+      }
+      if (dropShotAvailable) {
+        dialogParts.push(`<div class="form-group"><label>${game.i18n.localize("ARIANRHOD.DropShotApply")}</label><input type="checkbox" name="dropShot" /></div>`);
+      }
+
+      if (dialogParts.length > 0) {
+        const result = await foundry.applications.api.DialogV2.prompt({
+          window: { title: game.i18n.localize("ARIANRHOD.DropRollDialog") },
+          content: `<form>${dialogParts.join("")}</form>`,
+          ok: {
+            icon: "fas fa-dice",
+            label: game.i18n.localize("ARIANRHOD.Roll"),
+            callback: (event, button) => ({
+              fateDice: Math.min(parseInt(button.form.querySelector('[name="fateDice"]')?.value) || 0, maxFate),
+              dropShot: button.form.querySelector('[name="dropShot"]')?.checked ?? false,
+            }),
+          },
+          rejectClose: false,
+        });
+        if (!result) return; // Cancelled
+        fateDice = result.fateDice || 0;
+        if (result.dropShot) dropShotDice = 1;
+      }
+    }
+
+    // Deduct fate
+    if (fateDice > 0 && rollerActor?.type === "character") {
+      await rollerActor.update({ "system.fate.value": Math.max(0, rollerActor.system.fate.value - fateDice) });
+    }
+
+    // Mark drop shot as used for the PC who has the skill
+    if (dropShotDice > 0) {
+      const pcs = game.actors.filter(a => a.type === "character" && a.hasPlayerOwner);
+      for (const pc of pcs) {
+        const skill = pc.items.find(i => i.type === "skill" &&
+          (i.getFlag("arianrhod2e", "skillId") === "drop-shot" ||
+           i.getFlag("arianrhod2e", "libraryId") === "drop-shot"));
+        if (skill && !pc.getFlag("arianrhod2e", "dropShotUsed")) {
+          await pc.setFlag("arianrhod2e", "dropShotUsed", true);
+          break;
+        }
+      }
+    }
+
+    // Calculate total bonus dice
+    const allBonusDice = marauderDice + extraBonusDice + fateDice + dropShotDice;
+    const totalDice = 2 + allBonusDice;
+
+    // Roll with bonus dice: keep highest 2 for table lookup
+    const formula = allBonusDice > 0 ? `${totalDice}d6kh2` : "2d6";
+    const roll = new Roll(formula);
     await roll.evaluate();
     const total = roll.total;
 
     // Find matching drop
-    const drop = dropTable.find(d => total >= d.min && total <= d.max);
+    let drop = dropTable.find(d => total >= d.min && total <= d.max);
+
+    // Guess Well (때려맞추기): allow ±1 step adjustment after seeing result
+    const guild = findGuildForActor(rollerActor);
+    const hasGuessWell = guild?.system?.supports?.some(s => s.supportId === "guess_well") ?? false;
+    if (hasGuessWell && drop && dropTable.length > 1) {
+      const currentIdx = dropTable.indexOf(drop);
+      const options = [];
+      if (currentIdx > 0) {
+        const prev = dropTable[currentIdx - 1];
+        const prevRange = prev.max >= 99 ? `${prev.min}+` : `${prev.min}~${prev.max}`;
+        options.push(`<option value="${currentIdx - 1}">↓ ${prevRange}: ${prev.item}</option>`);
+      }
+      options.push(`<option value="${currentIdx}" selected>★ ${drop.max >= 99 ? `${drop.min}+` : `${drop.min}~${drop.max}`}: ${drop.item}</option>`);
+      if (currentIdx < dropTable.length - 1) {
+        const next = dropTable[currentIdx + 1];
+        const nextRange = next.max >= 99 ? `${next.min}+` : `${next.min}~${next.max}`;
+        options.push(`<option value="${currentIdx + 1}">↑ ${nextRange}: ${next.item}</option>`);
+      }
+
+      if (options.length > 1) {
+        const guessResult = await foundry.applications.api.DialogV2.prompt({
+          window: { title: game.i18n.localize("ARIANRHOD.GuessWellAdjust") },
+          content: `<form><div class="form-group"><label>${game.i18n.localize("ARIANRHOD.GuessWellSelect")}</label><select name="dropIdx">${options.join("")}</select></div></form>`,
+          ok: {
+            icon: "fas fa-hand-sparkles",
+            label: game.i18n.localize("ARIANRHOD.Confirm"),
+            callback: (event, button) => parseInt(button.form.querySelector('[name="dropIdx"]').value),
+          },
+          rejectClose: false,
+        });
+        if (guessResult !== null && guessResult !== undefined && guessResult !== currentIdx) {
+          drop = dropTable[guessResult];
+        }
+      }
+    }
+
     const dropResult = drop ? drop.item : game.i18n.localize("ARIANRHOD.DropNothing");
+
+    // Parse drop item details for the collect button
+    let dropItemName = "", dropItemPrice = 0, dropItemQty = 1;
+    if (drop) {
+      const itemMatch = drop.item.match(/^(.+?)\((\d+)G\)(?:[×x](\d+))?$/);
+      if (itemMatch) {
+        dropItemName = itemMatch[1].trim();
+        dropItemPrice = parseInt(itemMatch[2]);
+        dropItemQty = parseInt(itemMatch[3]) || 1;
+      } else {
+        dropItemName = drop.item;
+      }
+    }
+
+    // Build bonus dice badges
+    const bonusParts = [];
+    if (marauderDice > 0) bonusParts.push(`+${marauderDice}D (${game.i18n.localize("ARIANRHOD.GuildSupportMarauder")})`);
+    if (fateDice > 0) bonusParts.push(`+${fateDice}D (${game.i18n.localize("ARIANRHOD.FateDice")})`);
+    if (dropShotDice > 0) bonusParts.push(`+1D (${game.i18n.localize("ARIANRHOD.DropShotApply")})`);
+    if (extraBonusDice > 0) bonusParts.push(`+${extraBonusDice}D`);
+    const bonusBadge = bonusParts.length > 0
+      ? bonusParts.map(p => `<div class="ar-card-row"><span class="ar-card-badge ar-badge-guild"><i class="fas fa-shield-heart"></i> ${p}</span></div>`).join("")
+      : "";
+
+    // Guess well badge
+    const guessWellBadge = hasGuessWell
+      ? `<div class="ar-card-row"><span class="ar-card-badge ar-badge-guild"><i class="fas fa-hand-sparkles"></i> ${game.i18n.localize("ARIANRHOD.GuessWellAdjust")}</span></div>`
+      : "";
 
     // Build drop table display
     const tableRows = dropTable.map(d => {
       const rangeStr = d.max >= 99 ? `${d.min}+` : `${d.min}~${d.max}`;
       const isMatch = drop && d.min === drop.min;
-      return `<div class="ar-drop-row${isMatch ? " ar-drop-match" : ""}"><span class="ar-drop-range">${rangeStr}</span><span class="ar-drop-item">${d.item}</span></div>`;
+      return `<div class="ar-drop-row${isMatch ? " ar-drop-match" : ""}"><span class="ar-drop-range">${rangeStr}</span><span class="ar-drop-item">${_esc(d.item)}</span></div>`;
     }).join("");
+
+    // Collect button (GM only, when there's a valid drop item)
+    const collectBtn = (drop && dropItemName && game.user.isGM)
+      ? `<div class="ar-card-actions">
+           <button type="button" class="ar-chat-btn ar-collect-btn"
+             data-item-name="${_esc(dropItemName)}"
+             data-item-price="${dropItemPrice}"
+             data-item-qty="${dropItemQty}"
+             data-enemy-name="${_esc(this.name)}"
+             data-enemy-id="${this.id}">
+             <i class="fas fa-hand-sparkles"></i> ${game.i18n.localize("ARIANRHOD.DropCollect")}
+           </button>
+         </div>`
+      : "";
 
     const content = `<div class="ar-combat-card ar-drop-card">
       <header class="ar-card-header">
         <img class="ar-card-icon" src="${this.img || "icons/svg/chest.svg"}" width="32" height="32" />
         <div class="ar-card-title">
           <h3>${game.i18n.localize("ARIANRHOD.DropItemRoll")}</h3>
-          <span class="ar-card-subtitle">${this.name}</span>
+          <span class="ar-card-subtitle">${_esc(this.name)}</span>
         </div>
       </header>
+      ${bonusBadge}
+      ${guessWellBadge}
       <div class="ar-card-row">
-        <span class="ar-card-label">2D6</span>
+        <span class="ar-card-label">${totalDice}D6${allBonusDice > 0 ? "kh2" : ""}</span>
         <span class="ar-card-value">${total}</span>
       </div>
       <div class="ar-drop-table">${tableRows}</div>
       <div class="ar-card-row ar-card-final">
         <span class="ar-card-label">${game.i18n.localize("ARIANRHOD.DropResult")}</span>
-        <span class="ar-card-value">${dropResult}</span>
+        <span class="ar-card-value">${_esc(dropResult)}</span>
       </div>
+      ${collectBtn}
     </div>`;
 
     await roll.toMessage({
       speaker: ChatMessage.getSpeaker({ actor: this }),
       content,
+      flags: {
+        arianrhod2e: {
+          dropResult: {
+            itemName: dropItemName,
+            price: dropItemPrice,
+            qty: dropItemQty,
+            enemyName: this.name,
+            collected: false,
+          },
+        },
+      },
     });
   }
 
@@ -887,4 +1090,19 @@ export class ArianrhodActor extends Actor {
 
     return result ? this.items.get(result) : null;
   }
+}
+
+/**
+ * Check if any PC has the Drop Shot skill available (unused this scene).
+ * @returns {boolean}
+ */
+function _checkDropShotAvailable() {
+  const pcs = game.actors.filter(a => a.type === "character" && a.hasPlayerOwner);
+  for (const pc of pcs) {
+    const skill = pc.items.find(i => i.type === "skill" &&
+      (i.getFlag("arianrhod2e", "skillId") === "drop-shot" ||
+       i.getFlag("arianrhod2e", "libraryId") === "drop-shot"));
+    if (skill && !pc.getFlag("arianrhod2e", "dropShotUsed")) return true;
+  }
+  return false;
 }

@@ -23,13 +23,16 @@ const GUIDE_SECTIONS = {
     { id: "identify", icon: "fas fa-eye", titleKey: "ARIANRHOD.GuideIdentify", contentKey: "ARIANRHOD.GuideIdentifySteps" },
     { id: "movement", icon: "fas fa-person-running", titleKey: "ARIANRHOD.GuideMovement", contentKey: "ARIANRHOD.GuideMovementSteps" },
     { id: "flightHidden", icon: "fas fa-feather", titleKey: "ARIANRHOD.GuideFlightHidden", contentKey: "ARIANRHOD.GuideFlightHiddenSteps" },
+    { id: "dropItems", icon: "fas fa-hand-sparkles", titleKey: "ARIANRHOD.GuideDropItems", contentKey: "ARIANRHOD.GuideDropItemsSteps" },
   ],
   nonCombat: [
     { id: "situationCheck", icon: "fas fa-magnifying-glass", titleKey: "ARIANRHOD.GuideSituationCheck", contentKey: "ARIANRHOD.GuideSituationCheckSteps" },
+    { id: "fsJudgment", icon: "fas fa-star", titleKey: "ARIANRHOD.GuideFSJudgment", contentKey: "ARIANRHOD.GuideFSJudgmentSteps" },
     { id: "trap", icon: "fas fa-dungeon", titleKey: "ARIANRHOD.GuideTrap", contentKey: "ARIANRHOD.GuideTrapSteps" },
     { id: "abilityCheck", icon: "fas fa-dice", titleKey: "ARIANRHOD.GuideAbilityCheck", contentKey: "ARIANRHOD.GuideAbilityCheckSteps" },
     { id: "rest", icon: "fas fa-bed", titleKey: "ARIANRHOD.GuideRest", contentKey: "ARIANRHOD.GuideRestSteps" },
     { id: "consumable", icon: "fas fa-flask", titleKey: "ARIANRHOD.GuideConsumable", contentKey: "ARIANRHOD.GuideConsumableSteps" },
+    { id: "itemShop", icon: "fas fa-store", titleKey: "ARIANRHOD.GuideItemShop", contentKey: "ARIANRHOD.GuideItemShopSteps" },
   ],
   progression: [
     { id: "levelUp", icon: "fas fa-arrow-up", titleKey: "ARIANRHOD.GuideLevelUp", contentKey: "ARIANRHOD.GuideLevelUpSteps" },
@@ -39,6 +42,7 @@ const GUIDE_SECTIONS = {
     { id: "statusEffects", icon: "fas fa-skull-crossbones", titleKey: "ARIANRHOD.GuideStatusEffects", contentKey: "ARIANRHOD.GuideStatusEffectsContent" },
     { id: "elements", icon: "fas fa-fire", titleKey: "ARIANRHOD.GuideElements", contentKey: "ARIANRHOD.GuideElementsContent" },
     { id: "racePassive", icon: "fas fa-dna", titleKey: "ARIANRHOD.GuideRacePassive", contentKey: "ARIANRHOD.GuideRacePassiveContent" },
+    { id: "guildSupport", icon: "fas fa-shield-heart", titleKey: "ARIANRHOD.GuideGuildSupport", contentKey: "ARIANRHOD.GuideGuildSupportContent" },
   ],
 };
 

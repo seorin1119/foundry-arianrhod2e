@@ -1,3 +1,5 @@
+import { getPassiveBonuses, findGuildForActor } from "../helpers/guild-support-effects.mjs";
+
 const { SchemaField, NumberField, StringField, HTMLField, BooleanField, ArrayField } = foundry.data.fields;
 
 /**
@@ -144,6 +146,11 @@ export class CharacterData extends foundry.abstract.TypeDataModel {
     }
     // If either class is missing/invalid, skip calculation (preserve manual values)
 
+    // Apply guild support passive bonuses to HP/MP max
+    const guildBonuses = getPassiveBonuses(this.parent);
+    if (guildBonuses.maxHpBonus > 0) this.combat.hp.max += guildBonuses.maxHpBonus;
+    if (guildBonuses.maxMpBonus > 0) this.combat.mp.max += guildBonuses.maxMpBonus;
+
     // Set race-specific fate max
     const raceFateMax = this.race === "huulin" ? 6 : 5;
     this.fate.max = raceFateMax;
@@ -185,28 +192,39 @@ export class CharacterData extends foundry.abstract.TypeDataModel {
 
     this.combat.physDefBase = 0;
     this.combat.physDefEquip = armorPhysDef;
-    this.combat.physDef = armorPhysDef;
+    this.combat.physDefGuild = guildBonuses.physDefBonus + guildBonuses.fortressPhysDef;
+    this.combat.physDef = armorPhysDef + this.combat.physDefGuild;
 
     this.combat.magDefBase = 0;
     this.combat.magDefEquip = armorMagDef;
-    this.combat.magDef = armorMagDef;
+    this.combat.magDefGuild = guildBonuses.magDefBonus + guildBonuses.cathedralMagDef;
+    this.combat.magDef = armorMagDef + this.combat.magDefGuild;
 
     const evasionBase = this.abilities.agi?.bonus || 0;
     this.combat.evasionBase = evasionBase;
     this.combat.evasionEquip = armorEvasion;
     this.combat.evasion = evasionBase + armorEvasion;
 
-    // Initiative: AGI bonus + SEN bonus + armor initiative mod
+    // Initiative: AGI bonus + SEN bonus + armor initiative mod + guild acceleration
     const initiativeBase = (this.abilities.agi?.bonus || 0) + (this.abilities.sen?.bonus || 0);
     this.combat.initiativeBase = initiativeBase;
     this.combat.initiativeEquip = armorInitMod;
-    this.combat.initiative = initiativeBase + armorInitMod;
+    this.combat.initiativeGuild = guildBonuses.initiativeBonus;
+    this.combat.initiative = initiativeBase + armorInitMod + guildBonuses.initiativeBonus;
 
     // Movement: MAX(0, STR bonus + 5 + armor movement mod)
     const movementBase = (this.abilities.str?.bonus || 0) + 5;
     this.combat.movementBase = movementBase;
     this.combat.movementEquip = armorMoveMod;
     this.combat.movement = Math.max(0, movementBase + armorMoveMod);
+
+    // Apply guild carry capacity bonus (porter)
+    if (guildBonuses.carryCapacityBonus > 0) {
+      this.carryCapacity.max += guildBonuses.carryCapacityBonus;
+    }
+
+    // Store guild bonuses for UI reference
+    this.guildBonuses = guildBonuses;
 
     // Clamp current values to max
     this.combat.hp.value = Math.min(this.combat.hp.value, this.combat.hp.max);
@@ -235,6 +253,10 @@ export class GuildData extends foundry.abstract.TypeDataModel {
       })),
       supports: new ArrayField(new SchemaField({
         supportId: new StringField({ initial: "" }),
+      })),
+      supportUses: new ArrayField(new SchemaField({
+        supportId: new StringField({ initial: "" }),
+        used: new BooleanField({ initial: false }),
       })),
     };
   }

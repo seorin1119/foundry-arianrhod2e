@@ -62,6 +62,11 @@ export async function rollCheck({
 
   const { isCritical, isFumble, sixCount } = analyzeRoll(roll, fateDice);
 
+  // Deduct fate points from actor
+  if (fateDice > 0 && actor?.type === "character") {
+    await actor.update({ "system.fate.value": Math.max(0, (actor.system.fate?.value ?? 0) - fateDice) });
+  }
+
   let flavor = label || game.i18n.localize("ARIANRHOD.Check");
   if (isCritical) {
     flavor += ` — <strong>${game.i18n.localize("ARIANRHOD.Critical")}! (6×${sixCount})</strong>`;
@@ -327,6 +332,12 @@ export async function rollFSCheck({
   await roll.evaluate();
 
   const { isCritical, isFumble, sixCount } = analyzeRoll(roll, fateDice);
+
+  // Deduct fate points from actor
+  if (fateDice > 0 && actor?.type === "character") {
+    await actor.update({ "system.fate.value": Math.max(0, (actor.system.fate?.value ?? 0) - fateDice) });
+  }
+
   const achievement = roll.total;
 
   let fsResult = calculateFSProgress(achievement, difficulty, isCritical, isFumble, sixCount);

@@ -177,6 +177,13 @@ export class SessionEndDialog extends foundry.applications.api.HandlebarsApplica
       });
     }
 
+    // Reset guild support uses for all guilds
+    for (const guild of game.actors.filter(a => a.type === "guild")) {
+      if (guild.system.supportUses?.length > 0) {
+        await guild.update({ "system.supportUses": [] });
+      }
+    }
+
     ui.notifications.info(game.i18n.localize("ARIANRHOD.SessionEndApplied"));
     this.close();
   }

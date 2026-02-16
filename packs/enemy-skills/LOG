@@ -1,3 +1,5 @@
-2026/02/16-17:02:22.758 a3fc Recovering log #10
-2026/02/16-17:02:22.761 a3fc Delete type=0 #10
-2026/02/16-17:02:22.762 a3fc Delete type=3 #8
+2026/02/17-04:00:47.417 91c8 Recovering log #25
+2026/02/17-04:00:47.417 91c8 Level-0 table #27: started
+2026/02/17-04:00:47.418 91c8 Level-0 table #27: 10454 bytes OK
+2026/02/17-04:00:47.421 91c8 Delete type=0 #25
+2026/02/17-04:00:47.421 91c8 Delete type=3 #23
