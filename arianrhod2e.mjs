@@ -54,6 +54,14 @@ Hooks.once("init", () => {
       getEngagements,
       getOpponents,
     },
+    async openSessionEnd() {
+      if (!game.user.isGM) {
+        ui.notifications.warn("GM only");
+        return;
+      }
+      const { SessionEndDialog } = await import("./module/apps/session-end-dialog.mjs");
+      new SessionEndDialog().render(true);
+    },
   };
 
   // Add system config to global CONFIG
@@ -229,6 +237,24 @@ Hooks.once("init", () => {
 
   // Register Token HUD enhancements
   registerTokenHUD();
+});
+
+/* -------------------------------------------- */
+/*  Scene Control Buttons (GM Tools)           */
+/* -------------------------------------------- */
+
+Hooks.on("getSceneControlButtons", (controls) => {
+  if (!game.user?.isGM) return;
+  const tokenControls = controls.find(c => c.name === "token");
+  if (tokenControls) {
+    tokenControls.tools.push({
+      name: "sessionEnd",
+      title: "ARIANRHOD.SessionEnd",
+      icon: "fas fa-flag-checkered",
+      button: true,
+      onClick: () => game.arianrhod2e.openSessionEnd(),
+    });
+  }
 });
 
 /* -------------------------------------------- */
@@ -778,5 +804,11 @@ function _registerHandlebarsHelpers() {
 
   Handlebars.registerHelper("multiply", function (a, b) {
     return a * b;
+  });
+
+  Handlebars.registerHelper("or", function (...args) {
+    // Last argument is the Handlebars options hash
+    args.pop();
+    return args.some(Boolean);
   });
 }

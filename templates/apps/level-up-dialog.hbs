@@ -1,0 +1,327 @@
+{{!-- Level-Up Wizard Dialog Template --}}
+<form class="ar-levelup-form">
+
+  {{!-- Step Indicator --}}
+  <nav class="ar-levelup-steps">
+    <div class="ar-levelup-step {{#if (eq step 1)}}active{{/if}} {{#if (gt step 1)}}done{{/if}}">
+      <span class="ar-levelup-step-num">1</span>
+      <span class="ar-levelup-step-label">{{localize "ARIANRHOD.StepPattern"}}</span>
+    </div>
+    <div class="ar-levelup-step-divider"></div>
+    <div class="ar-levelup-step {{#if (eq step 2)}}active{{/if}} {{#if (gt step 2)}}done{{/if}}">
+      <span class="ar-levelup-step-num">2</span>
+      <span class="ar-levelup-step-label">{{localize "ARIANRHOD.StepAbilities"}}</span>
+    </div>
+    <div class="ar-levelup-step-divider"></div>
+    <div class="ar-levelup-step {{#if (eq step 3)}}active{{/if}} {{#if (gt step 3)}}done{{/if}}">
+      <span class="ar-levelup-step-num">3</span>
+      <span class="ar-levelup-step-label">{{localize "ARIANRHOD.StepSkills"}}</span>
+    </div>
+    <div class="ar-levelup-step-divider"></div>
+    <div class="ar-levelup-step {{#if (eq step 4)}}active{{/if}}">
+      <span class="ar-levelup-step-num">4</span>
+      <span class="ar-levelup-step-label">{{localize "ARIANRHOD.StepConfirm"}}</span>
+    </div>
+  </nav>
+
+  {{!-- Cost Info Bar --}}
+  <div class="ar-levelup-cost-bar">
+    <span>
+      <i class="fas fa-arrow-up"></i>
+      Lv.{{currentLevel}} → Lv.{{newLevel}}
+    </span>
+    <span class="{{#unless canAfford}}ar-levelup-insufficient{{/unless}}">
+      <i class="fas fa-coins"></i>
+      {{localize "ARIANRHOD.LevelUpCost"}}: {{cost}} GP
+      ({{localize "ARIANRHOD.Remaining"}}: {{gpRemaining}} GP)
+    </span>
+  </div>
+
+  {{!-- ==================== STEP 1: Pattern Selection ==================== --}}
+  {{#if (eq step 1)}}
+  <section class="ar-levelup-content">
+    {{#unless canAfford}}
+      <div class="ar-levelup-warning">
+        <i class="fas fa-exclamation-triangle"></i>
+        {{localize "ARIANRHOD.InsufficientGP"}}
+      </div>
+    {{/unless}}
+
+    <div class="ar-levelup-patterns">
+      {{#each patterns as |pat|}}
+        <div class="ar-levelup-pattern-card {{#if pat.selected}}selected{{/if}}"
+             data-action="selectPattern" data-pattern="{{pat.key}}">
+          <div class="ar-levelup-pattern-header">
+            <h3>{{pat.label}}</h3>
+            {{#if pat.selected}}
+              <i class="fas fa-check-circle"></i>
+            {{/if}}
+          </div>
+          <p class="ar-levelup-pattern-desc">{{pat.description}}</p>
+        </div>
+      {{/each}}
+    </div>
+  </section>
+  {{/if}}
+
+  {{!-- ==================== STEP 2: Ability Selection ==================== --}}
+  {{#if (eq step 2)}}
+  <section class="ar-levelup-content">
+    <div class="ar-levelup-section-header">
+      <h3>{{localize "ARIANRHOD.SelectAbilities"}}</h3>
+      <p>{{localize "ARIANRHOD.Select3Abilities"}} ({{selectedCount}}/3)</p>
+    </div>
+
+    <div class="ar-levelup-abilities">
+      {{#each abilities as |ab|}}
+        <div class="ar-levelup-ability-card {{#if ab.selected}}selected{{/if}}"
+             data-action="toggleAbility" data-ability="{{ab.key}}">
+          <div class="ar-levelup-ability-abbr">{{ab.abbreviation}}</div>
+          <div class="ar-levelup-ability-name">{{ab.label}}</div>
+          <div class="ar-levelup-ability-values">
+            <span class="ar-levelup-ability-current">{{ab.current}}</span>
+            {{#if ab.selected}}
+              <i class="fas fa-arrow-right"></i>
+              <span class="ar-levelup-ability-preview">{{ab.preview}}</span>
+            {{/if}}
+          </div>
+          {{#if ab.selected}}
+            <div class="ar-levelup-ability-check"><i class="fas fa-check"></i></div>
+          {{/if}}
+        </div>
+      {{/each}}
+    </div>
+  </section>
+  {{/if}}
+
+  {{!-- ==================== STEP 3: Skill Selection ==================== --}}
+  {{#if (eq step 3)}}
+  <section class="ar-levelup-content">
+
+    {{!-- Skill Budget Tracker --}}
+    <div class="ar-levelup-budget-bar">
+      <span>
+        <i class="fas fa-book"></i>
+        {{localize "ARIANRHOD.SkillBudget"}}: {{skillBudgetRemaining}} / {{skillBudget}}
+        {{localize "ARIANRHOD.SkillBudgetRemaining"}}
+      </span>
+      <span class="ar-levelup-budget-hint">
+        {{localize "ARIANRHOD.MaxPerSkill"}}
+      </span>
+    </div>
+
+    {{!-- Pattern B: Support Class Change --}}
+    {{#if isPatternB}}
+      <div class="ar-levelup-special-section">
+        <label><i class="fas fa-exchange-alt"></i> {{localize "ARIANRHOD.ChangeSupportClass"}}</label>
+        <div class="ar-levelup-support-change">
+          <span class="ar-levelup-support-current">{{currentSupportClass}}</span>
+          <i class="fas fa-arrow-right"></i>
+          <select class="ar-levelup-support-class">
+            {{#each supportClassOptions as |opt|}}
+              <option value="{{opt.value}}" {{#if opt.selected}}selected{{/if}}>{{opt.label}}</option>
+            {{/each}}
+          </select>
+        </div>
+      </div>
+    {{/if}}
+
+    {{!-- Pattern C: Fate Increase --}}
+    {{#if isPatternC}}
+      <div class="ar-levelup-special-section">
+        <i class="fas fa-star"></i>
+        {{localize "ARIANRHOD.FateIncrease"}}:
+        <strong>+{{fateIncrease}}</strong>
+        ({{currentFate}} → {{newFateMax}})
+      </div>
+    {{/if}}
+
+    {{!-- Filters --}}
+    <div class="ar-levelup-filters">
+      <div class="ar-levelup-filter-field">
+        <label><i class="fas fa-filter"></i></label>
+        <select class="ar-levelup-filter-class">
+          {{#each filterOptions as |opt|}}
+            <option value="{{opt.value}}" {{#if (eq opt.value ../filterClass)}}selected{{/if}}>{{opt.label}}</option>
+          {{/each}}
+        </select>
+      </div>
+      <div class="ar-levelup-filter-field">
+        <label><i class="fas fa-search"></i></label>
+        <input type="text" class="ar-levelup-search" value="{{searchQuery}}"
+               placeholder="{{localize 'ARIANRHOD.SearchSkills'}}" />
+      </div>
+    </div>
+
+    {{!-- Skill Table --}}
+    <div class="ar-levelup-skill-list">
+      {{#if skills}}
+        <table class="ar-levelup-skill-table">
+          <thead>
+            <tr>
+              <th class="col-name">{{localize "ARIANRHOD.SkillName"}}</th>
+              <th class="col-class">{{localize "ARIANRHOD.SkillClass"}}</th>
+              <th class="col-timing">{{localize "ARIANRHOD.Timing"}}</th>
+              <th class="col-cost">{{localize "ARIANRHOD.Cost"}}</th>
+              <th class="col-level">Lv</th>
+              <th class="col-action"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each skills as |skill|}}
+              <tr class="{{#if skill.allocatedDelta}}allocated{{/if}}">
+                <td class="col-name">
+                  <strong>{{skill.displayName}}</strong>
+                  {{#if skill.displayNameSub}}
+                    <br><span class="ar-levelup-name-sub">{{skill.displayNameSub}}</span>
+                  {{/if}}
+                </td>
+                <td class="col-class">{{skill.classLabel}}</td>
+                <td class="col-timing">{{skill.timingLabel}}</td>
+                <td class="col-cost">{{skill.cost}}</td>
+                <td class="col-level">
+                  {{#if skill.allocatedDelta}}
+                    {{skill.currentLevel}} → {{skill.effectiveLevel}} / {{skill.maxLevel}}
+                  {{else}}
+                    {{skill.currentLevel}} / {{skill.maxLevel}}
+                  {{/if}}
+                </td>
+                <td class="col-action">
+                  <div class="ar-levelup-skill-controls">
+                    {{#if skill.canRemove}}
+                      <button type="button" class="ar-levelup-btn-minus"
+                              data-action="removeSkillLevel" data-skill-id="{{skill.id}}">
+                        <i class="fas fa-minus"></i>
+                      </button>
+                    {{/if}}
+                    {{#if skill.allocatedDelta}}
+                      <span class="ar-levelup-skill-delta">+{{skill.allocatedDelta}}</span>
+                    {{/if}}
+                    {{#if skill.canAdd}}
+                      <button type="button" class="ar-levelup-btn-plus"
+                              data-action="addSkillLevel" data-skill-id="{{skill.id}}">
+                        <i class="fas fa-plus"></i>
+                      </button>
+                    {{/if}}
+                  </div>
+                </td>
+              </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      {{else}}
+        <div class="ar-levelup-empty">
+          <i class="fas fa-book-open"></i>
+          <p>{{localize "ARIANRHOD.NoSkillsAvailable"}}</p>
+        </div>
+      {{/if}}
+    </div>
+  </section>
+  {{/if}}
+
+  {{!-- ==================== STEP 4: Summary & Confirm ==================== --}}
+  {{#if (eq step 4)}}
+  <section class="ar-levelup-content">
+    <div class="ar-levelup-section-header">
+      <h3>{{localize "ARIANRHOD.LevelUpSummary"}}</h3>
+    </div>
+
+    <div class="ar-levelup-summary">
+      {{!-- Level --}}
+      <div class="ar-levelup-summary-row">
+        <span class="ar-levelup-summary-label"><i class="fas fa-arrow-up"></i> {{localize "ARIANRHOD.Level"}}</span>
+        <span class="ar-levelup-summary-value">
+          {{summary.currentLevel}} → <strong>{{summary.newLevel}}</strong>
+        </span>
+      </div>
+
+      {{!-- Pattern --}}
+      <div class="ar-levelup-summary-row">
+        <span class="ar-levelup-summary-label"><i class="fas fa-dice"></i> {{localize "ARIANRHOD.StepPattern"}}</span>
+        <span class="ar-levelup-summary-value">
+          {{summary.patternLabel}}
+        </span>
+      </div>
+
+      {{!-- GP Cost --}}
+      <div class="ar-levelup-summary-row">
+        <span class="ar-levelup-summary-label"><i class="fas fa-coins"></i> GP</span>
+        <span class="ar-levelup-summary-value">
+          -{{summary.cost}} ({{summary.gpBefore}} → {{summary.gpAfter}})
+        </span>
+      </div>
+
+      {{!-- Abilities --}}
+      <div class="ar-levelup-summary-row">
+        <span class="ar-levelup-summary-label"><i class="fas fa-fist-raised"></i> {{localize "ARIANRHOD.StepAbilities"}}</span>
+        <span class="ar-levelup-summary-value">
+          {{#each summary.abilities as |ab|}}
+            <span class="ar-levelup-summary-ability">{{ab.label}} {{ab.before}}→{{ab.after}}</span>
+          {{/each}}
+        </span>
+      </div>
+
+      {{!-- Skills --}}
+      <div class="ar-levelup-summary-row">
+        <span class="ar-levelup-summary-label"><i class="fas fa-book"></i> {{localize "ARIANRHOD.StepSkills"}}</span>
+        <span class="ar-levelup-summary-value">
+          {{#each summary.skills as |sk|}}
+            <div class="ar-levelup-summary-skill">
+              {{sk.name}}
+              {{#if sk.isNew}}
+                <span class="ar-levelup-badge-new">NEW</span> Lv.{{sk.after}}
+              {{else}}
+                Lv.{{sk.before}} → Lv.{{sk.after}}
+              {{/if}}
+            </div>
+          {{/each}}
+        </span>
+      </div>
+
+      {{!-- Pattern B: Support Class --}}
+      {{#if summary.supportClassChange}}
+        <div class="ar-levelup-summary-row">
+          <span class="ar-levelup-summary-label"><i class="fas fa-exchange-alt"></i> {{localize "ARIANRHOD.SupportClass"}}</span>
+          <span class="ar-levelup-summary-value">
+            {{summary.supportClassChange.before}} → <strong>{{summary.supportClassChange.after}}</strong>
+          </span>
+        </div>
+      {{/if}}
+
+      {{!-- Pattern C: Fate --}}
+      {{#if summary.fateIncrease}}
+        <div class="ar-levelup-summary-row">
+          <span class="ar-levelup-summary-label"><i class="fas fa-star"></i> {{localize "ARIANRHOD.FateIncrease"}}</span>
+          <span class="ar-levelup-summary-value">
+            +{{summary.fateIncrease.amount}} ({{summary.fateIncrease.before}} → {{summary.fateIncrease.after}})
+          </span>
+        </div>
+      {{/if}}
+    </div>
+  </section>
+  {{/if}}
+
+  {{!-- Navigation Buttons --}}
+  <footer class="ar-levelup-footer">
+    {{#if canPrev}}
+      <button type="button" class="ar-levelup-btn" data-action="prevStep">
+        <i class="fas fa-chevron-left"></i> {{localize "ARIANRHOD.Previous"}}
+      </button>
+    {{else}}
+      <span></span>
+    {{/if}}
+
+    <div class="ar-levelup-footer-right">
+      {{#if isFinalStep}}
+        <button type="button" class="ar-levelup-btn ar-levelup-btn-apply" data-action="applyLevelUp">
+          <i class="fas fa-check"></i> {{localize "ARIANRHOD.LevelUpApply"}}
+        </button>
+      {{else if canNext}}
+        <button type="button" class="ar-levelup-btn ar-levelup-btn-next" data-action="nextStep">
+          {{localize "ARIANRHOD.Next"}} <i class="fas fa-chevron-right"></i>
+        </button>
+      {{/if}}
+    </div>
+  </footer>
+
+</form>

@@ -544,9 +544,8 @@ export class ArianrhodActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
 
   static async #onLevelUp(event, target) {
     event.preventDefault();
-    const currentLevel = this.actor.system.level;
-    await this.actor.update({ "system.level": currentLevel + 1 });
-    ui.notifications.info(game.i18n.format("ARIANRHOD.LevelUpNotification", { level: currentLevel + 1 }));
+    const { LevelUpDialog } = await import("../apps/level-up-dialog.mjs");
+    new LevelUpDialog(this.actor).render(true);
   }
 
   static async #onLevelDown(event, target) {

@@ -4953,6 +4953,863 @@
   border-radius: 2px;
 }
 
+/* ======================================== */
+/*  Level-Up Wizard                        */
+/* ======================================== */
+
+.ar-levelup-wizard {
+  padding: 0.5rem;
+}
+
+.ar-levelup-steps {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  padding: 0.5rem 0;
+  border-bottom: 2px solid var(--ar-border-light);
+}
+
+.ar-levelup-step {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.3rem 0.8rem;
+  border-radius: 1rem;
+  font-size: 0.85rem;
+  color: var(--ar-text-light);
+  background: var(--ar-bg-dark);
+}
+
+.ar-levelup-step.active {
+  background: var(--ar-accent);
+  color: white;
+  font-weight: bold;
+}
+
+.ar-levelup-step.completed {
+  background: var(--ar-equipped);
+  color: white;
+}
+
+.ar-levelup-step-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.3);
+  font-size: 0.8rem;
+}
+
+/* Level-Up Form */
+.ar-levelup-form {
+  padding: 0.5rem;
+}
+
+.ar-levelup-content {
+  padding: 0.5rem 0;
+}
+
+.ar-levelup-step-divider {
+  width: 1.5rem;
+  height: 2px;
+  background: var(--ar-border-light);
+  align-self: center;
+}
+
+.ar-levelup-step-label {
+  font-size: 0.8rem;
+}
+
+.ar-levelup-step.done {
+  background: var(--ar-equipped);
+  color: white;
+}
+
+/* Cost Bar */
+.ar-levelup-cost-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 0.75rem;
+  background: var(--ar-bg-dark);
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.ar-levelup-insufficient {
+  color: var(--ar-hp);
+  font-weight: bold;
+}
+
+.ar-levelup-warning {
+  padding: 0.75rem;
+  margin-bottom: 0.75rem;
+  background: #fef2f2;
+  border: 1px solid var(--ar-hp);
+  border-radius: 0.5rem;
+  color: var(--ar-hp);
+  text-align: center;
+  font-weight: bold;
+}
+
+/* Pattern Cards */
+.ar-levelup-patterns {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+
+.ar-levelup-pattern-card {
+  padding: 1rem;
+  border: 2px solid var(--ar-border-light);
+  border-radius: 0.5rem;
+  background: var(--ar-washi);
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.ar-levelup-pattern-card:hover {
+  border-color: var(--ar-accent);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.ar-levelup-pattern-card.selected {
+  border-color: var(--ar-accent-gold);
+  background: linear-gradient(135deg, var(--ar-washi), #fff3cd);
+  box-shadow: 0 0 0 2px var(--ar-accent-gold);
+}
+
+.ar-levelup-pattern-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.ar-levelup-pattern-header h3 {
+  margin: 0 0 0.5rem 0;
+  color: var(--ar-accent);
+  font-size: 1.1rem;
+}
+
+.ar-levelup-pattern-header i {
+  color: var(--ar-equipped);
+}
+
+.ar-levelup-pattern-desc {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--ar-text-light);
+}
+
+/* Ability Selection */
+.ar-levelup-section-header {
+  margin-bottom: 0.5rem;
+}
+
+.ar-levelup-section-header h3 {
+  margin: 0 0 0.25rem 0;
+}
+
+.ar-levelup-section-header p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--ar-text-light);
+}
+
+.ar-levelup-abilities {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+  margin: 0.75rem 0;
+}
+
+.ar-levelup-ability-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.75rem;
+  border: 2px solid var(--ar-border-light);
+  border-radius: 0.5rem;
+  background: var(--ar-washi);
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.ar-levelup-ability-card:hover {
+  border-color: var(--ar-accent);
+}
+
+.ar-levelup-ability-card.selected {
+  border-color: var(--ar-accent-gold);
+  background: #fff3cd;
+}
+
+.ar-levelup-ability-abbr {
+  font-weight: bold;
+  font-size: 1rem;
+  color: var(--ar-accent);
+}
+
+.ar-levelup-ability-name {
+  font-size: 0.8rem;
+  color: var(--ar-text-light);
+}
+
+.ar-levelup-ability-values {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-top: 0.3rem;
+  font-size: 0.9rem;
+}
+
+.ar-levelup-ability-current {
+  color: var(--ar-text);
+}
+
+.ar-levelup-ability-preview {
+  color: var(--ar-equipped);
+  font-weight: bold;
+}
+
+.ar-levelup-ability-check {
+  position: absolute;
+  top: 0.3rem;
+  right: 0.3rem;
+  color: var(--ar-equipped);
+}
+
+/* Skill Step */
+.ar-levelup-budget-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.75rem;
+  background: var(--ar-bg-dark);
+  border-radius: 0.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.ar-levelup-budget-hint {
+  font-size: 0.8rem;
+  color: var(--ar-text-light);
+  font-weight: normal;
+}
+
+.ar-levelup-special-section {
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 0.5rem;
+  background: var(--ar-bg-dark);
+  border-radius: 0.5rem;
+}
+
+.ar-levelup-support-change {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.3rem;
+}
+
+.ar-levelup-support-current {
+  font-weight: bold;
+}
+
+.ar-levelup-support-class {
+  flex: 1;
+}
+
+.ar-levelup-filters {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.ar-levelup-filter-field {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  flex: 1;
+}
+
+.ar-levelup-filter-field select,
+.ar-levelup-filter-field input {
+  flex: 1;
+  padding: 0.3rem;
+}
+
+/* Skill Table */
+.ar-levelup-skill-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.ar-levelup-skill-table thead {
+  position: sticky;
+  top: 0;
+  background: var(--ar-bg-dark);
+  z-index: 1;
+}
+
+.ar-levelup-skill-table th {
+  padding: 0.4rem 0.5rem;
+  text-align: left;
+  font-weight: bold;
+  border-bottom: 2px solid var(--ar-border);
+}
+
+.ar-levelup-skill-table td {
+  padding: 0.4rem 0.5rem;
+  border-bottom: 1px solid var(--ar-bg-dark);
+}
+
+.ar-levelup-skill-table tr.allocated {
+  background: #f0fdf4;
+}
+
+.ar-levelup-name-sub {
+  font-size: 0.75rem;
+  color: var(--ar-text-light);
+}
+
+.ar-levelup-skill-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.ar-levelup-btn-minus,
+.ar-levelup-btn-plus {
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 1px solid var(--ar-border-light);
+  border-radius: 0.25rem;
+  background: var(--ar-washi);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+}
+
+.ar-levelup-btn-plus:hover {
+  background: var(--ar-equipped);
+  color: white;
+}
+
+.ar-levelup-btn-minus:hover {
+  background: var(--ar-hp);
+  color: white;
+}
+
+.ar-levelup-skill-delta {
+  font-weight: bold;
+  color: var(--ar-equipped);
+  min-width: 1.5rem;
+  text-align: center;
+}
+
+.ar-levelup-empty {
+  text-align: center;
+  padding: 2rem;
+  color: var(--ar-text-light);
+}
+
+/* Summary */
+.ar-levelup-summary-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.4rem 0;
+  border-bottom: 1px dashed var(--ar-bg-dark);
+}
+
+.ar-levelup-summary-row:last-child {
+  border-bottom: none;
+}
+
+.ar-levelup-summary-label {
+  color: var(--ar-text-light);
+  min-width: 100px;
+}
+
+.ar-levelup-summary-value {
+  font-weight: bold;
+  text-align: right;
+}
+
+.ar-levelup-summary-ability {
+  display: inline-block;
+  margin: 0 0.3rem;
+  padding: 0.1rem 0.4rem;
+  background: #f0fdf4;
+  border-radius: 0.25rem;
+  font-size: 0.85rem;
+}
+
+.ar-levelup-summary-skill {
+  font-size: 0.85rem;
+  padding: 0.1rem 0;
+}
+
+.ar-levelup-badge-new {
+  display: inline-block;
+  padding: 0 0.3rem;
+  background: var(--ar-accent-gold);
+  color: white;
+  border-radius: 0.2rem;
+  font-size: 0.7rem;
+  font-weight: bold;
+  vertical-align: middle;
+}
+
+/* Footer Navigation */
+.ar-levelup-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--ar-border-light);
+}
+
+.ar-levelup-footer-right {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.ar-levelup-btn {
+  padding: 0.5rem 1.2rem;
+  border-radius: 0.3rem;
+  font-weight: bold;
+  cursor: pointer;
+  border: 1px solid var(--ar-border-light);
+  background: var(--ar-bg-dark);
+  color: var(--ar-text);
+}
+
+.ar-levelup-btn:hover {
+  background: var(--ar-bg-darker);
+}
+
+.ar-levelup-btn-next {
+  background: var(--ar-accent);
+  color: white;
+  border-color: var(--ar-accent);
+}
+
+.ar-levelup-btn-next:hover {
+  background: var(--ar-accent-light);
+}
+
+.ar-levelup-btn-apply {
+  background: var(--ar-equipped);
+  color: white;
+  border-color: var(--ar-equipped);
+}
+
+.ar-levelup-btn-apply:hover {
+  opacity: 0.9;
+}
+
+/* Skill Selection in Wizard */
+.ar-levelup-skill-list {
+  max-height: 300px;
+  overflow-y: auto;
+  border: 1px solid var(--ar-border-light);
+  border-radius: 0.5rem;
+  margin: 0.5rem 0;
+}
+
+.ar-levelup-skill-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--ar-bg-dark);
+}
+
+.ar-levelup-skill-row:last-child {
+  border-bottom: none;
+}
+
+.ar-levelup-skill-row .skill-name {
+  flex: 1;
+  font-weight: 500;
+}
+
+.ar-levelup-skill-row .skill-class {
+  font-size: 0.8rem;
+  color: var(--ar-text-light);
+  margin-left: 0.5rem;
+}
+
+.ar-levelup-skill-row .skill-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.ar-levelup-skill-row .skill-level {
+  font-size: 0.85rem;
+  min-width: 2rem;
+  text-align: center;
+}
+
+.ar-levelup-budget {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--ar-bg-dark);
+  border-radius: 0.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.ar-levelup-budget .budget-full {
+  color: var(--ar-hp);
+}
+
+/* Summary */
+.ar-levelup-summary {
+  padding: 0.75rem;
+  background: var(--ar-washi);
+  border: 1px solid var(--ar-border-light);
+  border-radius: 0.5rem;
+}
+
+.ar-levelup-summary h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+}
+
+.ar-levelup-summary .summary-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.25rem 0;
+  border-bottom: 1px dashed var(--ar-bg-dark);
+}
+
+.ar-levelup-summary .summary-row:last-child {
+  border-bottom: none;
+}
+
+.ar-levelup-summary .summary-label {
+  color: var(--ar-text-light);
+}
+
+.ar-levelup-summary .summary-value {
+  font-weight: bold;
+}
+
+.ar-levelup-summary .summary-value.positive {
+  color: var(--ar-equipped);
+}
+
+/* Navigation */
+.ar-levelup-nav {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--ar-border-light);
+}
+
+.ar-levelup-nav button {
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.3rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.ar-btn-primary {
+  background: var(--ar-accent);
+  color: white;
+  border: none;
+}
+
+.ar-btn-primary:hover {
+  background: var(--ar-accent-light);
+}
+
+.ar-btn-secondary {
+  background: var(--ar-bg-dark);
+  color: var(--ar-text);
+  border: 1px solid var(--ar-border-light);
+}
+
+.ar-btn-secondary:hover {
+  background: var(--ar-bg-darker);
+}
+
+.ar-levelup-cost-info {
+  text-align: center;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  background: var(--ar-bg-dark);
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+}
+
+/* Support class change for Pattern B */
+.ar-support-class-select {
+  margin: 0.75rem 0;
+  padding: 0.75rem;
+  background: var(--ar-bg-dark);
+  border-radius: 0.5rem;
+}
+
+.ar-support-class-select label {
+  display: block;
+  margin-bottom: 0.3rem;
+  font-weight: bold;
+}
+
+.ar-support-class-select select {
+  width: 100%;
+  padding: 0.4rem;
+}
+
+/* Fate increase for Pattern C */
+.ar-fate-increase {
+  margin: 0.75rem 0;
+  padding: 0.75rem;
+  background: linear-gradient(135deg, #fff3cd, #fef6e4);
+  border: 1px solid var(--ar-fate);
+  border-radius: 0.5rem;
+  text-align: center;
+}
+
+.ar-fate-increase .fate-amount {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--ar-fate);
+}
+
+/* ======================================== */
+/*  Session End Dialog                     */
+/* ======================================== */
+
+.ar-session-end {
+  padding: 0.5rem;
+}
+
+.ar-session-header {
+  margin-bottom: 1rem;
+}
+
+.ar-session-header h2 {
+  margin: 0 0 0.75rem 0;
+  color: var(--ar-accent);
+}
+
+.ar-session-quick-set {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--ar-bg-dark);
+  border-radius: 0.5rem;
+}
+
+.ar-session-quick-set input {
+  width: 60px;
+  text-align: center;
+}
+
+.ar-session-pc-list {
+  max-height: 350px;
+  overflow-y: auto;
+}
+
+.session-pc-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  margin-bottom: 0.5rem;
+  background: var(--ar-washi);
+  border: 1px solid var(--ar-border-light);
+  border-radius: 0.5rem;
+}
+
+.session-pc-row .pc-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 140px;
+}
+
+.session-pc-row .pc-info img {
+  border-radius: 50%;
+  border: 2px solid var(--ar-border);
+}
+
+.session-pc-row .pc-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.session-pc-row .pc-name {
+  font-weight: bold;
+  font-size: 0.95rem;
+}
+
+.session-pc-row .pc-level {
+  font-size: 0.8rem;
+  color: var(--ar-text-light);
+}
+
+.session-pc-row .pc-controls {
+  display: flex;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.session-pc-row .control-group {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.session-pc-row .control-group label {
+  font-size: 0.75rem;
+  color: var(--ar-text-light);
+  margin-bottom: 0.2rem;
+}
+
+.session-pc-row .control-group input {
+  width: 100%;
+  text-align: center;
+  padding: 0.3rem;
+}
+
+.ar-session-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 0.75rem;
+  margin-top: 0.75rem;
+  border-top: 1px solid var(--ar-border-light);
+}
+
+.ar-session-end-summary {
+  padding: 0.5rem;
+}
+
+.ar-session-end-summary h3 {
+  margin: 0 0 0.5rem 0;
+  color: var(--ar-accent);
+}
+
+.ar-session-end-summary ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.ar-session-end-summary li {
+  padding: 0.25rem 0;
+  border-bottom: 1px dashed var(--ar-bg-dark);
+}
+
+/* ======================================== */
+/*  Enemy Sheet Badges                     */
+/* ======================================== */
+
+.ar-enemy-badges {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.3rem;
+}
+
+.ar-enemy-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+
+.ar-badge-element {
+  background: var(--ar-magic);
+  color: white;
+}
+
+.ar-badge-element.element-none {
+  background: var(--ar-metal);
+}
+
+.ar-badge-element.element-fire {
+  background: #dc2626;
+}
+
+.ar-badge-element.element-water {
+  background: #2563eb;
+}
+
+.ar-badge-element.element-wind {
+  background: #16a34a;
+}
+
+.ar-badge-element.element-earth {
+  background: #92400e;
+}
+
+.ar-badge-element.element-light {
+  background: #d97706;
+  color: #1a1a1a;
+}
+
+.ar-badge-element.element-dark {
+  background: #4c1d95;
+}
+
+.ar-badge-exp {
+  background: var(--ar-accent-gold);
+  color: var(--ar-primary);
+}
+
+.ar-enemy-quick-ref {
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 0.75rem;
+  background: var(--ar-bg-dark);
+  border-radius: 0.5rem;
+  border-left: 3px solid var(--ar-accent);
+}
+
+.ar-enemy-quick-ref h4 {
+  margin: 0 0 0.3rem 0;
+  font-size: 0.85rem;
+  color: var(--ar-accent);
+}
+
+.ar-enemy-quick-ref .ref-row {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.15rem 0;
+  font-size: 0.85rem;
+}
+
+.ar-enemy-quick-ref .ref-label {
+  font-weight: bold;
+  min-width: 80px;
+  color: var(--ar-text-light);
+}
+
 } /* end @layer arianrhod */
 
 /* ======================================== */

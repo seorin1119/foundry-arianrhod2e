@@ -1,0 +1,49 @@
+<div class="ar-session-end">
+  <div class="ar-session-header">
+    <h2><i class="fas fa-flag-checkered"></i> {{localize "ARIANRHOD.SessionEnd"}}</h2>
+    <div class="ar-session-quick-set">
+      <label>{{localize "ARIANRHOD.SetAllGP"}}:</label>
+      <input type="number" class="quick-gp-input" value="10" min="0" />
+      <button type="button" data-action="setAllGP">
+        <i class="fas fa-copy"></i> {{localize "ARIANRHOD.Apply"}}
+      </button>
+    </div>
+  </div>
+
+  <div class="ar-session-pc-list">
+    {{#each pcs as |pc|}}
+    <div class="session-pc-row" data-actor-id="{{pc.id}}">
+      <div class="pc-info">
+        <img src="{{pc.img}}" width="40" height="40" />
+        <div class="pc-details">
+          <span class="pc-name">{{pc.name}}</span>
+          <span class="pc-level">Lv.{{pc.level}}</span>
+        </div>
+      </div>
+      <div class="pc-controls">
+        <div class="control-group">
+          <label>{{localize "ARIANRHOD.Experience"}}</label>
+          <input type="number" name="gp" value="0" min="0" />
+        </div>
+        <div class="control-group">
+          <label>{{localize "ARIANRHOD.ConnectionPurchase"}}</label>
+          <input type="number" name="connections" value="0" min="0" />
+        </div>
+        <div class="control-group">
+          <label>{{localize "ARIANRHOD.GuildContribution"}} ({{localize "ARIANRHOD.Max"}}: {{pc.level}}G)</label>
+          <input type="number" name="guildContrib" value="0" min="0" max="{{pc.level}}" />
+        </div>
+      </div>
+    </div>
+    {{/each}}
+    {{#unless hasPCs}}
+    <p class="no-pcs">{{localize "ARIANRHOD.NoPCsFound"}}</p>
+    {{/unless}}
+  </div>
+
+  <footer class="ar-session-footer">
+    <button type="button" data-action="applyAll" class="ar-btn-primary">
+      <i class="fas fa-check"></i> {{localize "ARIANRHOD.ApplyAll"}}
+    </button>
+  </footer>
+</div>

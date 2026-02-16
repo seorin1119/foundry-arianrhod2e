@@ -50,5 +50,21 @@
         </button>
       </div>
     </div>
+    {{!-- Element & EXP Badges --}}
+    <div class="ar-enemy-badges">
+      {{#if system.element}}
+      <span class="ar-enemy-badge ar-badge-element element-{{system.element}}"
+            title="{{localize 'ARIANRHOD.EssenceElement'}}">
+        <i class="fas fa-fire-flame-curved"></i>
+        {{localize (lookup config.elements system.element)}}
+      </span>
+      {{/if}}
+      {{#if system.exp}}
+      <span class="ar-enemy-badge ar-badge-exp"
+            title="{{localize 'ARIANRHOD.EnemyExp'}}">
+        <i class="fas fa-star"></i> EXP: {{system.exp}}
+      </span>
+      {{/if}}
+    </div>
   </div>
 </header>

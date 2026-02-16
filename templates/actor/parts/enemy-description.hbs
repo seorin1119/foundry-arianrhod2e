@@ -1,5 +1,24 @@
 {{!-- Enemy Description Tab --}}
 <section class="tab description {{tab.cssClass}}" data-group="primary" data-tab="description">
+  {{!-- Quick Reference --}}
+  {{#if (or system.drops system.attackPattern)}}
+  <div class="ar-enemy-quick-ref">
+    <h4><i class="fas fa-book-open"></i> {{localize "ARIANRHOD.QuickReference"}}</h4>
+    {{#if system.attackPattern}}
+    <div class="ref-row">
+      <span class="ref-label">{{localize "ARIANRHOD.AttackPattern"}}</span>
+      <span>{{system.attackPattern}}</span>
+    </div>
+    {{/if}}
+    {{#if system.drops}}
+    <div class="ref-row">
+      <span class="ref-label">{{localize "ARIANRHOD.Drops"}}</span>
+      <span>{{system.drops}}</span>
+    </div>
+    {{/if}}
+  </div>
+  {{/if}}
+
   <div class="biography-content">
     {{editor enrichedDescription target="system.description"
              button=true editable=editable}}
