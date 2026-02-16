@@ -245,15 +245,28 @@ Hooks.once("init", () => {
 
 Hooks.on("getSceneControlButtons", (controls) => {
   if (!game.user?.isGM) return;
-  const tokenControls = controls.find(c => c.name === "token");
-  if (tokenControls) {
-    tokenControls.tools.push({
-      name: "sessionEnd",
-      title: "ARIANRHOD.SessionEnd",
-      icon: "fas fa-flag-checkered",
-      button: true,
-      onClick: () => game.arianrhod2e.openSessionEnd(),
-    });
+
+  // Foundry v13: controls may be an object keyed by name, not an array
+  let tokenControls;
+  if (typeof controls?.find === "function") {
+    tokenControls = controls.find(c => c.name === "token");
+  } else if (controls?.token) {
+    tokenControls = controls.token;
+  }
+  if (!tokenControls) return;
+
+  const tool = {
+    name: "sessionEnd",
+    title: "ARIANRHOD.SessionEnd",
+    icon: "fas fa-flag-checkered",
+    button: true,
+    onClick: () => game.arianrhod2e.openSessionEnd(),
+  };
+
+  if (Array.isArray(tokenControls.tools)) {
+    tokenControls.tools.push(tool);
+  } else if (tokenControls.tools && typeof tokenControls.tools === "object") {
+    tokenControls.tools.sessionEnd = tool;
   }
 });
 
