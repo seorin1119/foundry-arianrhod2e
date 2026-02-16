@@ -21,7 +21,7 @@ import { registerTokenHUD } from "./module/helpers/token-hud.mjs";
 import { populateAllPacks, resetPack } from "./module/helpers/compendium-populator.mjs";
 import { onHotbarDrop, rollSkillMacro, rollAttackMacro, rollItemMacro, rollAbilityCheckMacro } from "./module/helpers/macros.mjs";
 import { getMovementOptions, executeMovement } from "./module/helpers/movement.mjs";
-import { createEngagement, removeFromEngagement, getEngagements } from "./module/helpers/engagement.mjs";
+import { createEngagement, removeFromEngagement, getEngagements, getOpponents } from "./module/helpers/engagement.mjs";
 
 /* -------------------------------------------- */
 /*  Init Hook                                   */
@@ -52,6 +52,7 @@ Hooks.once("init", () => {
       createEngagement,
       removeFromEngagement,
       getEngagements,
+      getOpponents,
     },
   };
 
@@ -246,9 +247,68 @@ Hooks.on("renderChatMessage", (message, html) => {
       const actorId = btn.dataset.actorId;
       const weaponId = btn.dataset.weaponId;
       const isCritical = btn.dataset.critical === "true";
+      const sixCount = parseInt(btn.dataset.sixCount) || 0;
       const actor = game.actors.get(actorId);
       if (!actor) return;
-      await actor.rollDamage(weaponId, isCritical);
+      await actor.rollDamage(weaponId, isCritical, sixCount);
+    });
+  });
+
+  // "Fate Re-roll" button on attack cards
+  el.querySelectorAll(".ar-reroll-btn").forEach(btn => {
+    btn.addEventListener("click", async (event) => {
+      event.preventDefault();
+      const actorId = btn.dataset.actorId;
+      const formula = btn.dataset.formula;
+      const baseDice = parseInt(btn.dataset.baseDice) || 2;
+      const actor = game.actors.get(actorId);
+      if (!actor || actor.type !== "character") return;
+
+      // Check fate availability
+      const currentFate = actor.system.fate?.value ?? 0;
+      if (currentFate <= 0) {
+        ui.notifications.warn(game.i18n.localize("ARIANRHOD.NoFateRemaining"));
+        return;
+      }
+
+      // Deduct 1 fate point
+      await actor.update({ "system.fate.value": currentFate - 1 });
+
+      // Re-roll with the same formula
+      const { analyzeRoll } = await import("./module/dice.mjs");
+      const roll = new Roll(formula);
+      await roll.evaluate();
+      const { isCritical, isFumble, sixCount } = analyzeRoll(roll, 0);
+
+      // Find weapon info from original button
+      const weaponId = btn.dataset.weaponId;
+      const weapon = weaponId ? actor.items.get(weaponId) : actor.items.find(i => i.type === "weapon" && i.system.equipped);
+
+      const content = await renderTemplate("systems/arianrhod2e/templates/chat/attack-card.hbs", {
+        weaponImg: weapon?.img || actor.img || "icons/svg/sword.svg",
+        weaponName: weapon?.name || game.i18n.localize("ARIANRHOD.NaturalAttack"),
+        total: roll.total,
+        isCritical,
+        isFumble,
+        sixCount,
+        fateDice: 0,
+        fateNotice: "",
+        actorId,
+        weaponId: weaponId || "",
+        isReroll: true,
+        canReroll: false,
+        formula,
+        baseDice,
+      });
+
+      await roll.toMessage({
+        speaker: ChatMessage.getSpeaker({ actor }),
+        content,
+      });
+
+      // Disable the re-roll button after use
+      btn.disabled = true;
+      btn.textContent = game.i18n.localize("ARIANRHOD.FateRerolled");
     });
   });
 
@@ -264,6 +324,235 @@ Hooks.on("renderChatMessage", (message, html) => {
       ui.notifications.info(game.i18n.format("ARIANRHOD.DamageApplied", { name: targetActor.name, damage }));
       btn.disabled = true;
       btn.textContent = game.i18n.localize("ARIANRHOD.DamageAppliedShort");
+    });
+  });
+
+  // "Cover" button on damage cards — redirect damage to covering ally (rulebook p.226)
+  el.querySelectorAll(".ar-cover-btn").forEach(btn => {
+    btn.addEventListener("click", async (event) => {
+      event.preventDefault();
+      const { getEngagedWith } = await import("./module/helpers/engagement.mjs");
+
+      const targetId = btn.dataset.targetId;
+      const damage = parseInt(btn.dataset.damage) || 0;
+      const rawDamage = parseInt(btn.dataset.rawDamage) || damage;
+      const targetActor = game.actors.get(targetId);
+      if (!targetActor || !game.combat?.started) return;
+
+      // Find eligible coverers: same engagement, same side, not mob enemies
+      const targetCombatant = game.combat.combatants.find(c => c.actor?.id === targetActor.id);
+      if (!targetCombatant) return;
+
+      const engagedIds = getEngagedWith(game.combat, targetCombatant.id);
+      const coverers = engagedIds
+        .map(id => game.combat.combatants.get(id))
+        .filter(c => c?.actor && c.actor.id !== targetActor.id && c.actor.type === targetActor.type)
+        .map(c => c.actor);
+
+      if (coverers.length === 0) {
+        ui.notifications.warn(game.i18n.localize("ARIANRHOD.NoCovererAvailable"));
+        return;
+      }
+
+      // Dialog to select coverer
+      const choices = coverers.map(a => `<option value="${a.id}">${a.name} (HP: ${a.system.combat?.hp?.value}/${a.system.combat?.hp?.max})</option>`).join("");
+      const selectContent = `<form>
+        <div class="form-group">
+          <label>${game.i18n.localize("ARIANRHOD.SelectCoverer")}</label>
+          <select name="covererId">${choices}</select>
+        </div>
+      </form>`;
+
+      const coverResult = await foundry.applications.api.DialogV2.prompt({
+        window: { title: game.i18n.localize("ARIANRHOD.Cover") },
+        content: selectContent,
+        ok: {
+          icon: "fas fa-shield-heart",
+          label: game.i18n.localize("ARIANRHOD.Cover"),
+          callback: (event, button) => ({
+            covererId: button.form.querySelector('[name="covererId"]').value,
+          }),
+        },
+        rejectClose: false,
+      });
+      if (!coverResult) return;
+
+      const covererActor = game.actors.get(coverResult.covererId);
+      if (!covererActor) return;
+
+      // Recalculate damage with coverer's defense
+      const covererPhysDef = covererActor.system.combat?.physDef ?? 0;
+      const covererDamage = Math.max(0, rawDamage - covererPhysDef);
+
+      // Apply damage to coverer
+      await covererActor.applyDamage(covererDamage);
+
+      // Post cover notification
+      await ChatMessage.create({
+        content: `<div class="ar-combat-card"><div class="ar-card-badge ar-badge-cover"><i class="fas fa-shield-heart"></i> ${game.i18n.format("ARIANRHOD.CoverApplied", { coverer: covererActor.name, target: targetActor.name, damage: covererDamage })}</div></div>`,
+        speaker: ChatMessage.getSpeaker({ actor: covererActor }),
+      });
+
+      // Disable both apply and cover buttons
+      btn.disabled = true;
+      const applyBtn = btn.parentElement?.querySelector(".ar-apply-btn");
+      if (applyBtn) {
+        applyBtn.disabled = true;
+        applyBtn.textContent = game.i18n.localize("ARIANRHOD.CoveredShort");
+      }
+    });
+  });
+
+  // "Roll Evasion" button on attack cards — performs evasion + hit determination
+  el.querySelectorAll(".ar-evasion-btn").forEach(btn => {
+    btn.addEventListener("click", async (event) => {
+      event.preventDefault();
+      const { analyzeRoll } = await import("./module/dice.mjs");
+      const { isSurprised } = await import("./module/helpers/combat-manager.mjs");
+
+      const targetId = btn.dataset.targetId;
+      const attackerId = btn.dataset.attackerId;
+      const weaponId = btn.dataset.weaponId;
+      const attackTotal = parseInt(btn.dataset.attackTotal) || 0;
+      const attackCritical = btn.dataset.isCritical === "true";
+      const attackFumble = btn.dataset.isFumble === "true";
+      const sixCount = parseInt(btn.dataset.sixCount) || 0;
+
+      const targetActor = game.actors.get(targetId);
+      const attackerActor = game.actors.get(attackerId);
+      if (!targetActor) return;
+
+      // Calculate evasion dice and penalties
+      const evasion = targetActor.system.combat?.evasion ?? 0;
+      let baseDice = 2;
+      const penalties = [];
+      if (targetActor.hasStatusEffect?.("stun")) {
+        baseDice -= 1;
+        penalties.push(game.i18n.localize("ARIANRHOD.StatusStun") + " (-1D)");
+      }
+      if (isSurprised(targetActor)) {
+        const hasAlertness = targetActor.items?.some(i => i.type === "skill" && i.system?.effectId === "alertness");
+        if (!hasAlertness) {
+          baseDice -= 1;
+          penalties.push(game.i18n.localize("ARIANRHOD.SurpriseAttack") + " (-1D)");
+        }
+      }
+      baseDice = Math.max(1, baseDice);
+
+      // Show evasion dialog
+      const fateEnabled = game.settings?.get("arianrhod2e", "fateEnabled") ?? true;
+      const maxFate = (fateEnabled && targetActor.type === "character")
+        ? Math.min(targetActor.system.fate?.value ?? 0, targetActor.system.abilities?.luk?.bonus ?? 0)
+        : 0;
+
+      const dicePenaltyNote = penalties.length > 0 ? penalties.join(", ") : "";
+      const penaltyHtml = dicePenaltyNote
+        ? `<div class="form-group" style="color:#dc2626;font-weight:bold;"><i class="fas fa-exclamation-triangle"></i> ${dicePenaltyNote}</div>`
+        : "";
+      const dialogContent = `<form>${penaltyHtml}
+        <div class="form-group">
+          <label>${game.i18n.localize("ARIANRHOD.Modifier")}</label>
+          <input type="number" name="modifier" value="${evasion}" />
+        </div>
+        ${maxFate > 0 ? `<div class="form-group">
+          <label>${game.i18n.localize("ARIANRHOD.FateDice")} (${game.i18n.localize("ARIANRHOD.Max")}: ${maxFate})</label>
+          <input type="number" name="fateDice" value="0" min="0" max="${maxFate}" />
+        </div>` : ""}
+      </form>`;
+
+      const result = await foundry.applications.api.DialogV2.prompt({
+        window: { title: `${game.i18n.localize("ARIANRHOD.EvasionRoll")} — ${targetActor.name}` },
+        content: dialogContent,
+        ok: {
+          icon: "fas fa-shield-halved",
+          label: game.i18n.localize("ARIANRHOD.Roll"),
+          callback: (event, button) => {
+            const form = button.form;
+            return {
+              modifier: parseInt(form.querySelector('[name="modifier"]').value) || 0,
+              fateDice: Math.min(parseInt(form.querySelector('[name="fateDice"]')?.value) || 0, maxFate),
+            };
+          },
+        },
+        rejectClose: false,
+      });
+      if (!result) return;
+
+      // Deduct fate
+      if (result.fateDice > 0 && targetActor.type === "character") {
+        await targetActor.update({ "system.fate.value": Math.max(0, targetActor.system.fate.value - result.fateDice) });
+      }
+
+      // Build and evaluate evasion roll
+      let evasionFormula = `${baseDice}d6`;
+      if (result.modifier > 0) evasionFormula += ` + ${result.modifier}`;
+      else if (result.modifier < 0) evasionFormula += ` - ${Math.abs(result.modifier)}`;
+      if (result.fateDice > 0) evasionFormula += ` + ${result.fateDice}d6`;
+
+      const evasionRoll = new Roll(evasionFormula);
+      await evasionRoll.evaluate();
+      const evasionAnalysis = analyzeRoll(evasionRoll, result.fateDice);
+
+      // Determine hit/miss with defender priority (rulebook p.204, p.224)
+      // Fumble = achievement 0; tie = defender wins; both critical = defender wins
+      const effectiveAttack = attackFumble ? 0 : attackTotal;
+      const effectiveEvasion = evasionAnalysis.isFumble ? 0 : evasionRoll.total;
+      let isHit;
+      let reason = "";
+
+      if (attackFumble) {
+        isHit = false;
+        reason = game.i18n.localize("ARIANRHOD.Fumble");
+      } else if (evasionAnalysis.isFumble) {
+        isHit = true;
+      } else if (attackCritical && evasionAnalysis.isCritical) {
+        // Both critical → defender priority → miss
+        isHit = false;
+        reason = game.i18n.localize("ARIANRHOD.DefenderPriority");
+      } else if (effectiveAttack > effectiveEvasion) {
+        isHit = true;
+      } else {
+        // Tie or evasion higher → defender wins
+        isHit = false;
+        if (effectiveAttack === effectiveEvasion) {
+          reason = game.i18n.localize("ARIANRHOD.DefenderPriority");
+        }
+      }
+
+      const evasionFateNotice = result.fateDice > 0
+        ? game.i18n.format("ARIANRHOD.FateUsed", { count: result.fateDice })
+        : "";
+
+      // Render hit determination card
+      const HIT_RESULT_TEMPLATE = "systems/arianrhod2e/templates/chat/hit-result-card.hbs";
+      const hitContent = await renderTemplate(HIT_RESULT_TEMPLATE, {
+        attackerName: attackerActor?.name ?? "???",
+        targetName: targetActor.name,
+        attackTotal: effectiveAttack,
+        evasionTotal: effectiveEvasion,
+        attackCritical,
+        attackFumble,
+        evasionCritical: evasionAnalysis.isCritical,
+        evasionFumble: evasionAnalysis.isFumble,
+        isHit,
+        reason,
+        attackerId,
+        targetId,
+        weaponId,
+        sixCount,
+        evasionFateNotice,
+      });
+
+      await evasionRoll.toMessage({
+        speaker: ChatMessage.getSpeaker({ actor: targetActor }),
+        content: hitContent,
+      });
+
+      // Disable evasion button after use
+      btn.disabled = true;
+      btn.textContent = isHit
+        ? game.i18n.localize("ARIANRHOD.Hit")
+        : game.i18n.localize("ARIANRHOD.Miss");
     });
   });
 });

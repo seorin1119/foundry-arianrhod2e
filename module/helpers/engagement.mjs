@@ -139,6 +139,29 @@ export function getEngagedWith(combat, combatantId) {
 }
 
 /**
+ * Get opponents (opposing side combatants) in the same engagement.
+ * Opponents are combatants of a different actor type (character vs enemy).
+ * Only returns combatants that are alive (HP > 0).
+ * @param {Combat} combat
+ * @param {string} combatantId
+ * @returns {Combatant[]} Array of opponent combatants
+ */
+export function getOpponents(combat, combatantId) {
+  const engagements = getEngagements(combat);
+  const eng = findEngagement(engagements, combatantId);
+  if (!eng) return [];
+
+  const combatant = combat.combatants.get(combatantId);
+  if (!combatant?.actor) return [];
+  const myType = combatant.actor.type;
+
+  return eng.members
+    .filter(id => id !== combatantId)
+    .map(id => combat.combatants.get(id))
+    .filter(c => c?.actor && c.actor.type !== myType && (c.actor.system?.combat?.hp?.value ?? 1) > 0);
+}
+
+/**
  * Clear all engagements (e.g., when combat ends).
  * @param {Combat} combat
  */
@@ -182,9 +205,6 @@ export function validateAttackEngagement(combat, attacker, target, isRanged = fa
   const enabled = game.settings?.get("arianrhod2e", "engagementEnabled") ?? true;
   if (!enabled) return { allowed: true };
 
-  // Ranged attacks don't require engagement
-  if (isRanged) return { allowed: true };
-
   // Find combatants for attacker and target
   const attackerCombatant = combat.combatants.find(c => c.actor?.id === attacker.id);
   const targetCombatant = combat.combatants.find(c => c.actor?.id === target.id);
@@ -192,6 +212,15 @@ export function validateAttackEngagement(combat, attacker, target, isRanged = fa
   // If either is not in combat, allow the attack (safety fallback)
   if (!attackerCombatant || !targetCombatant) return { allowed: true };
 
+  if (isRanged) {
+    // Ranged attacks CANNOT target characters in the same engagement as the attacker (rulebook p.221)
+    if (areEngaged(combat, attackerCombatant.id, targetCombatant.id)) {
+      return { allowed: false, reason: "ARIANRHOD.RangedAttackEngaged" };
+    }
+    return { allowed: true };
+  }
+
+  // Melee attacks require engagement
   if (!areEngaged(combat, attackerCombatant.id, targetCombatant.id)) {
     return { allowed: false, reason: "ARIANRHOD.AttackNotEngaged" };
   }

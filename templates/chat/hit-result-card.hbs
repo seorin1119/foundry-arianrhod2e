@@ -1,0 +1,43 @@
+{{!-- Hit/Miss Determination Card --}}
+<div class="ar-combat-card ar-hit-result-card">
+  <header class="ar-card-header">
+    <img class="ar-card-icon" src="icons/svg/combat.svg" width="32" height="32" />
+    <div class="ar-card-title">
+      <h3>{{localize "ARIANRHOD.HitDetermination"}}</h3>
+      <span class="ar-card-subtitle">{{attackerName}} → {{targetName}}</span>
+    </div>
+  </header>
+  <div class="ar-card-row">
+    <span class="ar-card-label"><i class="fas fa-crosshairs"></i> {{localize "ARIANRHOD.AttackRoll"}}</span>
+    <span class="ar-card-value {{#if attackCritical}}critical{{/if}} {{#if attackFumble}}fumble{{/if}}">{{attackTotal}}</span>
+  </div>
+  <div class="ar-card-row">
+    <span class="ar-card-label"><i class="fas fa-shield-halved"></i> {{localize "ARIANRHOD.EvasionRoll"}}</span>
+    <span class="ar-card-value {{#if evasionCritical}}critical{{/if}} {{#if evasionFumble}}fumble{{/if}}">{{evasionTotal}}</span>
+  </div>
+  {{#if isHit}}
+  <div class="ar-card-badge ar-badge-hit">
+    <i class="fas fa-bullseye"></i> {{localize "ARIANRHOD.Hit"}}!
+    {{#if attackCritical}}({{localize "ARIANRHOD.Critical"}}){{/if}}
+  </div>
+  <div class="ar-card-actions">
+    <button type="button" class="ar-chat-btn ar-damage-btn"
+            data-actor-id="{{attackerId}}"
+            data-weapon-id="{{weaponId}}"
+            data-critical="{{attackCritical}}"
+            data-six-count="{{sixCount}}">
+      <i class="fas fa-burst"></i> {{localize "ARIANRHOD.RollDamage"}}
+    </button>
+  </div>
+  {{else}}
+  <div class="ar-card-badge ar-badge-miss">
+    <i class="fas fa-shield"></i> {{localize "ARIANRHOD.Miss"}}
+    {{#if reason}}({{reason}}){{/if}}
+  </div>
+  {{/if}}
+  {{#if evasionFateNotice}}
+  <div class="ar-card-fate-notice">
+    <i class="fas fa-sparkles"></i> {{evasionFateNotice}}
+  </div>
+  {{/if}}
+</div>

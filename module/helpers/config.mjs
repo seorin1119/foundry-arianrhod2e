@@ -41,6 +41,7 @@ ARIANRHOD.weaponTypes = {
   whip: "ARIANRHOD.WeaponTypeWhip",
   blunt: "ARIANRHOD.WeaponTypeBlunt",
   bow: "ARIANRHOD.WeaponTypeBow",
+  throwing: "ARIANRHOD.WeaponTypeThrowing",
   katana: "ARIANRHOD.WeaponTypeKatana",
   alchemy: "ARIANRHOD.WeaponTypeAlchemy",
   other: "ARIANRHOD.WeaponTypeOther",

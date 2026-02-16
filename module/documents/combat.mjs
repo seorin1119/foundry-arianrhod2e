@@ -15,6 +15,9 @@ import {
   onTurnStart,
   onTurnEnd,
   processCleanup,
+  processInitiativePhase,
+  processSetupPhase,
+  processCombatEnd,
   PHASES,
 } from "../helpers/combat-manager.mjs";
 
@@ -45,6 +48,8 @@ export class ArianrhodCombat extends Combat {
     // Initialize state before starting so _onStartTurn has clean state
     await initializeCombat(this);
     await super.startCombat();
+    // Process setup phase for round 1
+    await processSetupPhase(this, 1);
     return this;
   }
 
@@ -74,9 +79,27 @@ export class ArianrhodCombat extends Combat {
    * @override
    */
   async nextRound() {
-    // Process cleanup before advancing to next round
+    // Process cleanup phase (poison damage, auto-recover statuses)
     await processCleanup(this);
-    return super.nextRound();
+    // Process initiative phase (stun recovery at new round start)
+    await processInitiativePhase(this);
+    // Advance round
+    const result = await super.nextRound();
+    // Process setup phase for the new round (notify setup-timing skills)
+    await processSetupPhase(this, this.round);
+    return result;
+  }
+
+  /**
+   * Process combat end: recover incapacitated characters before deletion.
+   * Per rulebook p.227: HP=0 → HP=1 only when combat ends.
+   * @override
+   */
+  async _preDelete(options, user) {
+    await super._preDelete(options, user);
+    if (this.started) {
+      await processCombatEnd(this);
+    }
   }
 
   /**

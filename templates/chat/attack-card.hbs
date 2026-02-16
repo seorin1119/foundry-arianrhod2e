@@ -1,4 +1,4 @@
-{{!-- Attack Roll Chat Card --}}
+{{!-- Attack Roll Chat Card (supports multiple targets for area attacks) --}}
 <div class="ar-combat-card ar-attack-card">
   <header class="ar-card-header">
     <img class="ar-card-icon" src="{{weaponImg}}" alt="{{weaponName}}" width="32" height="32" />
@@ -7,6 +7,11 @@
       <span class="ar-card-subtitle">{{weaponName}}</span>
     </div>
   </header>
+  {{#if isReroll}}
+  <div class="ar-card-badge ar-badge-reroll">
+    <i class="fas fa-rotate"></i> {{localize "ARIANRHOD.FateReroll"}}
+  </div>
+  {{/if}}
   <div class="ar-card-row ar-achievement-row">
     <span class="ar-card-label">{{localize "ARIANRHOD.Achievement"}}</span>
     <span class="ar-card-value {{#if isCritical}}critical{{/if}} {{#if isFumble}}fumble{{/if}}">{{total}}</span>
@@ -27,11 +32,33 @@
   </div>
   {{/if}}
   <div class="ar-card-actions">
+    {{#each targets}}
+    <button type="button" class="ar-chat-btn ar-evasion-btn"
+            data-attacker-id="{{../actorId}}"
+            data-target-id="{{this.id}}"
+            data-weapon-id="{{../weaponId}}"
+            data-attack-total="{{../total}}"
+            data-is-critical="{{../isCritical}}"
+            data-is-fumble="{{../isFumble}}"
+            data-six-count="{{../sixCount}}">
+      <i class="fas fa-shield-halved"></i> {{localize "ARIANRHOD.EvasionRoll"}} ({{this.name}})
+    </button>
+    {{/each}}
     <button type="button" class="ar-chat-btn ar-damage-btn"
             data-actor-id="{{actorId}}"
             data-weapon-id="{{weaponId}}"
-            data-critical="{{isCritical}}">
+            data-critical="{{isCritical}}"
+            data-six-count="{{sixCount}}">
       <i class="fas fa-burst"></i> {{localize "ARIANRHOD.RollDamage"}}
     </button>
+    {{#if canReroll}}
+    <button type="button" class="ar-chat-btn ar-reroll-btn"
+            data-actor-id="{{actorId}}"
+            data-weapon-id="{{weaponId}}"
+            data-formula="{{formula}}"
+            data-base-dice="{{baseDice}}">
+      <i class="fas fa-rotate"></i> {{localize "ARIANRHOD.FateRerollBtn"}} ({{localize "ARIANRHOD.Fate"}} 1)
+    </button>
+    {{/if}}
   </div>
 </div>

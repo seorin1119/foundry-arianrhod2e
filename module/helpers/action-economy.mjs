@@ -18,6 +18,7 @@ export const MOVE_TYPES = {
   COMBAT: "combat",       // 전투이동: movement meters
   FULL: "full",           // 전력이동: movement×2, blocks minor
   DISENGAGE: "disengage", // 이탈: 5m, blocks minor, requires contest
+  RUSH: "rush",           // 돌입: enter engagement during movement
 };
 
 /**
@@ -95,8 +96,8 @@ export function canPerformAction(state, actionType, actor = null) {
       if (state.move) return { allowed: false, reason: "ARIANRHOD.ActionMoveUsed" };
       break;
     case ACTION_TYPES.FREE:
-      // Free actions are limited but GM discretion - allow up to 3
-      if (state.freeCount >= 3) return { allowed: false, reason: "ARIANRHOD.ActionFreeLimit" };
+      // Free action: 1 per main process per rulebook
+      if (state.freeCount >= 1) return { allowed: false, reason: "ARIANRHOD.ActionFreeLimit" };
       break;
     case ACTION_TYPES.REACTION:
       if (state.reaction) return { allowed: false, reason: "ARIANRHOD.ActionReactionUsed" };

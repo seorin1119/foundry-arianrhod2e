@@ -18,7 +18,7 @@ export class ArianrhodActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
   static DEFAULT_OPTIONS = {
     classes: ["arianrhod2e", "sheet", "actor"],
     tag: "form",
-    position: { width: 680, height: 720 },
+    position: { width: 740, height: 780 },
     window: { resizable: true },
     form: {
       submitOnChange: true,

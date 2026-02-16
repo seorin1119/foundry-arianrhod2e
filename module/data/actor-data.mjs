@@ -68,6 +68,7 @@ export class CharacterData extends foundry.abstract.TypeDataModel {
         value: new NumberField({ required: true, integer: true, min: 0, initial: 3 }),
         max: new NumberField({ required: true, integer: true, min: 0, initial: 3 }),
       }),
+      dead: new BooleanField({ initial: false }),
       currency: new NumberField({ required: true, integer: true, min: 0, initial: 0 }),
       carryCapacity: new SchemaField({
         value: new NumberField({ required: true, integer: true, min: 0, initial: 0 }),
@@ -182,9 +183,10 @@ export class CharacterData extends foundry.abstract.TypeDataModel {
     this.combat.magDefEquip = armorMagDef;
     this.combat.magDef = armorMagDef;
 
-    this.combat.evasionBase = 0;
+    const evasionBase = this.abilities.agi?.bonus || 0;
+    this.combat.evasionBase = evasionBase;
     this.combat.evasionEquip = armorEvasion;
-    this.combat.evasion = armorEvasion;
+    this.combat.evasion = evasionBase + armorEvasion;
 
     // Initiative: AGI bonus + SEN bonus + armor initiative mod
     const initiativeBase = (this.abilities.agi?.bonus || 0) + (this.abilities.sen?.bonus || 0);
@@ -289,6 +291,7 @@ export class EnemyData extends foundry.abstract.TypeDataModel {
       tags: new StringField({ initial: "" }),
       attackPattern: new StringField({ initial: "" }),
       exp: new NumberField({ required: true, integer: true, min: 0, initial: 0 }),
+      dead: new BooleanField({ initial: false }),
     };
   }
 

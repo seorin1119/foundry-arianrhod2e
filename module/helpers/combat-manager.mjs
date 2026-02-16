@@ -5,10 +5,20 @@
  * Combat flow per round:
  *   Setup Phase → Initiative Phase → Main Phase (per combatant turn) → Cleanup Phase
  *
- * Cleanup phase:
+ * Cleanup phase (per rulebook p.228):
  *   1. Process poison damage (독(n) → 5n HP loss)
- *   2. Remove all 7 bad statuses (rage, stun, offguard, intimidation, poison, knockback, slip)
- *   3. Recover incapacitated characters (HP=0 → HP=1)
+ *   2. Remove auto-recover statuses: rage (격노), offguard (멍함), knockback (넉백)
+ *
+ * Initiative phase (next round start):
+ *   - Remove stun (스턴)
+ *
+ * Manual recovery only:
+ *   - intimidation (위압): minor action
+ *   - poison (독): skill/item only
+ *   - slip (슬립): move action
+ *
+ * Combat end:
+ *   - Recover incapacitated (HP=0 → HP=1)
  */
 import {
   createActionState,
@@ -35,10 +45,24 @@ export const PHASES = {
 export async function initializeCombat(combat) {
   await combat.setFlag("arianrhod2e", "phase", PHASES.SETUP);
   await combat.setFlag("arianrhod2e", "engagements", []);
+  await combat.setFlag("arianrhod2e", "surprise", null); // null, "pcs", or "enemies"
   // Initialize action states for all combatants
   for (const combatant of combat.combatants) {
     await setActionState(combatant, createActionState());
   }
+
+  // Post combat quick guide chat message
+  await ChatMessage.create({
+    content: `<div class="arianrhod ar-combat-guide-card">
+      <h3><i class="fas fa-swords"></i> ${game.i18n.localize("ARIANRHOD.CombatStart")}</h3>
+      <ol>
+        <li>${game.i18n.localize("ARIANRHOD.CombatGuideStep1")}</li>
+        <li>${game.i18n.localize("ARIANRHOD.CombatGuideStep2")}</li>
+        <li>${game.i18n.localize("ARIANRHOD.CombatGuideStep3")}</li>
+      </ol>
+      <div class="ar-guide-tip"><i class="fas fa-lightbulb"></i> ${game.i18n.localize("ARIANRHOD.CombatGuideTip")}</div>
+    </div>`,
+  });
 }
 
 /**
@@ -121,9 +145,11 @@ export async function processCleanup(combat) {
       );
     }
 
-    // 2. Remove all 7 bad statuses (7대 배드 스테이터스) at cleanup
-    const badStatuses = ["rage", "stun", "offguard", "intimidation", "poison", "knockback", "slip"];
-    for (const statusId of badStatuses) {
+    // 2. Remove bad statuses that auto-recover at cleanup (per rulebook p.228)
+    // Cleanup auto-recover: rage (격노), offguard (멍함), knockback (넉백)
+    // NOT at cleanup: stun (이니셔티브 시), intimidation (마이너 액션), poison (스킬/아이템만), slip (무브 액션)
+    const cleanupStatuses = ["rage", "offguard", "knockback"];
+    for (const statusId of cleanupStatuses) {
       const effect = actor.effects.find(e => e.statuses.has(statusId));
       if (effect) {
         const statusLabel = game.i18n.localize(`ARIANRHOD.Status${statusId.charAt(0).toUpperCase() + statusId.slice(1)}`);
@@ -138,18 +164,8 @@ export async function processCleanup(combat) {
       }
     }
 
-    // 3. Recover incapacitated: HP=0 → HP=1
-    const hp = actor.system?.combat?.hp;
-    if (hp && hp.value === 0) {
-      try {
-        await actor.update({ "system.combat.hp.value": 1 });
-      } catch (err) {
-        if (!err.message?.includes("OBJECTS")) throw err;
-      }
-      messages.push(
-        `<div class="arianrhod status-msg"><i class="fas fa-heart-pulse"></i> ${actor.name}: ${game.i18n.localize("ARIANRHOD.IncapacitatedRecovery")}</div>`
-      );
-    }
+    // Note: Incapacitation recovery (HP=0 → HP=1) happens at combat END, not every round cleanup.
+    // See processCombatEnd() for that logic.
   }
 
   // Post all cleanup messages as a single combined chat card
@@ -163,6 +179,72 @@ export async function processCleanup(combat) {
 
   // Set phase to cleanup
   await combat.setFlag("arianrhod2e", "phase", PHASES.CLEANUP);
+}
+
+/**
+ * Process initiative phase: recover stun (스턴) at the start of a new round.
+ * Per rulebook p.228: stun recovers at the initiative process.
+ * @param {Combat} combat - The combat encounter
+ */
+export async function processInitiativePhase(combat) {
+  const messages = [];
+
+  for (const combatant of combat.combatants) {
+    const actor = combatant.actor;
+    if (!actor) continue;
+
+    const stunEffect = actor.effects.find(e => e.statuses.has("stun"));
+    if (stunEffect) {
+      const statusLabel = game.i18n.localize("ARIANRHOD.StatusStun");
+      try {
+        await stunEffect.delete();
+      } catch (err) {
+        if (!err.message?.includes("OBJECTS") && !err.message?.includes("does not exist")) throw err;
+      }
+      messages.push(
+        `<div class="arianrhod status-msg"><i class="fas fa-check-circle"></i> ${actor.name}: ${statusLabel} ${game.i18n.localize("ARIANRHOD.StatusRecovered")}</div>`
+      );
+    }
+  }
+
+  if (messages.length > 0) {
+    await ChatMessage.create({
+      content: `<div class="arianrhod ar-cleanup-card"><h3><i class="fas fa-bolt"></i> ${game.i18n.localize("ARIANRHOD.InitiativePhase")}</h3>${messages.join("")}</div>`,
+    });
+  }
+}
+
+/**
+ * Process setup phase: notify players that setup-timing skills can be used.
+ * Per rulebook p.214: each round begins with a setup process before initiative.
+ * @param {Combat} combat - The combat encounter
+ * @param {number} round - The round number
+ */
+export async function processSetupPhase(combat, round) {
+  await combat.setFlag("arianrhod2e", "phase", PHASES.SETUP);
+
+  // Collect actors with setup-timing skills
+  const setupSkills = [];
+  for (const combatant of combat.combatants) {
+    const actor = combatant.actor;
+    if (!actor) continue;
+    if (actor.system?.dead) continue;
+    const skills = actor.items?.filter(i => i.type === "skill" && i.system?.timing === "setup") ?? [];
+    if (skills.length > 0) {
+      setupSkills.push({
+        name: actor.name,
+        skills: skills.map(s => s.name).join(", "),
+      });
+    }
+  }
+
+  const skillList = setupSkills.length > 0
+    ? setupSkills.map(s => `<div class="arianrhod status-msg"><i class="fas fa-wand-sparkles"></i> ${s.name}: ${s.skills}</div>`).join("")
+    : `<div class="arianrhod status-msg"><i class="fas fa-minus"></i> ${game.i18n.localize("ARIANRHOD.SetupNoSkills")}</div>`;
+
+  await ChatMessage.create({
+    content: `<div class="arianrhod ar-cleanup-card"><h3><i class="fas fa-cog"></i> ${game.i18n.format("ARIANRHOD.SetupPhase", { round })}</h3>${skillList}</div>`,
+  });
 }
 
 /**
@@ -188,6 +270,40 @@ export async function performAction(combatant, actionType, moveType = null) {
   const newState = consumeAction(state, actionType, moveType);
   await setActionState(combatant, newState);
   return { allowed: true };
+}
+
+/**
+ * Check if an actor is surprised in the current combat (rulebook p.240).
+ * Returns true if the actor is on the surprised side during round 1.
+ * @param {Actor} actor - The actor to check
+ * @returns {boolean}
+ */
+export function isSurprised(actor) {
+  const combat = game.combat;
+  if (!combat?.started || combat.round > 1) return false;
+  const surprise = combat.getFlag("arianrhod2e", "surprise");
+  if (!surprise) return false;
+  // "pcs" means PCs are surprised, "enemies" means enemies are surprised
+  if (surprise === "pcs" && actor.type === "character") return true;
+  if (surprise === "enemies" && actor.type === "enemy") return true;
+  return false;
+}
+
+/**
+ * Set surprise state for combat. GM calls this via macro or UI.
+ * @param {Combat} combat - The combat encounter
+ * @param {string|null} side - "pcs", "enemies", or null to clear
+ */
+export async function setSurprise(combat, side) {
+  await combat.setFlag("arianrhod2e", "surprise", side);
+  if (side) {
+    const sideLabel = side === "pcs"
+      ? game.i18n.localize("ARIANRHOD.SurprisePCs")
+      : game.i18n.localize("ARIANRHOD.SurpriseEnemies");
+    await ChatMessage.create({
+      content: `<div class="arianrhod ar-cleanup-card"><h3><i class="fas fa-eye-slash"></i> ${game.i18n.localize("ARIANRHOD.SurpriseAttack")}</h3><div class="arianrhod status-msg">${sideLabel}</div></div>`,
+    });
+  }
 }
 
 /**
@@ -217,4 +333,88 @@ export function isCurrentCombatant(actor) {
  */
 export async function setPhase(combat, phase) {
   await combat.setFlag("arianrhod2e", "phase", phase);
+}
+
+/**
+ * Process combat end: recover incapacitated characters (HP=0 → HP=1).
+ * Per rulebook p.227: incapacitation recovers only when combat (round progression) ends.
+ * @param {Combat} combat - The combat encounter being deleted
+ */
+export async function processCombatEnd(combat) {
+  const messages = [];
+
+  for (const combatant of combat.combatants) {
+    const actor = combatant.actor;
+    if (!actor) continue;
+
+    // Dead actors do not recover (rulebook p.227)
+    if (actor.system?.dead) continue;
+    // Clear coup de grace flags on combat end
+    if (actor.getFlag("arianrhod2e", "coupDeGrace")) {
+      await actor.unsetFlag("arianrhod2e", "coupDeGrace");
+    }
+    const hp = actor.system?.combat?.hp;
+    if (hp && hp.value === 0) {
+      try {
+        await actor.update({ "system.combat.hp.value": 1 }, { arianrhod2e: { incapacitationRecovery: true } });
+      } catch (err) {
+        if (!err.message?.includes("OBJECTS")) throw err;
+      }
+      messages.push(
+        `<div class="arianrhod status-msg"><i class="fas fa-heart-pulse"></i> ${actor.name}: ${game.i18n.localize("ARIANRHOD.IncapacitatedRecovery")}</div>`
+      );
+    }
+  }
+
+  if (messages.length > 0) {
+    await ChatMessage.create({
+      content: `<div class="arianrhod ar-cleanup-card"><h3><i class="fas fa-flag-checkered"></i> ${game.i18n.localize("ARIANRHOD.CombatEnd")}</h3>${messages.join("")}</div>`,
+    });
+  }
+}
+
+/**
+ * Apply environmental/fall damage as penetration damage (rulebook p.240).
+ * Default 2D6 penetration damage, GM can adjust dice count.
+ * @param {Actor} actor - The target actor
+ * @param {number} [diceCount=2] - Number of d6 to roll
+ * @param {string} [source=""] - Description of the damage source (e.g., "Fall", "Fire")
+ */
+export async function applyEnvironmentalDamage(actor, diceCount = 2, source = "") {
+  const formula = `${diceCount}d6`;
+  const roll = new Roll(formula);
+  await roll.evaluate();
+
+  const sourceLabel = source || game.i18n.localize("ARIANRHOD.EnvironmentalDamage");
+
+  const content = `<div class="ar-combat-card ar-damage-card">
+    <header class="ar-card-header">
+      <img class="ar-card-icon" src="icons/svg/hazard.svg" width="32" height="32" />
+      <div class="ar-card-title">
+        <h3>${sourceLabel}</h3>
+        <span class="ar-card-subtitle">${actor.name}</span>
+      </div>
+    </header>
+    <div class="ar-card-badge ar-badge-penetration">
+      <i class="fas fa-burst"></i> ${game.i18n.localize("ARIANRHOD.Penetration")}
+    </div>
+    <div class="ar-card-row ar-card-final">
+      <span class="ar-card-label">${game.i18n.localize("ARIANRHOD.DamageTotal")}</span>
+      <span class="ar-card-value ar-final-damage">${roll.total}</span>
+    </div>
+    <div class="ar-card-actions">
+      <button type="button" class="ar-chat-btn ar-apply-btn"
+              data-target-id="${actor.id}"
+              data-damage="${roll.total}">
+        <i class="fas fa-heart-crack"></i> ${game.i18n.localize("ARIANRHOD.ApplyDamage")} (${roll.total})
+      </button>
+    </div>
+  </div>`;
+
+  await roll.toMessage({
+    speaker: ChatMessage.getSpeaker(),
+    content,
+  });
+
+  return { roll, damage: roll.total };
 }

@@ -241,6 +241,7 @@ export class EquipmentSelectionDialog extends foundry.applications.api.Handlebar
         price: selected.price || 0,
         slot: selected.slot === "twoHand" ? "right" : "right",
         description: selected.note || "",
+        equipped: true,
       };
     } else if (foundryType === "armor") {
       itemData.system = {
@@ -254,6 +255,7 @@ export class EquipmentSelectionDialog extends foundry.applications.api.Handlebar
         price: selected.price || 0,
         slot: selected.category === "head" ? "head" : (selected.category === "shield" ? "left" : "body"),
         description: selected.note || "",
+        equipped: true,
       };
     } else if (foundryType === "accessory") {
       itemData.system = {
@@ -261,6 +263,7 @@ export class EquipmentSelectionDialog extends foundry.applications.api.Handlebar
         weight: selected.weight || 0,
         price: selected.price || 0,
         description: selected.note || "",
+        equipped: true,
       };
     } else if (foundryType === "item") {
       itemData.system = {

@@ -3,7 +3,7 @@
  *
  * Core mechanic: 2d6 + modifier vs target number
  * Critical: 2 or more dice showing 6
- * Fumble: 2 or more dice showing 1 (on base 2d6 only)
+ * Fumble: ALL dice show 1 (only on base 2d6 without fate dice)
  * Fate: spend fate points to add +1d6 each
  */
 
@@ -23,7 +23,8 @@ export function analyzeRoll(roll, fateDice = 0) {
     sixCount,
     oneCount,
     isCritical: sixCount >= criticalRange,
-    isFumble: oneCount >= 2 && fateDice === 0,
+    // Fumble: all dice show 1 (only possible on base 2d6 without fate dice)
+    isFumble: fateDice === 0 && allDice.length > 0 && allDice.every(d => d === 1),
   };
 }
 
@@ -52,8 +53,9 @@ export async function rollCheck({
   fateDice = 0,
   label = "",
   actor = null,
+  baseDice = 2,
 } = {}) {
-  const formula = buildFormula("2d6", modifier, fateDice);
+  const formula = buildFormula(`${baseDice}d6`, modifier, fateDice);
   const roll = new Roll(formula);
   await roll.evaluate();
 
@@ -93,13 +95,19 @@ export async function rollCheckDialog({
   maxFate = 0,
   label = "",
   actor = null,
+  baseDice = 2,
+  dicePenaltyNote = "",
 } = {}) {
   const dialogTitle = title || game.i18n.localize("ARIANRHOD.RollCheck");
   const fateEnabled = game.settings?.get("arianrhod2e", "fateEnabled") ?? true;
   if (!fateEnabled) maxFate = 0;
 
+  const penaltyHtml = dicePenaltyNote
+    ? `<div class="form-group" style="color:#dc2626;font-weight:bold;"><i class="fas fa-exclamation-triangle"></i> ${dicePenaltyNote}</div>`
+    : "";
   const content = `
     <form>
+      ${penaltyHtml}
       <div class="form-group">
         <label>${game.i18n.localize("ARIANRHOD.Modifier")}</label>
         <input type="number" name="modifier" value="${modifier}" />
@@ -139,6 +147,7 @@ export async function rollCheckDialog({
     modifier: result.modifier,
     fateDice: result.fateDice,
     label: label,
+    baseDice,
     actor: actor,
   });
 }
