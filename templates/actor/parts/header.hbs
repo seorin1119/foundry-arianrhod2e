@@ -62,6 +62,9 @@
       <div class="field field-sm">
         <label>{{localize "ARIANRHOD.Experience"}}</label>
         <input type="number" name="system.experience" value="{{system.experience}}" data-dtype="Number" />
+        {{#if canLevelUp}}
+        <span class="ar-levelup-badge" title="{{localize 'ARIANRHOD.LevelUpAvailable'}}"><i class="fas fa-arrow-up"></i></span>
+        {{/if}}
       </div>
       <div class="field field-sm">
         <label>{{localize "ARIANRHOD.GrowthPoints"}}</label>
@@ -77,6 +80,9 @@
         <input type="text" name="system.guild" value="{{system.guild}}" />
       </div>
       <div class="field field-io">
+        <button type="button" class="io-btn ar-rest-btn" data-action="rest" title="{{localize 'ARIANRHOD.Rest'}}">
+          <i class="fas fa-bed"></i>
+        </button>
         <button type="button" class="io-btn" data-action="exportCharacter" title="{{localize 'ARIANRHOD.ExportCharacter'}}">
           <i class="fas fa-file-export"></i>
         </button>

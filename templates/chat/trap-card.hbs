@@ -1,0 +1,42 @@
+{{!-- Trap Resolution Chat Card --}}
+<div class="ar-combat-card ar-trap-card">
+  <header class="ar-card-header">
+    <img class="ar-card-icon" src="{{trapImg}}" width="36" height="36" />
+    <div class="ar-card-title">
+      <h3>{{trapName}}</h3>
+      <span class="ar-card-subtitle">{{localize "ARIANRHOD.Trap"}} Lv.{{trapLevel}}</span>
+    </div>
+  </header>
+  <div class="ar-card-row">
+    <span class="ar-card-label">{{localize "ARIANRHOD.TrapStructure"}}</span>
+    <span class="ar-card-value">{{structureLabel}}</span>
+  </div>
+  <div class="ar-card-row">
+    <span class="ar-card-label">{{localize "ARIANRHOD.DetectionDC"}}</span>
+    <span class="ar-card-value">{{detectionDC}}</span>
+  </div>
+  <div class="ar-card-row">
+    <span class="ar-card-label">{{localize "ARIANRHOD.DisarmDC"}}</span>
+    <span class="ar-card-value">{{disarmDC}}</span>
+  </div>
+  {{#if damage}}
+  <div class="ar-card-row">
+    <span class="ar-card-label">{{localize "ARIANRHOD.Damage"}}</span>
+    <span class="ar-card-value">{{damage}}</span>
+  </div>
+  {{/if}}
+  {{#if effect}}
+  <div class="ar-card-row">
+    <span class="ar-card-label">{{localize "ARIANRHOD.Effect"}}</span>
+    <span class="ar-card-value">{{effect}}</span>
+  </div>
+  {{/if}}
+  <div class="ar-trap-actions">
+    <button type="button" class="ar-trap-detect-btn" data-trap-id="{{trapId}}" data-dc="{{detectionDC}}">
+      <i class="fas fa-search"></i> {{localize "ARIANRHOD.TrapDetect"}}
+    </button>
+    <button type="button" class="ar-trap-disarm-btn" data-trap-id="{{trapId}}" data-dc="{{disarmDC}}">
+      <i class="fas fa-tools"></i> {{localize "ARIANRHOD.TrapDisarm"}}
+    </button>
+  </div>
+</div>

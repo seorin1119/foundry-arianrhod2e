@@ -734,5 +734,23 @@
   "ARIANRHOD.NoEnemiesFound": "No enemies found",
   "ARIANRHOD.EnemyPartialData": "This enemy only has name and basic info. Create as custom and fill in stats manually.",
   "ARIANRHOD.EnemySelectToPreview": "Select an enemy to see preview",
-  "ARIANRHOD.EnemyCreatedFromLibrary": "Enemy created: {name}"
+  "ARIANRHOD.EnemyCreatedFromLibrary": "Enemy created: {name}",
+
+  "ARIANRHOD.Rest": "Rest",
+  "ARIANRHOD.RestFullHealth": "Already at full health",
+  "ARIANRHOD.UseItem": "Use Item",
+  "ARIANRHOD.Recovery": "Recovery",
+  "ARIANRHOD.Remaining": "Remaining",
+  "ARIANRHOD.Difficulty": "Difficulty",
+  "ARIANRHOD.Optional": "Optional",
+  "ARIANRHOD.CheckSuccess": "Success",
+  "ARIANRHOD.CheckFail": "Failure",
+  "ARIANRHOD.TrapDetect": "Detect Trap",
+  "ARIANRHOD.TrapDisarm": "Disarm Trap",
+  "ARIANRHOD.LevelUpAvailable": "Level Up Available!",
+  "ARIANRHOD.LevelUpReady": "EXP {exp} — enough for level {nextLevel}",
+  "ARIANRHOD.ItemUsed": "Used {name}",
+  "ARIANRHOD.ItemEmpty": "Deleted (quantity reached 0)",
+  "ARIANRHOD.NoConsumableItems": "No consumable items available",
+  "ARIANRHOD.NoActorSelected": "Please select a character"
 }

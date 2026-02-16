@@ -170,6 +170,9 @@
         <span class="item-detail-sm">{{item.system.weight}}</span>
         <span class="item-detail-wide">{{item.system.effect}}</span>
         <span class="item-controls">
+          {{#if item.system.consumable}}
+          <a data-action="useItem" title="{{localize 'ARIANRHOD.UseItem'}}" class="ar-use-btn"><i class="fas fa-flask-vial"></i></a>
+          {{/if}}
           <a data-action="editItem" title="{{localize 'ARIANRHOD.ItemEdit'}}"><i class="fas fa-edit"></i></a>
           <a data-action="deleteItem" title="{{localize 'ARIANRHOD.ItemDelete'}}"><i class="fas fa-trash"></i></a>
         </span>

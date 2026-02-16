@@ -734,5 +734,23 @@
   "ARIANRHOD.NoEnemiesFound": "該当するエネミーがいません",
   "ARIANRHOD.EnemyPartialData": "このエネミーは名前と基本情報のみです。カスタム作成後、ステータスを手動で入力してください。",
   "ARIANRHOD.EnemySelectToPreview": "エネミーを選択するとプレビューが表示されます",
-  "ARIANRHOD.EnemyCreatedFromLibrary": "エネミー作成: {name}"
+  "ARIANRHOD.EnemyCreatedFromLibrary": "エネミー作成: {name}",
+
+  "ARIANRHOD.Rest": "休憩",
+  "ARIANRHOD.RestFullHealth": "すでに万全の状態です",
+  "ARIANRHOD.UseItem": "アイテム使用",
+  "ARIANRHOD.Recovery": "回復",
+  "ARIANRHOD.Remaining": "残り",
+  "ARIANRHOD.Difficulty": "難易度",
+  "ARIANRHOD.Optional": "任意",
+  "ARIANRHOD.CheckSuccess": "成功",
+  "ARIANRHOD.CheckFail": "失敗",
+  "ARIANRHOD.TrapDetect": "トラップ探知",
+  "ARIANRHOD.TrapDisarm": "トラップ解除",
+  "ARIANRHOD.LevelUpAvailable": "レベルアップ可能！",
+  "ARIANRHOD.LevelUpReady": "経験点{exp} — レベル{nextLevel}に必要な経験点に達しました",
+  "ARIANRHOD.ItemUsed": "{name}を使用",
+  "ARIANRHOD.ItemEmpty": "数量が0になり削除されました",
+  "ARIANRHOD.NoConsumableItems": "使用可能な消耗品がありません",
+  "ARIANRHOD.NoActorSelected": "キャラクターを選択してください"
 }

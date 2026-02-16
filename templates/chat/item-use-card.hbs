@@ -1,0 +1,28 @@
+{{!-- Item Use Chat Card --}}
+<div class="ar-combat-card ar-item-use-card">
+  <header class="ar-card-header">
+    <img class="ar-card-icon" src="{{itemImg}}" width="36" height="36" />
+    <div class="ar-card-title">
+      <h3>{{itemName}}</h3>
+      <span class="ar-card-subtitle">{{localize "ARIANRHOD.UseItem"}}</span>
+    </div>
+  </header>
+  {{#if hasEffect}}
+  <div class="ar-card-row">
+    <span class="ar-card-label">{{localize "ARIANRHOD.Effect"}}</span>
+    <span class="ar-card-value">{{effectText}}</span>
+  </div>
+  {{/if}}
+  {{#if hasRecovery}}
+  <div class="ar-card-row ar-card-final">
+    <span class="ar-card-label">{{localize "ARIANRHOD.Recovery"}}</span>
+    <span class="ar-card-value {{recoveryClass}}">{{recoveryText}}</span>
+  </div>
+  {{/if}}
+  {{#if remainingQty}}
+  <div class="ar-card-row">
+    <span class="ar-card-label">{{localize "ARIANRHOD.Remaining"}}</span>
+    <span class="ar-card-value">{{remainingQty}}</span>
+  </div>
+  {{/if}}
+</div>

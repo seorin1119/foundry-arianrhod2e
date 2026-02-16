@@ -6,6 +6,9 @@
 import { skillLibrary } from './skill-library.mjs';
 import { equipmentLibrary } from './equipment-library.mjs';
 import { enemySkillLibrary } from './enemy-skill-library.mjs';
+import { getWeaponIcon, getArmorIcon, getItemIcon, getSkillIcon, ACCESSORY_ICONS } from './icon-mapping.mjs';
+
+const COMPENDIUM_VERSION = 2; // Bump this to force compendium repopulation
 
 /**
  * Resolve a localized name based on the current game language.
@@ -50,6 +53,7 @@ function _buildSkillItems() {
       items.push({
         name: resolveName(skill),
         type: 'skill',
+        img: getSkillIcon(skill.timing || 'other'),
         system: {
           description: desc,
           skillClass: skill.skillClass || className,
@@ -81,6 +85,7 @@ function _buildWeaponItem(w) {
   return {
     name: resolveName(w),
     type: 'weapon',
+    img: getWeaponIcon(w.category || 'other'),
     system: {
       description: w.note || '',
       weaponType: w.category || '',
@@ -105,6 +110,7 @@ function _buildArmorItem(a) {
   return {
     name: resolveName(a),
     type: 'armor',
+    img: getArmorIcon(a.category || 'other'),
     system: {
       description: a.note || '',
       armorType: a.category || '',
@@ -132,6 +138,7 @@ function _buildAccessoryItem(acc) {
   return {
     name: resolveName(acc),
     type: 'accessory',
+    img: ACCESSORY_ICONS.default,
     system: {
       description: acc.note || '',
       effect: effect,
@@ -150,17 +157,23 @@ function _buildAccessoryItem(acc) {
  */
 function _buildGeneralItem(item) {
   const effect = resolveText(item, 'effect', 'effectKo');
+  const systemData = {
+    description: item.note || '',
+    itemType: item.category || '',
+    effect: effect,
+    weight: item.weight ?? 0,
+    price: item.price ?? 0,
+    quantity: 1,
+    consumable: item.consumable || false
+  };
+  if (item.consumable && item.useEffect) {
+    systemData.useEffect = item.useEffect;
+  }
   return {
     name: resolveName(item),
     type: 'item',
-    system: {
-      description: item.note || '',
-      itemType: item.category || '',
-      effect: effect,
-      weight: item.weight ?? 0,
-      price: item.price ?? 0,
-      quantity: 1
-    },
+    img: getItemIcon(item.category || 'default'),
+    system: systemData,
     flags: {
       arianrhod2e: { libraryId: item.id }
     }
@@ -194,6 +207,7 @@ function _buildEnemySkillItems() {
     return {
       name: resolveName(skill),
       type: 'skill',
+      img: getSkillIcon(skill.timing || 'other'),
       system: {
         description: effect,
         skillClass: 'enemy',
@@ -217,8 +231,24 @@ function _buildEnemySkillItems() {
 /* ---------------------------------------- */
 
 /**
+ * Check if compendium packs need repopulation based on version.
+ * @returns {boolean}
+ */
+export function needsRepopulation() {
+  const currentVersion = game.settings?.get("arianrhod2e", "compendiumVersion") ?? 0;
+  return currentVersion < COMPENDIUM_VERSION;
+}
+
+/**
+ * Mark compendium packs as populated with current version.
+ */
+export async function markPopulated() {
+  await game.settings.set("arianrhod2e", "compendiumVersion", COMPENDIUM_VERSION);
+}
+
+/**
  * Populate all three compendium packs from library data.
- * Skips any pack that already contains items.
+ * Skips any pack that already contains items (unless version mismatch detected).
  */
 export async function populateAllPacks() {
   const packs = [
@@ -246,11 +276,23 @@ export async function populateAllPacks() {
       continue;
     }
 
-    // Check if already populated
+    // Check if already populated and up to date
     const index = await pack.getIndex();
-    if (index.size > 0) {
+    const versionCurrent = needsRepopulation();
+    if (index.size > 0 && !versionCurrent) {
       ui.notifications.info(`${label} compendium already populated (${index.size} items). Skipping.`);
       continue;
+    }
+
+    // Clear existing items if repopulating due to version mismatch
+    if (index.size > 0 && versionCurrent) {
+      ui.notifications.info(`${label} compendium outdated. Clearing ${index.size} items for repopulation...`);
+      const wasLockedForClear = pack.locked;
+      if (wasLockedForClear) {
+        await pack.configure({ locked: false });
+      }
+      const ids = index.map(e => e._id);
+      await Item.deleteDocuments(ids, { pack: key });
     }
 
     // Unlock the pack if locked
@@ -273,6 +315,7 @@ export async function populateAllPacks() {
     }
   }
 
+  await markPopulated();
   ui.notifications.info('All compendium packs population complete.');
 }
 

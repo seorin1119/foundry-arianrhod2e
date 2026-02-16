@@ -1461,6 +1461,8 @@ const items = [
     price: 30,
     effect: "Recover HP 2D",
     effectKo: "HP 2D 회복",
+    consumable: true,
+    useEffect: { resource: "hp", dice: 2, flat: 0 },
     note: ""
   },
   {
@@ -1474,6 +1476,8 @@ const items = [
     price: 50,
     effect: "Recover MP 2D",
     effectKo: "MP 2D 회복",
+    consumable: true,
+    useEffect: { resource: "mp", dice: 2, flat: 0 },
     note: ""
   },
   {
@@ -1487,6 +1491,8 @@ const items = [
     price: 200,
     effect: "Recover HP 4D",
     effectKo: "HP 4D 회복",
+    consumable: true,
+    useEffect: { resource: "hp", dice: 4, flat: 0 },
     note: ""
   },
   {
@@ -1500,6 +1506,8 @@ const items = [
     price: 300,
     effect: "Recover MP 4D",
     effectKo: "MP 4D 회복",
+    consumable: true,
+    useEffect: { resource: "mp", dice: 4, flat: 0 },
     note: ""
   },
   {
@@ -1513,6 +1521,8 @@ const items = [
     price: 2000,
     effect: "Recover HP 6D",
     effectKo: "HP 6D 회복",
+    consumable: true,
+    useEffect: { resource: "hp", dice: 6, flat: 0 },
     note: ""
   },
   {
@@ -1526,6 +1536,8 @@ const items = [
     price: 3000,
     effect: "Recover MP 6D",
     effectKo: "MP 6D 회복",
+    consumable: true,
+    useEffect: { resource: "mp", dice: 6, flat: 0 },
     note: ""
   },
   {
@@ -1580,6 +1592,8 @@ const items = [
     price: 20,
     effect: "Recover HP 1D",
     effectKo: "HP 1D 회복",
+    consumable: true,
+    useEffect: { resource: "hp", dice: 1, flat: 0 },
     note: ""
   },
   {
@@ -1593,6 +1607,8 @@ const items = [
     price: 20,
     effect: "Recover MP 3",
     effectKo: "MP 3 회복",
+    consumable: true,
+    useEffect: { resource: "mp", dice: 0, flat: 3 },
     note: ""
   },
   {
@@ -1606,6 +1622,8 @@ const items = [
     price: 30,
     effect: "Recover MP 1D",
     effectKo: "MP 1D 회복",
+    consumable: true,
+    useEffect: { resource: "mp", dice: 1, flat: 0 },
     note: ""
   },
 

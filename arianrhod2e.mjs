@@ -18,7 +18,7 @@ import { ArianrhodCombat } from "./module/documents/combat.mjs";
 import { rollCheck, rollCheckDialog, rollFSCheck, calculateFSProgress } from "./module/dice.mjs";
 import { getStatusEffects } from "./module/helpers/status-effects.mjs";
 import { registerTokenHUD } from "./module/helpers/token-hud.mjs";
-import { populateAllPacks, resetPack } from "./module/helpers/compendium-populator.mjs";
+import { populateAllPacks, resetPack, needsRepopulation } from "./module/helpers/compendium-populator.mjs";
 import { onHotbarDrop, rollSkillMacro, rollAttackMacro, rollItemMacro, rollAbilityCheckMacro } from "./module/helpers/macros.mjs";
 import { getMovementOptions, executeMovement } from "./module/helpers/movement.mjs";
 import { createEngagement, removeFromEngagement, getEngagements, getOpponents } from "./module/helpers/engagement.mjs";
@@ -143,6 +143,15 @@ Hooks.once("init", () => {
     config: false,
     type: Boolean,
     default: false
+  });
+
+  // Register compendium version for icon-based repopulation
+  game.settings.register("arianrhod2e", "compendiumVersion", {
+    name: "Compendium Version",
+    scope: "world",
+    config: false,
+    type: Number,
+    default: 0
   });
 
   // ---- System Settings (House Rules) ----
@@ -403,6 +412,40 @@ Hooks.on("renderChatMessage", (message, html) => {
     });
   });
 
+  // "Trap Detect" / "Trap Disarm" buttons on trap cards
+  el.querySelectorAll(".ar-trap-detect-btn, .ar-trap-disarm-btn").forEach(btn => {
+    btn.addEventListener("click", async (event) => {
+      event.preventDefault();
+      const dc = parseInt(btn.dataset.dc) || 0;
+      const isDetect = btn.classList.contains("ar-trap-detect-btn");
+      const checkType = isDetect ? "trapDetect" : "trapDisarm";
+      const label = isDetect
+        ? game.i18n.localize("ARIANRHOD.TrapDetect")
+        : game.i18n.localize("ARIANRHOD.TrapDisarm");
+
+      // Get selected token's actor or first owned character
+      const speaker = ChatMessage.getSpeaker();
+      const actor = game.actors.get(speaker.actor);
+      if (!actor) {
+        ui.notifications.warn(game.i18n.localize("ARIANRHOD.NoActorSelected"));
+        return;
+      }
+
+      // Roll the check with difficulty
+      const { rollCheckDialog } = await import("./module/dice.mjs");
+      const checkKey = isDetect ? "sen" : "dex";
+      const ability = actor.system.abilities?.[checkKey];
+      const bonus = ability?.bonus ?? 0;
+      await rollCheckDialog({
+        actor,
+        baseDice: 2,
+        modifier: bonus,
+        label: `${label} — ${actor.name}`,
+        difficulty: dc,
+      });
+    });
+  });
+
   // "Roll Evasion" button on attack cards — performs evasion + hit determination
   el.querySelectorAll(".ar-evasion-btn").forEach(btn => {
     btn.addEventListener("click", async (event) => {
@@ -588,14 +631,17 @@ Hooks.once("ready", async () => {
     ui.notifications.info("Arianrhod 2E: Migration complete!", { permanent: false });
   }
 
-  // Auto-populate compendium packs on first load (GM only)
-  if (game.user.isGM && !game.settings.get("arianrhod2e", "compendiumsPopulated")) {
-    console.log("Arianrhod 2E | Populating compendium packs...");
-    try {
-      await populateAllPacks();
-      await game.settings.set("arianrhod2e", "compendiumsPopulated", true);
-    } catch (err) {
-      console.error("Arianrhod 2E | Failed to populate compendiums:", err);
+  // Auto-populate compendium packs on first load or when version changes (GM only)
+  if (game.user.isGM) {
+    const shouldPopulate = !game.settings.get("arianrhod2e", "compendiumsPopulated") || needsRepopulation();
+    if (shouldPopulate) {
+      console.log("Arianrhod 2E | Populating compendium packs...");
+      try {
+        await populateAllPacks();
+        await game.settings.set("arianrhod2e", "compendiumsPopulated", true);
+      } catch (err) {
+        console.error("Arianrhod 2E | Failed to populate compendiums:", err);
+      }
     }
   }
 });

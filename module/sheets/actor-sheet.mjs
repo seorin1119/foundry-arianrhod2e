@@ -56,6 +56,8 @@ export class ArianrhodActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
       rollRelation: ArianrhodActorSheet.#onRollRelation,
       exportCharacter: ArianrhodActorSheet.#onExportCharacter,
       importCharacter: ArianrhodActorSheet.#onImportCharacter,
+      useItem: ArianrhodActorSheet.#onUseItem,
+      rest: ArianrhodActorSheet.#onRest,
     },
   };
 
@@ -277,6 +279,14 @@ export class ArianrhodActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
     context.totalWeight = totalWeight;
     context.totalValue = totalValue;
     context.totalItems = this.actor.items.filter(i => i.type !== "skill").size;
+
+    // Check level-up availability (cumulative XP: level × 10 per level)
+    if (context.isCharacter) {
+      const lvl = systemData.level ?? 1;
+      const nextLevelExp = (lvl * (lvl + 1)) / 2 * 10;
+      context.canLevelUp = (systemData.experience ?? 0) >= nextLevelExp;
+      context.nextLevelExp = nextLevelExp;
+    }
 
     // Connection relation dropdown options
     context.connectionRelations = CONFIG.ARIANRHOD.connectionRelations ?? {};
@@ -706,5 +716,17 @@ export class ArianrhodActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
   static async #onImportCharacter(event, target) {
     event.preventDefault();
     await importCharacter();
+  }
+
+  static async #onUseItem(event, target) {
+    event.preventDefault();
+    const itemId = target.closest("[data-item-id]")?.dataset.itemId;
+    const item = this.actor.items.get(itemId);
+    if (item?.use) await item.use();
+  }
+
+  static async #onRest(event, target) {
+    event.preventDefault();
+    if (this.actor.rest) await this.actor.rest();
   }
 }

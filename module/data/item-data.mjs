@@ -116,6 +116,12 @@ export class ItemData extends foundry.abstract.TypeDataModel {
       quantity: new NumberField({ required: true, integer: true, min: 0, initial: 1 }),
       consumable: new BooleanField({ initial: false }),
       effect: new StringField({ initial: "" }),
+      // Structured use effect for consumables (potions, food)
+      useEffect: new SchemaField({
+        resource: new StringField({ initial: "" }),    // "hp" or "mp" or ""
+        dice: new NumberField({ integer: true, initial: 0 }),  // number of d6 to roll
+        flat: new NumberField({ integer: true, initial: 0 }),  // flat amount to add
+      }, { required: false }),
     };
   }
 }

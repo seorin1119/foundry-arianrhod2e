@@ -51,6 +51,7 @@ function buildFormula(baseDice, modifier, fateDice) {
 export async function rollCheck({
   modifier = 0,
   fateDice = 0,
+  difficulty = null,
   label = "",
   actor = null,
   baseDice = 2,
@@ -66,6 +67,13 @@ export async function rollCheck({
     flavor += ` — <strong>${game.i18n.localize("ARIANRHOD.Critical")}! (6×${sixCount})</strong>`;
   } else if (isFumble) {
     flavor += ` — <strong>${game.i18n.localize("ARIANRHOD.Fumble")}!</strong>`;
+  }
+  if (difficulty !== null && difficulty > 0) {
+    const isSuccess = !isFumble && (isCritical || roll.total >= difficulty);
+    const badge = isSuccess
+      ? `<span class="ar-check-badge ar-check-success"><i class="fas fa-check-circle"></i> ${game.i18n.localize("ARIANRHOD.CheckSuccess")}</span>`
+      : `<span class="ar-check-badge ar-check-fail"><i class="fas fa-times-circle"></i> ${game.i18n.localize("ARIANRHOD.CheckFail")}</span>`;
+    flavor += ` (vs ${difficulty}) ${badge}`;
   }
   if (fateDice > 0) {
     flavor += ` (${game.i18n.format("ARIANRHOD.FateUsed", { count: fateDice })})`;
@@ -93,6 +101,7 @@ export async function rollCheckDialog({
   title = "",
   modifier = 0,
   maxFate = 0,
+  difficulty = null,
   label = "",
   actor = null,
   baseDice = 2,
@@ -122,6 +131,10 @@ export async function rollCheckDialog({
       `
           : ""
       }
+      <div class="form-group">
+        <label>${game.i18n.localize("ARIANRHOD.Difficulty")} (${game.i18n.localize("ARIANRHOD.Optional")})</label>
+        <input type="number" name="difficulty" value="${difficulty || ''}" placeholder="—" />
+      </div>
     </form>
   `;
 
@@ -135,7 +148,8 @@ export async function rollCheckDialog({
         const form = button.form;
         const mod = parseInt(form.querySelector('[name="modifier"]').value) || 0;
         const fate = parseInt(form.querySelector('[name="fateDice"]')?.value) || 0;
-        return { modifier: mod, fateDice: Math.min(fate, maxFate) };
+        const diff = parseInt(form.querySelector('[name="difficulty"]')?.value) || null;
+        return { modifier: mod, fateDice: Math.min(fate, maxFate), difficulty: diff };
       },
     },
     rejectClose: false,
@@ -146,6 +160,7 @@ export async function rollCheckDialog({
   return rollCheck({
     modifier: result.modifier,
     fateDice: result.fateDice,
+    difficulty: result.difficulty,
     label: label,
     baseDice,
     actor: actor,

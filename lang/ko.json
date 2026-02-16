@@ -735,5 +735,23 @@
   "ARIANRHOD.NoEnemiesFound": "해당하는 에너미가 없습니다",
   "ARIANRHOD.EnemyPartialData": "이 에너미는 이름과 기본 정보만 있습니다. 커스텀 생성 후 직접 스탯을 입력하세요.",
   "ARIANRHOD.EnemySelectToPreview": "에너미를 선택하면 미리보기가 표시됩니다",
-  "ARIANRHOD.EnemyCreatedFromLibrary": "에너미 생성: {name}"
+  "ARIANRHOD.EnemyCreatedFromLibrary": "에너미 생성: {name}",
+
+  "ARIANRHOD.Rest": "휴식",
+  "ARIANRHOD.RestFullHealth": "이미 완전한 상태입니다",
+  "ARIANRHOD.UseItem": "아이템 사용",
+  "ARIANRHOD.Recovery": "회복",
+  "ARIANRHOD.Remaining": "남은 수량",
+  "ARIANRHOD.Difficulty": "난이도",
+  "ARIANRHOD.Optional": "선택",
+  "ARIANRHOD.CheckSuccess": "성공",
+  "ARIANRHOD.CheckFail": "실패",
+  "ARIANRHOD.TrapDetect": "함정 탐지",
+  "ARIANRHOD.TrapDisarm": "함정 해제",
+  "ARIANRHOD.LevelUpAvailable": "레벨업 가능!",
+  "ARIANRHOD.LevelUpReady": "경험치 {exp} — 레벨 {nextLevel}에 필요한 경험치에 도달했습니다",
+  "ARIANRHOD.ItemUsed": "{name} 사용",
+  "ARIANRHOD.ItemEmpty": "수량이 0이 되어 삭제됨",
+  "ARIANRHOD.NoConsumableItems": "사용 가능한 소모품이 없습니다",
+  "ARIANRHOD.NoActorSelected": "캐릭터를 선택해 주세요"
 }

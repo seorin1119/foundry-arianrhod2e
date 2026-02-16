@@ -75,6 +75,7 @@
           {{#each equipment as |equip|}}
           <tr>
             <td class="col-name">
+              {{#if equip.icon}}<img class="ar-equip-icon" src="{{equip.icon}}" width="20" height="20" />{{/if}}
               <strong>{{equip.displayName}}</strong>
               {{#if equip.displayNameSub}}
                 <br><span class="equip-name-sub">{{equip.displayNameSub}}</span>

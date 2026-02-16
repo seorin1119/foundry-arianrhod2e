@@ -1,3 +1,5 @@
+import { getWeaponIcon, getArmorIcon, getItemIcon, ACCESSORY_ICONS } from "../helpers/icon-mapping.mjs";
+
 /**
  * Resolve localized field from equipment data.
  */
@@ -165,6 +167,12 @@ export class EquipmentSelectionDialog extends foundry.applications.api.Handlebar
     }
 
     // Resolve display fields
+    // Icon getter based on active type
+    const iconGetter = activeType === "weapon" ? (i) => getWeaponIcon(i.category)
+      : activeType === "armor" ? (i) => getArmorIcon(i.category)
+      : activeType === "accessory" ? () => ACCESSORY_ICONS.default
+      : (i) => getItemIcon(i.category);
+
     context.equipment = items.map(item => {
       const displayName = resolveLocalizedField(item, "name", lang);
       const displayNameSub = (lang === "ja") ? item.nameEn : (displayName !== item.name ? item.name : item.nameEn);
@@ -174,6 +182,7 @@ export class EquipmentSelectionDialog extends foundry.applications.api.Handlebar
         displayNameSub,
         displayEffect: resolveLocalizedField(item, "effect", lang) || "",
         displayPrice: item.price != null ? `${item.price}G` : "—",
+        icon: iconGetter(item),
       };
     });
 

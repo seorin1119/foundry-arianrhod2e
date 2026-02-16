@@ -1,6 +1,7 @@
 import { rollCheckDialog, analyzeRoll } from "../dice.mjs";
 import { validateAttackEngagement } from "../helpers/engagement.mjs";
 import { isSurprised } from "../helpers/combat-manager.mjs";
+import { ACTOR_DEFAULT_ICONS } from "../helpers/icon-mapping.mjs";
 
 const ATTACK_CARD_TEMPLATE = "systems/arianrhod2e/templates/chat/attack-card.hbs";
 const DAMAGE_CARD_TEMPLATE = "systems/arianrhod2e/templates/chat/damage-card.hbs";
@@ -19,6 +20,14 @@ export class ArianrhodActor extends Actor {
   async _preCreate(data, options, user) {
     const allowed = await super._preCreate(data, options, user);
     if (allowed === false) return false;
+
+    // Set default icon based on actor type
+    if (!data.img || data.img === "icons/svg/mystery-man.svg") {
+      const icon = ACTOR_DEFAULT_ICONS[data.type];
+      if (icon && icon !== "icons/svg/mystery-man.svg") {
+        this.updateSource({ img: icon });
+      }
+    }
 
     // Intercept enemy creation to show the library dialog
     if (data.type === "enemy" && !data.flags?.arianrhod2e?.fromLibrary) {
@@ -44,6 +53,18 @@ export class ArianrhodActor extends Actor {
           delete changed.system.combat.hp.value;
           return;
         }
+      }
+    }
+
+    // Check if experience change triggers level-up availability
+    const newExp = foundry.utils.getProperty(changed, "system.experience");
+    if (newExp !== undefined && this.type === "character") {
+      const currentLevel = this.system.level;
+      const nextLevelExp = (currentLevel * (currentLevel + 1)) / 2 * 10; // Cumulative: level × 10 per level
+      if (newExp >= nextLevelExp) {
+        ui.notifications.info(
+          game.i18n.format("ARIANRHOD.LevelUpReady", { exp: newExp, nextLevel: currentLevel + 1 })
+        );
       }
     }
   }
@@ -748,6 +769,15 @@ export class ArianrhodActor extends Actor {
   /* -------------------------------------------- */
   /*  Helpers                                     */
   /* -------------------------------------------- */
+
+  /**
+   * Perform a short rest (HP/MP full recovery, remove bad statuses).
+   * Delegates to the rest helper module.
+   */
+  async rest() {
+    const { performRest } = await import("../helpers/rest.mjs");
+    return performRest(this);
+  }
 
   /**
    * Show a combat roll dialog (modifier + fate dice).

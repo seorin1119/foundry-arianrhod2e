@@ -4737,6 +4737,222 @@
   background: var(--ar-bg-darker);
 }
 
+/* ======================================== */
+/*  Check Success/Fail Badges              */
+/* ======================================== */
+
+.ar-check-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 0.85em;
+  margin-left: 4px;
+}
+
+.ar-check-success {
+  background: #16a34a;
+  color: white;
+}
+
+.ar-check-fail {
+  background: #dc2626;
+  color: white;
+}
+
+/* ======================================== */
+/*  Item Use Card                          */
+/* ======================================== */
+
+.ar-item-use-card {
+  border: 1px solid var(--ar-border-light);
+  border-radius: 6px;
+  padding: 8px;
+  background: var(--ar-parchment);
+}
+
+.ar-item-use-card .ar-card-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.ar-item-use-card .ar-card-header img {
+  border: 1px solid var(--ar-border-light);
+  border-radius: 4px;
+}
+
+.ar-item-use-card .ar-card-header strong {
+  font-size: 1em;
+}
+
+.ar-hp-recover {
+  color: var(--ar-hp);
+  font-weight: bold;
+}
+
+.ar-mp-recover {
+  color: var(--ar-mp);
+  font-weight: bold;
+}
+
+.ar-item-use-card .ar-remaining {
+  font-size: 0.85em;
+  color: var(--ar-text-light);
+  margin-top: 4px;
+}
+
+/* ======================================== */
+/*  Rest Button & Card                     */
+/* ======================================== */
+
+.ar-rest-btn {
+  color: var(--ar-mp);
+}
+
+.ar-rest-btn:hover {
+  color: var(--ar-accent-gold);
+}
+
+.ar-rest-card {
+  border: 1px solid var(--ar-border-light);
+  border-radius: 6px;
+  padding: 8px;
+  background: linear-gradient(135deg, #e0f2fe, var(--ar-parchment));
+}
+
+.ar-rest-card .ar-rest-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+  font-weight: bold;
+}
+
+.ar-rest-card .ar-rest-detail {
+  font-size: 0.9em;
+}
+
+/* ======================================== */
+/*  Trap Card                              */
+/* ======================================== */
+
+.ar-trap-card {
+  border: 1px solid #b45309;
+  border-radius: 6px;
+  padding: 8px;
+  background: linear-gradient(135deg, #fef3c7, var(--ar-parchment));
+}
+
+.ar-trap-card .ar-trap-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.ar-trap-card .ar-trap-header img {
+  border: 1px solid #b45309;
+  border-radius: 4px;
+}
+
+.ar-trap-card .ar-trap-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  margin-bottom: 6px;
+  font-size: 0.9em;
+}
+
+.ar-trap-card .ar-trap-stats .stat-label {
+  color: var(--ar-text-light);
+}
+
+.ar-trap-card .ar-trap-stats .stat-value {
+  font-weight: bold;
+}
+
+.ar-trap-card .ar-trap-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.ar-trap-card .ar-trap-actions button {
+  flex: 1;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--ar-border);
+  cursor: pointer;
+  font-size: 0.85em;
+}
+
+.ar-trap-detect-btn {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.ar-trap-detect-btn:hover {
+  background: #bfdbfe;
+}
+
+.ar-trap-disarm-btn {
+  background: #fef9c3;
+  color: #854d0e;
+}
+
+.ar-trap-disarm-btn:hover {
+  background: #fef08a;
+}
+
+/* ======================================== */
+/*  Use Button (Consumable Items)          */
+/* ======================================== */
+
+.ar-use-btn {
+  color: var(--ar-equipped);
+  cursor: pointer;
+}
+
+.ar-use-btn:hover {
+  color: var(--ar-accent-gold);
+}
+
+/* ======================================== */
+/*  Level-Up Badge                         */
+/* ======================================== */
+
+.ar-levelup-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--ar-accent-gold);
+  color: white;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  font-size: 10px;
+  margin-left: 4px;
+  animation: ar-pulse 1.5s ease-in-out infinite;
+  vertical-align: middle;
+}
+
+@keyframes ar-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.2); opacity: 0.8; }
+}
+
+/* ======================================== */
+/*  Equipment Icon in Selection Dialog     */
+/* ======================================== */
+
+.ar-equip-icon {
+  vertical-align: middle;
+  margin-right: 4px;
+  border-radius: 2px;
+}
+
 } /* end @layer arianrhod */
 
 /* ======================================== */
