@@ -1,5 +1,5 @@
 /**
- * Combat Tracker Dock - A bottom-of-screen combat turn tracker.
+ * Combat Tracker Dock - A top-of-screen combat turn tracker.
  * Shows all combatants in initiative order with End Turn controls.
  */
 
@@ -61,7 +61,7 @@ class CombatTrackerDock {
     if (isGM) html += `<button class="ar-dock-prev" title="${game.i18n.localize("ARIANRHOD.DockPrevTurn")}"><i class="fas fa-backward-step"></i></button>`;
     html += `<button class="ar-dock-end-turn" ${canEnd ? "" : "disabled"}><i class="fas fa-forward-step"></i> ${game.i18n.localize("ARIANRHOD.DockEndTurn")}</button>`;
     html += `<button class="ar-dock-collapse" title="${this.#collapsed ? game.i18n.localize("ARIANRHOD.DockExpand") : game.i18n.localize("ARIANRHOD.DockCollapse")}">`;
-    html += this.#collapsed ? `<i class="fas fa-chevron-up"></i>` : `<i class="fas fa-chevron-down"></i>`;
+    html += this.#collapsed ? `<i class="fas fa-chevron-down"></i>` : `<i class="fas fa-chevron-up"></i>`;
     html += `</button>`;
     html += `</div></div>`;
 
