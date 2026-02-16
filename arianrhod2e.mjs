@@ -18,6 +18,7 @@ import { ArianrhodCombat } from "./module/documents/combat.mjs";
 import { rollCheck, rollCheckDialog, rollFSCheck, calculateFSProgress } from "./module/dice.mjs";
 import { getStatusEffects } from "./module/helpers/status-effects.mjs";
 import { registerTokenHUD } from "./module/helpers/token-hud.mjs";
+import { registerCombatDock } from "./module/apps/combat-tracker-dock.mjs";
 import { populateAllPacks, resetPack, needsRepopulation } from "./module/helpers/compendium-populator.mjs";
 import { onHotbarDrop, rollSkillMacro, rollAttackMacro, rollItemMacro, rollAbilityCheckMacro } from "./module/helpers/macros.mjs";
 import { getMovementOptions, executeMovement } from "./module/helpers/movement.mjs";
@@ -237,6 +238,9 @@ Hooks.once("init", () => {
 
   // Register Token HUD enhancements
   registerTokenHUD();
+
+  // Register Combat Tracker Dock
+  registerCombatDock();
 });
 
 /* -------------------------------------------- */

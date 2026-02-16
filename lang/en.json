@@ -796,5 +796,18 @@
   "ARIANRHOD.QuickReference": "Quick Reference",
   "ARIANRHOD.NewSkill": "New Skill",
   "ARIANRHOD.ExistingSkill": "Level Up Existing",
-  "ARIANRHOD.SkillLevelIncrease": "Skill Level +{delta}"
+  "ARIANRHOD.SkillLevelIncrease": "Skill Level +{delta}",
+
+  "ARIANRHOD.DockRound": "Round",
+  "ARIANRHOD.DockEndTurn": "End Turn",
+  "ARIANRHOD.DockNextTurn": "Next Turn",
+  "ARIANRHOD.DockPrevTurn": "Previous Turn",
+  "ARIANRHOD.DockCollapse": "Minimize",
+  "ARIANRHOD.DockExpand": "Expand",
+  "ARIANRHOD.DockPhaseSetup": "Setup",
+  "ARIANRHOD.DockPhaseInitiative": "Initiative",
+  "ARIANRHOD.DockPhaseMain": "Main",
+  "ARIANRHOD.DockPhaseCleanup": "Cleanup",
+  "ARIANRHOD.DockDefeated": "Defeated",
+  "ARIANRHOD.DockUnknown": "???"
 }

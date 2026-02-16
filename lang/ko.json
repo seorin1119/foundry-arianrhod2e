@@ -797,5 +797,18 @@
   "ARIANRHOD.QuickReference": "퀵 레퍼런스",
   "ARIANRHOD.NewSkill": "신규 스킬",
   "ARIANRHOD.ExistingSkill": "기존 스킬 레벨업",
-  "ARIANRHOD.SkillLevelIncrease": "스킬 레벨 +{delta}"
+  "ARIANRHOD.SkillLevelIncrease": "스킬 레벨 +{delta}",
+
+  "ARIANRHOD.DockRound": "라운드",
+  "ARIANRHOD.DockEndTurn": "턴 종료",
+  "ARIANRHOD.DockNextTurn": "다음 턴",
+  "ARIANRHOD.DockPrevTurn": "이전 턴",
+  "ARIANRHOD.DockCollapse": "최소화",
+  "ARIANRHOD.DockExpand": "확장",
+  "ARIANRHOD.DockPhaseSetup": "셋업",
+  "ARIANRHOD.DockPhaseInitiative": "이니셔티브",
+  "ARIANRHOD.DockPhaseMain": "메인",
+  "ARIANRHOD.DockPhaseCleanup": "클린업",
+  "ARIANRHOD.DockDefeated": "전투불능",
+  "ARIANRHOD.DockUnknown": "???"
 }

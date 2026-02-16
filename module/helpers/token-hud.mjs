@@ -38,19 +38,7 @@ function _updateTurnIndicator(combat) {
   const token = canvas.tokens?.get(combatant.tokenId);
   if (!token?.mesh) return;
 
-  // Create or update the turn indicator overlay element
-  let indicator = document.getElementById("ar-turn-indicator");
-  if (!indicator) {
-    indicator = document.createElement("div");
-    indicator.id = "ar-turn-indicator";
-    document.getElementById("board")?.appendChild(indicator);
-  }
-
-  const name = combatant.actor?.name ?? "???";
-  indicator.innerHTML = `<i class="fas fa-play"></i> ${game.i18n.format("ARIANRHOD.TurnOf", { name })}`;
-  indicator.classList.add("visible");
-
-  // Also add a pulsing ring around the token via CSS class on the token's DOM element
+  // Add a pulsing ring around the token via CSS class on the token's DOM element
   // Foundry v13 tokens are rendered via PIXI, so we use a fixed-position screen overlay instead
   _positionTokenRing(token);
 }
@@ -98,9 +86,6 @@ function _positionTokenRing(token) {
  * Remove all turn indicators from the canvas.
  */
 function _clearAllTurnIndicators() {
-  const indicator = document.getElementById("ar-turn-indicator");
-  if (indicator) indicator.classList.remove("visible");
-
   const ring = document.getElementById("ar-turn-ring");
   if (ring) {
     ring.style.display = "none";

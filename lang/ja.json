@@ -796,5 +796,18 @@
   "ARIANRHOD.QuickReference": "クイックリファレンス",
   "ARIANRHOD.NewSkill": "新規スキル",
   "ARIANRHOD.ExistingSkill": "既存スキルレベルアップ",
-  "ARIANRHOD.SkillLevelIncrease": "スキルレベル+{delta}"
+  "ARIANRHOD.SkillLevelIncrease": "スキルレベル+{delta}",
+
+  "ARIANRHOD.DockRound": "ラウンド",
+  "ARIANRHOD.DockEndTurn": "ターン終了",
+  "ARIANRHOD.DockNextTurn": "次のターン",
+  "ARIANRHOD.DockPrevTurn": "前のターン",
+  "ARIANRHOD.DockCollapse": "最小化",
+  "ARIANRHOD.DockExpand": "展開",
+  "ARIANRHOD.DockPhaseSetup": "セットアップ",
+  "ARIANRHOD.DockPhaseInitiative": "イニシアチブ",
+  "ARIANRHOD.DockPhaseMain": "メイン",
+  "ARIANRHOD.DockPhaseCleanup": "クリンナップ",
+  "ARIANRHOD.DockDefeated": "戦闘不能",
+  "ARIANRHOD.DockUnknown": "???"
 }
